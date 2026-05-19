@@ -18,3 +18,8 @@ languages/
 # Local dev / personal files
 gulpfile.js
 todo.txt
+.vscode
+.agents
+scratch_output.txt
+skills-lock.json
+tsconfig.json

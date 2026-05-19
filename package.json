@@ -18,7 +18,7 @@
     "i18n-mo": "wp i18n make-mo languages/",
     "i18n": "npm run i18n-pot && npm run i18n-json && npm run i18n-mo",
     "bundle": "npm run build && gulp bundle && gulp zip",
-    "zip": "rm -f zip/html5-video-player.zip && zip -r zip/html5-video-player.zip admin build img inc public tinymce vendor blocks.php elementor-widget.php html5-video-player.php readme.txt includes.php composer.json -x '*.DS_Store' '*.log'",
+    "zip": "rm -f zip/html5-video-player.zip && zip -r zip/html5-video-player.zip admin build img inc public languages tinymce vendor blocks.php elementor-widget.php html5-video-player.php readme.txt includes.php composer.json -x '*.DS_Store' '*.log'",
     "zip:temp": "zip -r zip/html5-video-player.zip build/ img/ inc/ public/ rest-api/ tinymce/ vendor/ blocks.php elementor-widget.php html5-video-player.php readme.txt includes.php -x *.DS_Store *.log */codestar-framework",
     "deploy": "gulp freemius-deploy",
     "start:css": "NODE_ENV=production npx tailwindcss -o src/admin/analytics/output.css --watch",

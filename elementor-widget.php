@@ -35,15 +35,10 @@ final class Elementor_Addons
 
 	public function frontend_assets_scripts()
 	{
-		wp_register_script('bplugins-plyrio', plugin_dir_url(__FILE__) . 'public/js/plyr-v3.8.3.polyfilled.js', array('jquery'), '3.8.3', false);
-		// wp_register_script('html5-player-video-view-script', plugin_dir_url(__FILE__) . 'build/blocks/view.js', array('jquery', 'bplugins-plyrio', 'react', 'react-dom', 'wp-util'), time(), true);
+		wp_register_script('bplugins-plyrio', plugin_dir_url(__FILE__) . 'public/js/plyr-v3.8.4.polyfilled.js', array('jquery'), '3.8.3', false);
 
 		wp_register_style('bplugins-plyrio', plugin_dir_url(__FILE__) . 'public/css/h5vp.css', array(), H5VP_VER, 'all');
-		// wp_register_style('html5-player-video-style', plugin_dir_url(__FILE__) . 'build/blocks/view.css', array('bplugins-plyrio'), H5VP_VER);
 
-		// wp_localize_script('html5-player-video-view-script', 'ajax', array(
-		// 	'ajax_url' => admin_url('admin-ajax.php'),
-		// ));
 	}
 
 	public function init_widgets()

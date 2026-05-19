@@ -251,12 +251,12 @@ You can find the source code, report bugs, and contribute to the development of 
 This plugin bundles the following third-party library:
 
 **Plyr**
-- Version: 3.8.3
+- Version: 3.8.4
 - Purpose: Provides the customizable HTML5, YouTube, and Vimeo media player interface used to render videos.
 - License: MIT
 - Website: https://plyr.io
 - Source code: https://github.com/sampotts/plyr
-- Bundled file: public/js/plyr-v3.8.3.polyfilled.js
+- Bundled file: public/js/plyr-v3.8.4.polyfilled.js
 
 = bpl-tools =
 * Source / GitHub: https://github.com/bPlugins/bpl-tools
@@ -518,3 +518,8 @@ This plugin bundles the following third-party library:
 
 = 1.0 =
 * Initial Release
+
+== Upgrade Notice ==
+
+= 2.11.1 =
+The [video] shortcode has been removed. If you embedded players using [video], switch to the [video_player] shortcode or the HTML5 Video Player block. Existing [video_player] shortcodes and Gutenberg blocks are unaffected.
