@@ -1,0 +1,338 @@
+<?php
+
+namespace H5VP\PostType;
+
+if (!defined('ABSPATH'))
+    exit; // Exit if accessed directly
+
+use H5VP\Helper\Functions as Utils;
+
+class VideoPlayer
+{
+    protected $post_type = 'videoplayer';
+    protected $taxonomy = 'html5_video_tag';
+    private static $_instance = null;
+
+    public function __construct()
+    {
+        //we nothing do here
+    }
+
+    public function register()
+    {
+        add_action('init', [$this, 'init']);
+        add_action('edit_form_after_title', [$this, 'shortcode_area']);
+
+        // // post type ui
+        add_filter("manage_{$this->post_type}_posts_columns", [$this, 'postTypeColumns'], 1);
+        add_action("manage_{$this->post_type}_posts_custom_column", [$this, 'postTypeContent'], 10, 2);
+
+
+
+        add_filter('pre_get_posts', [$this, 'limitAccess']);
+        add_action('use_block_editor_for_post', [$this, 'forceGutenberg'], 10, 2);
+        add_filter('filter_block_editor_meta_boxes', [$this, 'remove_metabox']);
+
+        // add_filter( 'wp_insert_post_data' , [$this, 'filter_post_data'] , '99', 2 );
+
+        add_filter('save_post', [$this, 'filter_post_data'], '99', 2);
+
+    }
+
+    public static function instance()
+    {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+
+    /**
+     * Register post type
+     *
+     * @return void
+     */
+    public function init()
+    {
+        register_post_type(
+            $this->post_type,
+            array(
+                'labels' => array(
+                    'name' => __('Html5 Video Player', 'html5-video-player'),
+                    'singular_name' => __('Video Player', 'html5-video-player'),
+                    'add_new' => __('Add New Player', 'html5-video-player'),
+                    'add_new_item' => __('Add New', 'html5-video-player'),
+                    'edit_item' => __('Edit Player', 'html5-video-player'),
+                    'new_item' => __('New Player', 'html5-video-player'),
+                    'view_item' => __('View Player', 'html5-video-player'),
+                    'all_items' => __('All Players', 'html5-video-player'),
+                    'search_items' => __('Search Player', 'html5-video-player'),
+                    'not_found' => __('Sorry, we couldn\'t find the Player you are looking for.', 'html5-video-player'),
+                ),
+                'public' => false,
+                'show_ui' => true,
+                'menu_position' => 14,
+                'menu_icon' => H5VP_PLUGIN_DIR . 'admin/img/logo.svg',
+                'has_archive' => false,
+                'hierarchical' => false,
+                'capability_type' => 'page',
+                'rewrite' => false,
+                'show_in_rest' => true,
+                'supports' => array('title', 'editor'),
+                'template' => [['html5-player/parent']],
+                'template_lock' => 'all',
+            )
+        );
+    }
+
+    function remove_metabox($metaboxs)
+    {
+        $screen = get_current_screen();
+
+        if ($screen->post_type === $this->post_type) {
+            return [];
+        }
+        return $metaboxs;
+    }
+
+    /**
+     * Force gutenberg in case of classic editor
+     */
+    public function forceGutenberg($use, $post)
+    {
+        if ($this->post_type === $post->post_type) {
+            $isGutenberg = get_post_meta($post->ID, 'isGutenberg', true);
+            $gutenberg = get_option('h5vp_option', ['h5vp_gutenberg_enable' => true]);
+            if (isset($gutenberg['h5vp_gutenberg_enable'])) {
+                $gutenberg = (bool) $gutenberg['h5vp_gutenberg_enable'];
+            } else {
+                $gutenberg = true;
+            }
+
+            if ($gutenberg) {
+                if ($post->post_status == 'auto-draft') {
+                    update_post_meta($post->ID, 'isGutenberg', true);
+                    return true;
+                }
+                if ($isGutenberg) {
+                    return true;
+                } else {
+                    remove_post_type_support($this->post_type, 'editor');
+                    return false;
+                }
+                return $use;
+            } else {
+                if ($isGutenberg) {
+                    return true;
+                } else {
+                    remove_post_type_support($this->post_type, 'editor');
+                    return false;
+                }
+            }
+        }
+
+        return $use;
+    }
+
+    /**
+     * Limit media hub posts by author if cannot edit others posts
+     *  
+     * @param \WP_Query $query
+     * @return \WP_Query
+     */
+    public function limitAccess($query)
+    {
+        global $pagenow, $typenow;
+
+        if ('edit.php' != $pagenow || !$query->is_admin || $this->post_type !== $typenow) {
+            return $query;
+        }
+
+        if (!current_user_can('edit_others_posts')) {
+            $query->set('author', get_current_user_id());
+        }
+
+        return $query;
+    }
+
+
+
+    /**
+     * Columns on all posts page
+     *
+     * @param array $defaults
+     * @return array
+     */
+    public function postTypeColumns($columns)
+    {
+
+        unset($columns['date']);
+        $columns['shortcode'] = 'Shortcode';
+        $option = h5vp_get_option('h5vp_option');
+        if ($option('h5vp_import_export_enable', false)) {
+            $columns['export'] = 'Export/Import';
+        }
+        $columns['shortcode_deprecated'] = 'Shortcode Deprecated';
+        // $columns['total_viewes'] = 'Total Viewes ( Deprecated )';
+        $columns['date'] = 'Date';
+        return $columns;
+    }
+
+    public function postTypeContent($column_name, $post_id)
+    {
+        $shortcode = [
+            'shortcode' => '[html5_video id=' . esc_attr($post_id) . ']',
+            'shortcode_deprecated' => '[video id=' . esc_attr($post_id) . ']',
+        ];
+        switch ($column_name) {
+            case 'shortcode':
+                echo '<div class="h5vp_front_shortcode"><button class="button button-primary h5vp_shortcode_copy_btn" data-clipboard-text="' . esc_attr($shortcode['shortcode']) . '">' . esc_attr($shortcode['shortcode']) . '</button> <svg class="h5vp_shortcode_copy_btn" data-clipboard-text="' . esc_attr($shortcode['shortcode']) . '" data-type="icon" width="22px" height="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M8 4V16C8 17.1046 8.89543 18 10 18L18 18C19.1046 18 20 17.1046 20 16V7.24162C20 6.7034 19.7831 6.18789 19.3982 5.81161L16.0829 2.56999C15.7092 2.2046 15.2074 2 14.6847 2H10C8.89543 2 8 2.89543 8 4Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M16 18V20C16 21.1046 15.1046 22 14 22H6C4.89543 22 4 21.1046 4 20V9C4 7.89543 4.89543 7 6 7H8" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg><span class="htooltip">Copy To Clipboard</span> </div>';
+                break;
+            case 'shortcode_deprecated':
+                echo '<div class="h5vp_front_shortcode"><button class="button button-primary h5vp_shortcode_copy_btn" data-clipboard-text="' . esc_attr($shortcode['shortcode_deprecated']) . '">' . esc_attr($shortcode['shortcode_deprecated']) . '</button> <svg class="h5vp_shortcode_copy_btn" data-clipboard-text="' . esc_attr($shortcode['shortcode_deprecated']) . '" data-type="icon" width="22px" height="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M8 4V16C8 17.1046 8.89543 18 10 18L18 18C19.1046 18 20 17.1046 20 16V7.24162C20 6.7034 19.7831 6.18789 19.3982 5.81161L16.0829 2.56999C15.7092 2.2046 15.2074 2 14.6847 2H10C8.89543 2 8 2.89543 8 4Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M16 18V20C16 21.1046 15.1046 22 14 22H6C4.89543 22 4 21.1046 4 20V9C4 7.89543 4.89543 7 6 7H8" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg><span class="htooltip">Copy To Clipboard</span> </div>';
+                break;
+            case 'export':
+                echo '<button class="button button-primary h5vp_export_button" data-id=' . esc_attr($post_id) . '>Export</button> <button class="button button-primary h5vp_import_button" data-id=' . esc_attr($post_id) . '>Import</button>';
+                break;
+            default:
+                false;
+        }
+    }
+
+    public function allowedTypes($allowed_block_types, $post)
+    {
+        if ($post->post_type !== $this->post_type) {
+            return $allowed_block_types;
+        }
+
+        return [
+            'html5-player/parent',
+            'html5-player/video',
+            'html5-player/vimeo',
+            'html5-player/youtube'
+        ];
+    }
+
+    /**
+     * create a video id on database
+     */
+    function filter_post_data($post_id, $postarr)
+    {
+        // Skip autosaves and revisions to prevent duplicates
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+        if (wp_is_post_revision($post_id)) {
+            return;
+        }
+
+        $post_type = get_post_type($post_id);
+        if ($post_type === 'videoplayer') {
+            $provider = get_post_meta($post_id, 'h5vp_video_source', true);
+            $source = get_post_meta($post_id, 'h5vp_video_link', true);
+            if (in_array($provider, ['youtube', 'vimeo'])) {
+                $source = get_post_meta($post_id, 'h5vp_video_link_youtube_vimeo', true);
+            }
+
+            if (class_exists('\H5VP\Model\Video')) {
+                $video = new \H5VP\Model\Video();
+                $video->create([
+                    'src' => esc_url($source),
+                    'title' => get_the_title($post_id),
+                    'type' => $provider,
+                    'post_id' => $post_id,
+                ]);
+            }
+        } else {
+            // For any other post type, parse Gutenberg blocks and sync videos to custom DB
+            $this->syncBlockVideos($post_id, $postarr);
+        }
+    }
+
+    /**
+     * Parse post content for html5-player blocks and insert their videos
+     * into the custom h5vp_videos table if they don't already exist.
+     */
+    private function syncBlockVideos($post_id, $postarr)
+    {
+        $content = $postarr->post_content ?? '';
+        // Bail before the (potentially expensive) recursive block walk unless
+        // the content actually contains an html5-player block.
+        if (empty($content) || strpos($content, 'wp:html5-player/') === false) {
+            return;
+        }
+
+        $blocks = parse_blocks($content);
+        if (empty($blocks)) {
+            return;
+        }
+
+        $video_model = new \H5VP\Model\Video();
+        $this->extractVideoBlocks($blocks, $video_model, $post_id);
+    }
+
+    /**
+     * Recursively walk parsed blocks looking for html5-player/* blocks.
+     */
+    private function extractVideoBlocks($blocks, $video_model, $post_id)
+    {
+        $block_type_map = [
+            'html5-player/video' => 'library',
+            'html5-player/youtube' => 'youtube',
+            'html5-player/vimeo' => 'vimeo',
+        ];
+
+        foreach ($blocks as $block) {
+            if (!empty($block['blockName']) && isset($block_type_map[$block['blockName']])) {
+                $source = $block['attrs']['source'] ?? '';
+                if (!empty($source)) {
+                    $type = $block_type_map[$block['blockName']];
+                    // Use provider attribute if set (e.g. amazons3, self-hosted)
+                    $provider = $block['attrs']['provider'] ?? $type;
+
+                    $video_model->createIfNotExists([
+                        'src' => $source,
+                        'title' => get_the_title($post_id),
+                        'type' => $provider,
+                        'post_id' => $post_id,
+                    ]);
+                }
+            }
+
+            // Recurse into inner blocks (e.g. html5-player/parent wrapper)
+            if (!empty($block['innerBlocks'])) {
+                $this->extractVideoBlocks($block['innerBlocks'], $video_model, $post_id);
+            }
+        }
+    }
+
+    function shortcode_area()
+    {
+
+        if ($this->post_type != get_post_type()) {
+            return;
+        }
+        global $post;
+        $id = $post->ID;
+
+        $shortcode = "[html5_video id='" . esc_attr($id) . "']";
+        ?>
+        <div class="h5vp_shortcode_area_after_title">
+            <label><?php esc_html_e('Copy and paste this shortcode into your posts, pages and widget', 'html5-video-player'); ?></label>
+            <div class="shortcode_area">
+                <button class="button button-bplugins button-large h5vp_shortcode_copy_btn"
+                    data-clipboard-text="<?php echo esc_attr($shortcode) ?>"><?php echo esc_html($shortcode); ?></button>
+                <svg class='h5vp_shortcode_copy_btn' data-type="icon" data-clipboard-text='<?php echo esc_attr($shortcode) ?>'
+                    width='22px' height='22px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                    <path
+                        d='M8 4V16C8 17.1046 8.89543 18 10 18L18 18C19.1046 18 20 17.1046 20 16V7.24162C20 6.7034 19.7831 6.18789 19.3982 5.81161L16.0829 2.56999C15.7092 2.2046 15.2074 2 14.6847 2H10C8.89543 2 8 2.89543 8 4Z'
+                        stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />
+                    <path d='M16 18V20C16 21.1046 15.1046 22 14 22H6C4.89543 22 4 21.1046 4 20V9C4 7.89543 4.89543 7 6 7H8'
+                        stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />
+                </svg>
+            </div>
+        </div>
+        <?php
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "tailwindCSS.experimental.classRegex": ["[cC]lass=['\"](.*)['|\"]"],
+  "html.customData": [
+    "./node_modules/vidstack/vscode.html-data.json"
+  ],
+  "cSpell.words": [
+    "allowtransparency",
+    "playsinline"
+  ]
+}

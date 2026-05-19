@@ -1,0 +1,46 @@
+{
+    "compilerOptions": {
+        "target": "ES2019",
+        "lib": [
+            "DOM",
+            "ES2019"
+        ],
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "jsx": "react-jsx",
+        "allowJs": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "types": [
+            "wordpress__blocks",
+            "wordpress__i18n",
+            "wordpress__element",
+            "wordpress__data"
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "src/*": [
+                "src/*"
+            ],
+            "@wordpress/i18n": [
+                "node_modules/@types/wordpress__i18n"
+            ],
+            "@wordpress/element": [
+                "node_modules/@types/wordpress__element"
+            ],
+            "@wordpress/blocks": [
+                "node_modules/@types/wordpress__blocks"
+            ],
+            "@wordpress/data": [
+                "node_modules/@types/wordpress__data"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules/**/*"
+    ]
+}

@@ -1,0 +1,582 @@
+.h5vp_player_temp {
+  .plyr .plyr__controls .plyr__control:not(.plyr__menu__container .plyr__control) {
+    color: #fff;
+
+    :hover {
+      color: #fff;
+    }
+  }
+
+  button {
+    border: none;
+  }
+
+  .plyr {
+    button.plyr__control {
+      &:focus {
+        background: none;
+      }
+    }
+
+    .plyr__captions {
+      display: block;
+    }
+  }
+
+  .plyr {
+    input[type=range]::-webkit-slider-runnable-track {
+      box-shadow: none;
+    }
+
+    input[type=range]::-moz-range-track {
+      box-shadow: none;
+    }
+
+    input[type=range]::-ms-track {
+      box-shadow: none;
+    }
+  }
+
+  .plyr_wrapper:fullscreen {
+    .plyr {
+      height: 100vh;
+    }
+  }
+
+
+
+  a.plyr__control[data-plyr="download"] {
+    color: #fff;
+  }
+
+  .hideUI iframe {
+    height: 200%;
+    top: -50%;
+  }
+
+  .opacity-0 {
+    opacity: 0;
+  }
+
+  .background-transparent {
+    background: transparent;
+  }
+
+  .plyr {
+    .preload_poster {
+      display: none;
+    }
+
+    +.preload_poster {
+      display: none;
+    }
+  }
+
+  position: relative;
+
+  // popup css start
+  .plyr_wrapper {
+    overflow: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .plyr__volume input[type=range] {
+    @media screen and (max-width: 767px) {
+      max-width: 60px;
+    }
+  }
+
+  .bottom_right {
+    bottom: 10px;
+  }
+
+  .top_right {
+    top: 10px;
+  }
+
+  [role="menuitem"] {
+    &:focus {
+      background: #fff;
+    }
+  }
+
+  .plyr {
+    // transition: top .8s ease-in-out;
+    // transition: right 1s linear;
+    // transition: top 0.3s ease, right 0.3s ease, bottom 0.3s ease, left 0.3s ease, opacity 0.3s ease;
+    // position: fixed;
+    opacity: 1;
+    transition: opacity 1s linear;
+  }
+
+  .close {
+    display: none;
+  }
+
+  .sticky_close {
+    display: none;
+  }
+
+  .sticky {
+    position: fixed;
+    animation: fadeInFromNone 0.5s ease-in;
+    right: 10px;
+    width: 350px !important;
+    z-index: 99999;
+
+    [data-plyr="fast-forward"],
+    [data-plyr="volume"],
+    [data-plyr="rewind"],
+    [data-plyr="pip"] {
+      display: none;
+    }
+
+    .sticky_close {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      z-index: 99;
+      background: #222;
+      padding: 0px 5px;
+      font-family: sans-serif;
+      font-size: 25px;
+      line-height: 100%;
+      color: #fff;
+      cursor: pointer;
+      display: block;
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    [data-plyr="download"],
+    [data-plyr="restart"],
+    [data-plyr="rewind"],
+    [data-plyr="fast-forward"] {
+      display: none;
+    }
+
+    &:hover .sticky_close {
+      opacity: 1;
+    }
+  }
+
+  .plyr--hide-controls .close {
+    display: none;
+  }
+
+  .plyr__poster {
+    background-size: cover;
+  }
+
+  // chapters
+  .plyr__progress__container {
+    position: relative;
+  }
+
+  .h5vp-chapter-wrapper {
+    /* width: calc(100% - 15px); */
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    /* left: 14px; */
+  }
+
+  .plyr__progress__marker {
+    width: 4px;
+    height: 8px;
+    cursor: pointer;
+  }
+
+  .h5vp-chapter-list-wrapper {
+    max-height: 300px;
+    overflow: hidden;
+    min-width: 200px;
+    position: absolute;
+    bottom: 50px;
+    right: 20px;
+    z-index: 9999;
+  }
+
+  .h5vp-chapter-list {
+    background: var(--plyr-menu-background, rgba(255, 255, 255, 0.9));
+    border-radius: 3px;
+    /* opacity: 0; */
+    display: none;
+    max-height: 300px;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    box-sizing: content-box;
+    padding-right: 17px;
+  }
+
+  .h5vp-chapter-list.showing {
+    display: block;
+  }
+
+  .h5vp-chapter-list button {
+    display: block;
+    min-width: 100px;
+    text-align: left;
+    background: transparent;
+    color: #333;
+    width: 100%;
+    padding: 5px 15px;
+    outline: none;
+    border: none;
+    font-size: 15px;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+
+  .h5vp-chapter-list button:hover {
+    background: var(--plyr-video-control-background-hover, var(--plyr-color-main, var(--plyr-color-main, #00b3ff)));
+    color: #fff;
+  }
+
+  // ------------------------------------------------------ Popup CSS ----------------------------------------------------- //
+
+  // ---------------------------------------------------------------- thumbnail in video pause ------------------------- //
+
+  .plyr__control--overlaid {
+    transition: none;
+
+    img {
+      display: none;
+    }
+  }
+
+  .plyr .thumbInPause {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    border-radius: 0;
+    background-color: transparent !important;
+    z-index: 3;
+    opacity: 1;
+
+    img {
+      display: block;
+    }
+  }
+
+  .plyr .plyr__control--overlaid.thumbInPause:hover {
+    background: transparent;
+  }
+
+  .thumbInPause:hover::before {
+    background-color: #1a3056;
+    opacity: 1;
+  }
+
+  .thumbInPause::after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px;
+    background-color: black;
+    box-shadow: 0 0 140px 80px black;
+    opacity: 0.3;
+  }
+
+  .thumbInPause img {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thumbInPause svg {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    margin: -9px -5px;
+    transform: scale(3);
+    opacity: 0.75;
+    // transition: 0.3s ease;
+  }
+
+
+
+
+}
+
+// loading placeholder
+
+
+:root {
+  --loader-width: 100%;
+}
+
+.h5vp_lp {
+  width: var(--loader-width);
+  padding: 1rem;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.05);
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  position: relative;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    fill: #d0d8dd;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 50%;
+    background: #fff;
+    width: 60px;
+    height: 60px;
+    padding-left: 18px;
+  }
+}
+
+.bar {
+  position: relative;
+  width: 100%;
+  height: 0.5rem;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  border-radius: 5px;
+  background-color: #d0d8dd;
+}
+
+.bar:last-child {
+  margin-bottom: 0;
+}
+
+.bar:after {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 6rem;
+  top: 0;
+  animation: load 2s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+  background-image: linear-gradient(to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%);
+}
+
+@keyframes load {
+  from {
+    left: -100px;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+/* ======================================================== Animations ======================================== */
+@keyframes fadeInFromNone {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
+
+.preload_poster {
+  background-size: cover !important;
+  background-position: 50% 50% !important;
+  aspect-ratio: 16/9;
+  position: relative;
+
+  svg {
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+    position: absolute;
+  }
+}
+
+.entry-content[ast-blocks-layout]>.html5_video_players {
+  margin-left: 0px;
+}
+
+.password_form {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  form {
+    width: 300px;
+
+    .password_form_input {
+      width: 100%;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 3px;
+      font-size: 16px;
+      line-height: 100%;
+      background-color: #fff;
+    }
+
+    .password_form_button {
+      padding: 10px 26px;
+      outline: none;
+      border: 1px solid #444;
+      background: #ffffffe3;
+      color: #222;
+      border-radius: 3px;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+
+      &:disabled {
+        background: #ffffffd1;
+        color: #333;
+        cursor: 'auto'
+      }
+    }
+
+    .password_form_heading {
+      color: #fff;
+      font-size: 18px;
+      font-weight: normal;
+      margin-bottom: 15px;
+    }
+
+    .password_form_error {
+      color: red;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+  }
+}
+
+.password_form_overlay {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  opacity: 0.7;
+}
+
+.h5vp_progressbar_up {
+  .plyr__controls {
+    .plyr__progress__container {
+      position: absolute;
+      bottom: 45px;
+      width: calc(100% - 40px);
+      padding-left: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+
+      .plyr__progress {
+        width: calc(100% - 30px);
+      }
+    }
+
+    .plyr__volume input[type=range] {
+      max-width: 90px;
+    }
+  }
+}
+
+.plyr {
+  input[type=range]::-webkit-slider-runnable-track {
+    box-shadow: none;
+  }
+
+  input[type=range]::-moz-range-track {
+    box-shadow: none;
+  }
+
+  input[type=range]::-ms-track {
+    box-shadow: none;
+  }
+
+  input[type=range] {
+    cursor: pointer;
+  }
+
+  [data-plyr="seek"]::-webkit-slider-thumb {
+    display: none;
+  }
+
+  [data-plyr="seek"]::-moz-range-thumb {
+    display: none;
+  }
+
+  [data-plyr="seek"]::-ms-thumb {
+    display: none;
+  }
+
+  [data-plyr="seek"]:hover {
+    &::-webkit-slider-thumb {
+      display: block;
+    }
+
+    &::-moz-range-thumb {
+      display: block;
+    }
+
+    &::-ms-thumb {
+      display: block;
+    }
+
+  }
+}
+
+.h5vp-hls-video .plyr,
+.h5vp-dash-video .plyr {
+  aspect-ratio: 16/9;
+}
+
+.wp-block-html5-player-popup-trigger {
+  display: flex;
+
+  .wp-block-button__link {
+    color: #fff;
+    background: #333;
+  }
+}
+
+.html5_video_players .plyr--vimeo .plyr__captions {
+  display: none;
+}

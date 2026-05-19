@@ -1,0 +1,459 @@
+/* common */
+.skin-classic-minimal,
+.skin-stacked-dual-row {
+    input[type=range]::-webkit-slider-runnable-track {
+        border-radius: 0;
+    }
+
+    input[type=range]::-moz-range-track {
+        border-radius: 0;
+    }
+
+    input[type=range]::-ms-track {
+        border-radius: 0;
+    }
+}
+
+.h5vp-center-controls {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    position: absolute;
+
+}
+
+@media screen and (max-width: 480px) {
+    .h5vp-center-controls {
+        bottom: 5px;
+    }
+}
+
+// stacked
+/* 1. Make the control container wrap so we can stack rows */
+.skin-stacked {
+
+    .plyr__control--overlaid {
+        /* Rounded rectangle */
+        border-radius: 8px !important;
+        width: 70px;
+        height: 50px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .plyr__controls {
+        flex-wrap: wrap;
+    }
+
+    /* 2. Force the Progress Bar to take 100% width on the top row */
+    .plyr__progress__container {
+        // flex-basis: 100%;
+        order: -1;
+        flex: 0 0 100%;
+    }
+
+    .plyr__volume {
+        margin-left: auto;
+    }
+
+    .plyr__controls .plyr__controls__item:first-child {
+        margin-right: 0;
+    }
+
+    .plyr__progress__buffer {
+        height: 3px;
+        margin-top: calc((var(--plyr-range-track-height, 3px)/2)*-1)
+    }
+
+    .plyr__progress__container {
+
+        --plyr-range-track-height: 3px;
+
+        [data-plyr="seek"]:hover {
+            --plyr-range-track-height: 5px
+        }
+
+    }
+
+    .plyr__control--overlaid {
+        top: calc(50% - 25px);
+    }
+}
+
+.skin-modern {
+    .plyr__control--overlaid {
+        /* Rounded rectangle */
+        border-radius: 3px !important;
+        width: 100px;
+        height: 70px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            width: 27px;
+            height: 27px;
+        }
+    }
+
+    .plyr__controls {
+        // z-index: 2;
+        padding: 3px;
+    }
+
+    .plyr__controls::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--plyr-color-main, #00b2ff);
+        /* Use your solid color here */
+        opacity: 0.75;
+        /* Set opacity without changing the color code */
+        z-index: -1;
+        /* Push background behind content */
+
+    }
+
+    .plyr__progress__buffer {
+        height: 3px;
+        margin-top: calc((var(--plyr-range-track-height, 3px)/2)*-1)
+    }
+
+    .plyr {
+        --plyr-range-track-height: 3px;
+        --plyr-range-fill-background: #fff
+    }
+}
+
+.skin-floating-pill {
+
+    /* 1. Make the control bar float and rounded */
+    .plyr__controls {
+        background: rgba(0, 0, 0, 0.4) !important;
+        /* Semi-transparent dark background */
+        backdrop-filter: blur(10px);
+        /* Optional: adds a glassmorphism effect */
+        border-radius: 25px !important;
+        /* The "Pill" shape */
+        margin: 15px !important;
+        /* Space between bar and video edges */
+        padding: 5px 15px !important;
+        /* Internal padding */
+        width: auto !important;
+        /* Allows it to float away from edges */
+    }
+
+    /* 2. Style the progress bar to be thin and white */
+    .plyr__progress__container {
+        padding: 0 10px !important;
+    }
+
+    .plyr--full-ui input[type=range] {
+        color: #ffffff !important;
+        /* Progress fill color */
+        height: 4px !important;
+        /* Makes the bar thin */
+    }
+
+    /* 3. Style the white thumb (dot) */
+    input[type=range]::-webkit-slider-thumb {
+        background: #ffffff !important;
+        border: none !important;
+        width: 10px !important;
+        height: 10px !important;
+        margin-top: -2px;
+    }
+
+    /* 4. Icon and Text sizing */
+    .plyr__controls button,
+    .plyr__time {
+        color: #ffffff !important;
+        font-size: 13px !important;
+        font-weight: 500;
+    }
+
+    /* 5. Speed Selector (The "1x" in your image) */
+    /* Plyr settings button usually contains this, but you can style the 
+       individual speed button if you've added it to the controls array */
+    [data-plyr="settings"] {
+        font-weight: bold;
+    }
+}
+
+.skin-classic-minimal {
+
+    /* 1. Background Gradient (Bottom to Top) */
+    .plyr__controls {
+        background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7)) !important;
+        padding: 20px 10px 10px !important;
+        color: #ffffff !important;
+    }
+
+    /* 2. Style the Progress Bar - Solid White & Thick */
+    .plyr__progress__container {
+        padding: 0 10px !important;
+    }
+
+    .plyr {
+        --plyr-range-thumb-height: 0px;
+        --plyr-range-track-height: 12px;
+        --plyr-range-fill-background: #fff;
+    }
+
+    .plyr input[type=range] {
+        border-radius: 0px;
+        height: 12px;
+    }
+
+    .plyr__progress__buffer {
+        display: none;
+    }
+}
+
+
+.skin-stacked-dual-row {
+
+    .plyr {
+        --plyr-range-thumb-height: 0px;
+        --plyr-range-track-height: 7px;
+        --plyr-range-fill-background: #fff;
+    }
+
+    /* 2. Top Row Progress Bar (Square) */
+    .plyr__progress__container {
+        flex-basis: 100%;
+        order: -10;
+        margin-bottom: 5px;
+        margin-left: -13px;
+        margin-right: -10px;
+    }
+
+    /* 4. Time and Settings (The "Ends") */
+    .plyr__time--duration {
+        order: -9;
+        /* Keeps time on the far left */
+        font-size: 12px;
+    }
+
+    .plyr__time--current {
+        order: -8;
+        /* Keeps time on the far left */
+        font-size: 12px;
+    }
+
+    .plyr__time:not(:has(~ .plyr__time)) {
+        margin-right: auto;
+    }
+
+    /* Position Rewind to the left of Play */
+    [data-plyr="rewind"] {
+        order: -5;
+        margin-left: auto !important;
+        /* This pushes the group to the center */
+    }
+
+    /* Force the "Play" button to stay in the dead center */
+    [data-plyr="play"]:not(.plyr__control--overlaid) {
+        order: -4;
+        /* Pink Accent */
+        border-radius: 50% !important;
+        padding: 10px;
+
+        svg {
+            margin-left: 2px;
+        }
+
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+
+    /* Position Fast-Forward to the right of Play */
+    [data-plyr="fast-forward"] {
+        order: -3;
+        margin-right: auto !important;
+        /* This pushes the group to the center */
+    }
+
+    [data-plyr="restart"] {
+        display: none;
+    }
+
+    [data-plyr="play"]:has(+[data-plyr=fast-forward]) {
+        margin-right: 0 !important;
+    }
+
+    [data-plyr="rewind"]+[data-plyr="play"] {
+        margin-left: 0 !important;
+    }
+
+    /* 1. Main Container Setup */
+    .plyr__controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        /* Pushes time left and settings right */
+        // background: var(--plyr-color-main);
+        padding-top: 0;
+        padding-bottom: 5px;
+    }
+
+    .plyr__controls::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--plyr-color-main, #00b2ff);
+        /* Use your solid color here */
+        opacity: 0.75;
+        /* Set opacity without changing the color code */
+        z-index: -1;
+        /* Push background behind content */
+
+    }
+
+    .plyr__progress input[type=range],
+    .plyr__progress__buffer {
+        border-radius: 0 !important;
+        /* Total square edges */
+        height: 7px !important;
+    }
+
+    .plyr__volume input[type=range] {
+        max-width: 60px;
+    }
+
+    .plyr__controls .plyr__controls__item:first-child {
+        margin-right: 0;
+    }
+
+    .plyr__control--overlaid {
+        top: calc(50% - 25px);
+    }
+
+    .h5vp-center-controls {
+        top: 50%;
+        transform: translateY(calc(-50% + 3.5px));
+    }
+}
+
+.skin-modern-mobile-stack {
+
+    /* 1. Control bar wrapper setup */
+    .plyr__controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background: transparent !important;
+        /* Image onujayi transparent */
+    }
+
+    /* 2. First Row: Time - Progress - Duration */
+    .plyr__time--current {
+        order: -5;
+        flex: 0 0 45px;
+        margin-right: 0px;
+
+        &::before {
+            content: '';
+            display: none;
+        }
+    }
+
+    .plyr__progress__container {
+        order: -4;
+        flex: 0 0 calc(100% - 105px);
+        /* Progress bar takes all middle space */
+        min-width: 0;
+    }
+
+    .plyr__time--duration {
+        order: -3;
+        flex: 0 0 50px;
+        margin-left: 0px;
+
+        &::before {
+            content: "";
+            margin-right: 0;
+        }
+    }
+
+    /* Progress bar color (Blue accent) */
+    // .plyr--full-ui input[type=range] {
+    //     color: #3498db !important;
+    // }
+
+    .plyr__volume {
+        order: -2;
+    }
+
+    /* 3. Second Row: Grouped Buttons */
+    /* Previous, Play, Next buttons center-e anar logic */
+    [data-plyr="restart"],
+    [data-plyr="rewind"],
+    [data-plyr="play"]:not(.plyr__control--overlaid),
+    [data-plyr="fast-forward"] {
+        order: 1;
+        // margin: 15px 10px 0 !important;
+        /* Nicher row-te gap create korbe */
+    }
+
+    [data-plyr="rewind"] {
+        margin-left: auto;
+    }
+
+    [data-plyr="fast-forward"] {
+        margin-right: auto;
+    }
+
+    [data-plyr="play"]:has(+[data-plyr=fast-forward]) {
+        margin-right: 0 !important;
+    }
+
+    [data-plyr="rewind"]+[data-plyr="play"] {
+        margin-left: 0 !important;
+    }
+
+    /* Play button ke ektu boro kora (Optional) */
+    [data-plyr="play"]:not(.plyr__control--overlaid) {
+        transform: scale(1.2);
+    }
+
+    /* Fullscreen button ke ekdom corner-e neya */
+    [data-plyr="fullscreen"],
+    .plyr__menu,
+    [data-plyr="download"],
+    [data-plyr="pip"] {
+        order: 5;
+        /* Pushes to bottom-right corner */
+    }
+
+    [data-plyr=restart] {
+        display: none
+    }
+
+    .plyr__volume {
+        margin-right: auto;
+    }
+
+    .h5vp-center-controls {
+        bottom: 10px;
+    }
+
+    .h5vp-mobile-stack-row-1 {
+        display: flex;
+        flex: 0 0 100%;
+        order: -50;
+    }
+
+}

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "wp-playground": {
+      "source": "wordpress/agent-skills",
+      "sourceType": "github",
+      "computedHash": "1125d6cd0d9097ae478d4b067cf02f2b2e5f0c6690209aa05c97a3e13dbb8921"
+    }
+  }
+}
