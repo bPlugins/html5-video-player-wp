@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { __ } from "@wordpress/i18n";
-import { Button, Icon, Modal, Placeholder } from "@wordpress/components";
+import { Button, Placeholder } from "@wordpress/components";
 import { useBlockProps, MediaUpload, MediaUploadCheck } from "@wordpress/block-editor";
 import { dispatch } from "@wordpress/data";
 
 import BSettings from "./BSettings";
 import VideoPlayer from "../Common/VideoPlayer";
-import { cameraIcon, DEFAULT_PRESETS } from "../../constants";
-import type { EditProps, PresetProps, ProviderConfig } from "../../types";
-import useWPAjax from "src/hooks/useWPAjax";
+import { cameraIcon } from "../../constants";
+import type { EditProps, ProviderConfig } from "../../types";
 
 interface EditBlockProps extends EditProps {
   config: ProviderConfig;
@@ -18,11 +17,10 @@ const EditBlock = ({ config, ...props }: EditBlockProps) => {
   const { validator, hasMediaUpload = false, placeholderText, blockName = 'video', icon = cameraIcon } = config;
   const { attributes, setAttributes, isSelected, clientId } = props;
 
-  const { source, presetId, } = attributes;
+  const { source } = attributes;
 
   const [mediaSource, setMediaSource] = useState<string | undefined>();
   const [valid, setValid] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (isSelected) {

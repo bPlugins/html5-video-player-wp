@@ -9,7 +9,7 @@ interface RefactorDataStructureProps {
 }
 
 const RefactorDataStructure = ({ setAttributes, attributes }: RefactorDataStructureProps) => {
-  const { autoplay, autoHideControl, muted, options, preload, resetOnEnd, ratio, repeat, radius, styles, seekTime, speed, width, chapters, imported, controls } = attributes as any;
+  const { autoplay, autoHideControl, muted, options, preload, resetOnEnd, ratio, radius, styles, seekTime, width, imported, controls } = attributes as any;
   const { playinline } = attributes as any;
 
   const handleStyles = () => {

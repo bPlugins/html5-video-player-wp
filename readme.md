@@ -2,7 +2,7 @@
 
 A flexible, fully responsive WordPress video player plugin. Embed MP4, WebM, OGG, FLV, YouTube, and Vimeo videos via shortcode or Gutenberg block — no code required.
 
-- **Version:** 2.11.1
+- **Version:** 2.11.3
 - **Requires WordPress:** 6.5+
 - **Requires PHP:** 7.4+ (Pro: 8.1+)
 - **License:** GPL v2 or later

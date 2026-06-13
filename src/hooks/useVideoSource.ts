@@ -29,11 +29,8 @@ interface UseVideoSourceReturn {
 const useVideoSource = ({
     source,
     provider,
-    uniqueId,
-    streaming,
     passwordProtected,
 }: UseVideoSourceOptions): UseVideoSourceReturn => {
-    const isPasswordProtected = passwordProtected?.enabled ?? false;
 
 
     const detectProvider = (raw: string): VideoSourceType => {

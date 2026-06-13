@@ -1,28 +1,24 @@
 import { useEffect, useState } from "react";
-import { __experimentalNumberControl as NumberControl, TextControl, SelectControl, TextareaControl, ToggleControl, PanelBody } from "@wordpress/components";
+import { TextControl, SelectControl, PanelBody } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 
 import isYoutubeURL from "../../../../../../../wp-utils/v1/isYoutubeURL";
-import { BtnGroup, Notice } from "./../../../../../../../bpl-tools/Components";
+import Notice from "./../../../../../../../bpl-tools/Components/Notice";
 import BToggleControl from "../../BToggleControl";
 import { helpText } from "../../../../../utils/constant";
 import SettingsIcon from "../../../../../icons/Settings";
 import Title from "../Title";
 
 import type { BlockAttributes } from "../../../../types";
-import type { SkinType } from "../../../../types";
-import { PremiumPanel } from "../../../../../../../bpl-tools/ProControls";
 
 interface SettingsProps {
   attributes: BlockAttributes;
   setAttributes: (attrs: Partial<BlockAttributes>) => void;
   handleOptions: (value: Record<string, any>, type?: string | null) => void;
-  handleFeatures: (value: Record<string, any>, type?: string | null) => void;
-
   name?: string;
 }
 
-const Settings = ({ attributes, setAttributes, handleOptions, handleFeatures }: SettingsProps) => {
+const Settings = ({ attributes, setAttributes, handleOptions }: SettingsProps) => {
   const { source, options, presetId } = attributes;
   const { autoplay, muted, hideControls, ratio, resetOnEnd, loop, speed } = options;
 

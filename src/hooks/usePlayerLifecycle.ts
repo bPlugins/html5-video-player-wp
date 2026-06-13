@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import MyPlayer from '../public/MyPlayer';
-import useWPAjax from './useWPAjax';
 import { VideoPlayerAttributes } from '../interfaces/MyPlayerInterface';
 
 

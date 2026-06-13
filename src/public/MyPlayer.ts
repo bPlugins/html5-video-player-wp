@@ -149,7 +149,7 @@ class MyPlayer extends EventEmitter {
    * Instantiates the Plyr player based on source type and wires initial events.
    */
   private createPlayer(): void {
-    const ext = this.getFileExtension(this.source);
+    // const ext = this.getFileExtension(this.source);
     const plyrOpts = { ...this.options, i18n: window.h5vpI18n || {} };
 
     this.player = new window.Plyr(this.media, { ...plyrOpts, playsinline: true });
@@ -321,7 +321,9 @@ class MyPlayer extends EventEmitter {
 
       // Autoplay on frontend
       if (this.options.autoplay) {
-        this.player?.play();
+        this.player?.play()?.catch?.((err: any) => {
+          console.warn("Autoplay was blocked by browser policies. Video will load paused until user interaction.", err);
+        });
       }
 
       this.controlTouchAction();
@@ -607,9 +609,6 @@ class MyPlayer extends EventEmitter {
       }
     };
   }
-
-
-
 
   private play() {
     this.player.play();

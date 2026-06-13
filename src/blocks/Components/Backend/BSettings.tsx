@@ -22,9 +22,9 @@ import Presets from "./Tabs/General/Presets";
 
 import CopyShortcode from "./CopyShortcode";
 
-import type { BlockAttributes, PresetProps } from "../../types";
+import type { BlockAttributes } from "../../types";
 import useWPAjax from "src/hooks/useWPAjax";
-import { PremiumPanel } from "../../../../../bpl-tools/ProControls";
+import PremiumPanel from "../../../../../bpl-tools/ProControls/PremiumPanel";
 
 interface BSettingsProps {
   attributes: BlockAttributes;

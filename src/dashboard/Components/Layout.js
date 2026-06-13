@@ -10,19 +10,19 @@ const navigation = [
 ];
 
 const Layout = (props) => {
-
     const location = useLocation();
 
     return <div className='bPlDashboard'>
         <Header {...props}>
             <nav className='bPlDashboardNav'>
-                {navigation?.map((item, index) => <Link
-                    key={index}
-                    to={item.href}
-                    className={`navLink ${location.pathname === item.href || (location.pathname === '/' && item.href === '/welcome') ? 'active' : ''}`}
-                >
-                    {item.name}
-                </Link>)}
+                {navigation
+                    ?.map((item, index) => <Link
+                        key={index}
+                        to={item.href}
+                        className={`navLink ${location.pathname === item.href || (location.pathname === '/' && item.href === '/welcome') ? 'active' : ''}`}
+                    >
+                        {item.name}
+                    </Link>)}
             </nav>
         </Header>
 

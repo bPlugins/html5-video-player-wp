@@ -2,8 +2,27 @@
 
 const slug = 'html5-video-player';
 
+const gutenbergTabIcon = <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+    <rect x='3' y='3' width='7' height='7' rx='1' />
+    <rect x='14' y='3' width='7' height='7' rx='1' />
+    <rect x='3' y='14' width='7' height='7' rx='1' />
+    <rect x='14' y='14' width='7' height='7' rx='1' />
+</svg>;
+
+const shortcodeTabIcon = <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+    <polyline points='16 18 22 12 16 6' />
+    <polyline points='8 6 2 12 8 18' />
+</svg>;
+
+const elementorTabIcon = <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+    <rect x='3' y='3' width='18' height='18' rx='2' />
+    <line x1='9' y1='9' x2='15' y2='9' />
+    <line x1='9' y1='13' x2='15' y2='13' />
+    <line x1='9' y1='17' x2='15' y2='17' />
+</svg>;
+
 export const dashboardInfo = (info) => {
-    const { version, hasPro, licenseActiveNonce } = info;
+    const { version, adminUrl = '' } = info;
 
     return {
         name: `HTML5 Video Player`,
@@ -12,7 +31,6 @@ export const dashboardInfo = (info) => {
             "HTML5 Video Player Plugin lets you embed responsive videos in WordPress. It’s easy to use, fast, and supports MP4, WebM, OGG, FLV, Youtube and Vimeo.",
         slug,
         version,
-        hasPro,
         displayOurPlugins: true,
         media: {
             logo: `https://ps.w.org/${slug}/assets/icon-128x128.png`,
@@ -23,7 +41,6 @@ export const dashboardInfo = (info) => {
         },
         pages: {
             org: `https://wordpress.org/plugins/${slug}/`,
-            // landing: `https://bplugins.com/products/${slug}/`,
             docs: `https://bplugins.com/docs/${slug}/`,
             pricing: `https://bplugins.com/products/${slug}/pricing`,
         },
@@ -32,32 +49,125 @@ export const dashboardInfo = (info) => {
             plan_id: 23848,
             public_key: 'pk_42a72d9cdea87e78854f59cdc1293'
         },
-        licenseActiveNonce,
-        changelogs: [
-            {
-                version: '2.9.0 - 03 Mar, 2026',
-                type: 'update',
-                list: [
-                    'Update Admin Dashboard',
-                    'Fix Issues',
-                    'Move shortcode area to top'
-                ]
-            }
-        ],
-        proFeatures: [
-            'Watermark Support.',
-            'Chapters.',
-            'Password Protected.',
-            'Allow Inline Playback on iOS.',
-            'Autoplay when visible on screen.',
-            'Shortcode support to display posts anywhere.'
-        ],
         startButton: {
             label: 'Start Now',
-            url: `wp-admin/post-new.php?post_type=videoplayer`
+            url: `${adminUrl}/post-new.php?post_type=videoplayer`
         }
     }
 }
+
+export const welcomeInfo = (adminUrl) => ({
+    keywords: ['MP4', 'YouTube', 'Vimeo', 'HLS', 'VAST Ads', 'Chapters'],
+    keywordsLabel: 'Formats & Features',
+    gettingStarted: {
+        tabs: [
+            {
+                key: 'gutenberg',
+                label: 'Gutenberg',
+                icon: gutenbergTabIcon,
+                steps: [
+                    {
+                        num: 1,
+                        title: 'Add the Block',
+                        body: 'Open the Gutenberg editor, click <strong>+</strong> or type <strong>/Video Player</strong> to insert the HTML5 Video Player parent block.',
+                        link: { url: `${adminUrl}/post-new.php`, label: 'Open Editor' }
+                    },
+                    {
+                        num: 2,
+                        title: 'Insert Source Block',
+                        body: 'Add a child block like <strong>Video File</strong>, <strong>YouTube</strong>, or <strong>Vimeo</strong> depending on your video format.'
+                    },
+                    {
+                        num: 3,
+                        title: 'Configure Settings',
+                        body: 'Select the block and adjust settings like Autoplay, Mute, Loop, Watermark, and Subtitles in the inspector sidebar.'
+                    },
+                    {
+                        num: 4,
+                        title: 'Publish & Preview',
+                        body: 'Publish or preview your page to see the video player rendered live.'
+                    }
+                ]
+            },
+            {
+                key: 'shortcode',
+                label: 'Shortcode',
+                icon: shortcodeTabIcon,
+                steps: [
+                    {
+                        num: 1,
+                        title: 'Create Player CPT',
+                        body: 'Go to <strong>Video Player &rsaquo; Add New Player</strong> from the WordPress admin menu.',
+                        link: { url: `${adminUrl}/post-new.php?post_type=videoplayer`, label: 'Add Player' }
+                    },
+                    {
+                        num: 2,
+                        title: 'Upload & Configure',
+                        body: 'Add video sources, adjust dimensions, player theme colors, and setup features.'
+                    },
+                    {
+                        num: 3,
+                        title: 'Copy Shortcode',
+                        body: 'Publish the player post and copy the generated shortcode (e.g., <code>[html5_video id="..."]</code>).'
+                    },
+                    {
+                        num: 4,
+                        title: 'Embed Anywhere',
+                        body: 'Paste the copied shortcode into any post, page, widget area, or theme template file.'
+                    }
+                ]
+            },
+            {
+                key: 'elementor',
+                label: 'Elementor',
+                icon: elementorTabIcon,
+                steps: [
+                    {
+                        num: 1,
+                        title: 'Edit with Elementor',
+                        body: 'Open your page in the Elementor editor and search for <strong>HTML5 Video Player</strong> in the widget list.'
+                    },
+                    {
+                        num: 2,
+                        title: 'Drag & Drop Widget',
+                        body: 'Drag the widget to the desired section or column in your layout.'
+                    },
+                    {
+                        num: 3,
+                        title: 'Select Video/Player',
+                        body: 'Input your video URL, or select a pre-configured video player ID from the dropdown list.'
+                    },
+                    {
+                        num: 4,
+                        title: 'Style & Save',
+                        body: 'Use the Style tab to adjust margins, background color, responsive visibility, and save your changes.'
+                    }
+                ]
+            }
+        ]
+    },
+    changelogs: [
+        {
+            version: '2.11.3 - 14 June, 2026',
+            type: 'update',
+            list: [
+                '<strong>Improvement:</strong> Updated admin dashboard design',
+                '<strong>Improvement:</strong> Removed unused code, dead asset registrations, and leftover images',
+                '<strong>Improvement:</strong> Code quality and general maintenance'
+            ]
+        },
+    ],
+    changelogsLimit: 6,
+    changelogsReadMoreLabel: 'View More Changelogs',
+    proFeatures: [
+        'Watermark Support.',
+        'Chapters.',
+        'Password Protected.',
+        'Allow Inline Playback on iOS.',
+        'Autoplay when visible on screen.',
+        'Shortcode support to display posts anywhere.'
+    ]
+});
 
 export const demoInfo = {
     // allInOneLabel: 'See All Demos',
@@ -67,12 +177,6 @@ export const demoInfo = {
             title: "Player with All Controls",
             url: "https://wpvideoplayer.com/demo/demo-1-player-with-all-controls/",
             icon: <svg width="20" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z' /></svg>,
-            type: "iframe"
-        },
-        {
-            title: "Player with Custom Size",
-            url: "https://wpvideoplayer.com/demo/demo-3-video-player-with-custom-size/",
-            icon: <svg width="20" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'><path d='M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64H240l-10.7 32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H346.7L336 416H512c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM512 64V288H64V64H512z' /></svg>,
             type: "iframe"
         },
         {

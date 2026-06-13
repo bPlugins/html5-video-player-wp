@@ -3,7 +3,7 @@ import Title from "../Title"
 import { __ } from "@wordpress/i18n"
 import PresetsIcon from "../../../../../icons/PresetsIcon"
 import { DEFAULT_PRESETS } from "src/blocks/constants"
-import { Notice } from "../../../../../../../bpl-tools/Components"
+import Notice from "../../../../../../../bpl-tools/Components/Notice"
 
 
 const Presets = ({ presetId, setAttributes }: { presetId: number | string | null, setAttributes: (attributes: any) => void }) => {
