@@ -72,6 +72,16 @@
     }
   }
 
+  /* Force Plyr's native poster to be visible for YouTube and Vimeo until played, but ONLY if a custom poster is provided */
+  .has-custom-poster .plyr.plyr--vimeo.plyr--stopped .plyr__poster,
+  .has-custom-poster .plyr.plyr--youtube.plyr--stopped .plyr__poster {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    background-size: cover !important;
+    z-index: 1;
+  }
+
   position: relative;
 
   // popup css start

@@ -289,10 +289,11 @@ This plugin bundles the following third-party library:
 
 == Changelog ==
 
-= 2.11.3 - 14 June, 2026 =
+= 2.11.3 - 16 June, 2026 =
 * Improved: Updated admin dashboard design
 * Improved: Removed unused code, dead asset registrations, and leftover images
 * Improved: Code quality and general maintenance
+* Fixed: Custom poster not showing for Vimeo player
 
 = 2.11.2 - 20 May, 2026 =
 * Fixed: Player does not showing

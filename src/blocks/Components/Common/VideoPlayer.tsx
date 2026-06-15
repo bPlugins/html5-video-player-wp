@@ -91,12 +91,12 @@ const VideoPlayer = ({
 
       <div
         //@ts-ignore
-        className={`plyr_wrapper skin-${attributes.tempSkin ? skin : 'default'}`}
+        className={`plyr_wrapper skin-${attributes.tempSkin ? skin : 'default'} ${poster ? 'has-custom-poster' : ''}`}
         data-unique-id={generateUniqueID(5)}
         key={JSON.stringify({ options, presetId, poster })}
       >
-        {videoSource === 'vimeo' && <Vimeo source={isVimeoLink(src) as string} />}
-        {videoSource === 'youtube' && <Youtube source={isYoutubeURL(src)} />}
+        {videoSource === 'vimeo' && <Vimeo source={isVimeoLink(src) as string} data-poster={poster as string} />}
+        {videoSource === 'youtube' && <Youtube source={isYoutubeURL(src)} data-poster={poster as string} />}
 
         {['self-hosted', 'amazons3'].includes(videoSource) && (
           <Video
