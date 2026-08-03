@@ -11,6 +11,7 @@ const navigation = [
 
 const Layout = (props) => {
     const location = useLocation();
+    const { setupUrl } = props;
 
     return <div className='bPlDashboard'>
         <Header {...props}>
@@ -23,6 +24,9 @@ const Layout = (props) => {
                     >
                         {item.name}
                     </Link>)}
+
+                {/* Full page load, not a router Link — the wizard is its own PHP screen. */}
+                {setupUrl && <a className='navLink' href={setupUrl}>Guided Setup</a>}
             </nav>
         </Header>
 

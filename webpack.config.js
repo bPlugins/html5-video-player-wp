@@ -15,6 +15,7 @@ const entry = {
   ...defaultConfig.entry(),
   admin: "./src/admin.ts",
   dashboard: "./src/dashboard/admin.js",
+  onboarding: "./src/dashboard/onboarding.js",
   "blocks/blocks": "./src/blocks/blocks.ts",
   "blocks/view": "./src/blocks/view.tsx",
 };

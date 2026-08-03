@@ -302,6 +302,7 @@ class MyPlayer extends EventEmitter {
     });
 
     // Activate all features
+    this.exitPipOnFullscreen();
     if (typeof this.features === "object") {
       this.landScapeWhenFullscreen();
     }
@@ -438,7 +439,7 @@ class MyPlayer extends EventEmitter {
       m3u8: "application/x-mpegURL",
       mpd: "application/dash+xml",
       flv: "video/x-flv",
-      mov: "video/quicktime",
+      mov: "video/mp4", // don't update it
       webm: "video/webm",
       ogv: "video/ogg",
       avi: "video/x-msvideo",
@@ -449,6 +450,26 @@ class MyPlayer extends EventEmitter {
 
   }
 
+
+  /**
+   * Automatically exits Picture-in-Picture mode when entering fullscreen.
+   */
+  private exitPipOnFullscreen(): void {
+    this.player?.on("enterfullscreen", () => {
+      // Standard W3C Picture-in-Picture API
+      if (document.pictureInPictureElement) {
+        document.exitPictureInPicture().catch(() => { });
+      }
+      // WebKit / Safari presentation mode
+      if ((this.media as any)?.webkitPresentationMode === "picture-in-picture") {
+        (this.media as any)?.webkitSetPresentationMode?.("inline");
+      }
+      // Plyr PiP controller state
+      if (this.player?.pip?.active) {
+        this.player.pip.active = false;
+      }
+    });
+  }
 
   /**
    * Locks screen orientation to landscape when entering fullscreen on mobile.

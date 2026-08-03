@@ -15,9 +15,9 @@ const App = (props) => {
     return <Router>
         <Routes>
             <Route path='/' element={<Layout {...props} />}>
-                <Route index element={<Welcome {...props} {...welcomeInfo(adminUrl)} />} />
+                <Route index element={<Welcome {...props} {...welcomeInfo(adminUrl, props.editor)} />} />
 
-                <Route path='welcome' element={<Welcome {...props} {...welcomeInfo(adminUrl)} />} />
+                <Route path='welcome' element={<Welcome {...props} {...welcomeInfo(adminUrl, props.editor)} />} />
 
                 <Route path='demos' element={<Demos {...props} demoInfo={demoInfo} />} />
 

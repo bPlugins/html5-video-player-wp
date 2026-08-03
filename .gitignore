@@ -13,6 +13,10 @@ languages/
 /test-results
 /screenshots
 /playwright
+/docs
+**/*.mp4
+**/*.webm
+**/*.mp3
 .DS_Store
 
 # Local dev / personal files

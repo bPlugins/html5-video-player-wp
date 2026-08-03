@@ -5,20 +5,24 @@ namespace H5VP\Base;
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
+use H5VP\Model\Onboarding;
+
 /**
- * Dismissible admin notice announcing that the legacy [video] shortcode has
- * been removed and replaced by [html5_video].
+ * Dismissible notice pointing existing installs at the guided setup.
  *
- * The dismissal is stored per user, so once an editor closes the notice it
- * stays closed for them on every screen.
+ * The activation redirect only reaches new installs. Sites that already had the
+ * plugin when the wizard shipped would otherwise never learn it exists, which
+ * is exactly the audience the wizard was built for.
+ *
+ * Dismissal is stored per user, matching AdminNotice's behaviour.
  */
-class AdminNotice
+class OnboardingNotice
 {
     /** User meta key that records the dismissal for the current user. */
-    const DISMISS_META_KEY = 'h5vp_dismissed_video_shortcode_notice';
+    const DISMISS_META_KEY = 'h5vp_dismissed_onboarding_notice';
 
     /** AJAX action used to persist the dismissal. */
-    const DISMISS_ACTION = 'h5vp_dismiss_video_shortcode_notice';
+    const DISMISS_ACTION = 'h5vp_dismiss_onboarding_notice';
 
     public function register()
     {
@@ -27,11 +31,15 @@ class AdminNotice
     }
 
     /**
-     * Output the notice on admin screens for users who can author content.
+     * Show the notice to admins who have not run — or dismissed — the wizard.
      */
     public function render()
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can(Onboarding::CAPABILITY)) {
+            return;
+        }
+
+        if (Onboarding::is_completed()) {
             return;
         }
 
@@ -39,18 +47,20 @@ class AdminNotice
             return;
         }
 
-        $message = sprintf(
-            /* translators: 1: removed shortcode, 2: replacement shortcode. */
-            __('HTML5 Video Player: the %1$s shortcode has been removed. Please use %2$s instead.', 'html5-video-player'),
-            '<code>[video]</code>',
-            '<code>[html5_video]</code>'
-        );
+        // The wizard is its own full-screen page; showing the notice on top of
+        // it would be noise.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only screen check, no state change.
+        if (isset($_GET['page']) && 'h5vp-setup' === sanitize_key(wp_unslash($_GET['page']))) {
+            return;
+        }
 
         printf(
-            '<div class="notice notice-warning is-dismissible" data-h5vp-notice="%1$s" data-h5vp-nonce="%2$s"><p>%3$s</p></div>',
+            '<div class="notice notice-info is-dismissible" data-h5vp-notice="%1$s" data-h5vp-nonce="%2$s"><p>%3$s</p><p><a class="button button-primary" href="%4$s">%5$s</a></p></div>',
             esc_attr(self::DISMISS_ACTION),
             esc_attr(wp_create_nonce(self::DISMISS_ACTION)),
-            wp_kses($message, ['code' => []])
+            esc_html__('New to HTML5 Video Player? Take the 1-minute guided setup — it walks you through adding your first video and setting your player defaults.', 'html5-video-player'),
+            esc_url(\H5VPAdmin::setupUrl()),
+            esc_html__('Start Guided Setup', 'html5-video-player')
         );
 
         $this->print_dismiss_script();
@@ -63,7 +73,7 @@ class AdminNotice
     {
         check_ajax_referer(self::DISMISS_ACTION, 'nonce');
 
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can(Onboarding::CAPABILITY)) {
             wp_send_json_error(null, 403);
         }
 
@@ -80,8 +90,6 @@ class AdminNotice
         ?>
         <script>
             (function () {
-                // Scoped to this notice's own action — more than one H5VP
-                // notice can be on screen at once.
                 var notice = document.querySelector('[data-h5vp-notice="<?php echo esc_js(self::DISMISS_ACTION); ?>"]');
                 if (!notice) {
                     return;

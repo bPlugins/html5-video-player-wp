@@ -58,7 +58,7 @@ const EditBlock = ({ config, ...props }: EditBlockProps) => {
         ) : (
           <Placeholder
             icon={icon}
-            instructions={["youtube", "vimeo"].includes(blockName) ? `Paste or type a ${blockName} video URL/ID` : __("Upload a video or paste/write video url to get started.", "h5vp")}
+            instructions={["youtube", "vimeo"].includes(blockName) ? `Paste or type a ${blockName} video URL/ID` : __("Upload a video or paste/write a video URL to get started.", "h5vp")}
             label={["youtube", "vimeo"].includes(blockName) ? blockName.toUpperCase() : __("Upload a Video ", "h5vp")}
           >
             {hasMediaUpload && (

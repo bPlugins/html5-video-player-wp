@@ -1,34 +1,19 @@
 // import { gridIcon, masonryIcon, sliderIcon, tickerIcon } from '../../utils/icons';
 
-const slug = 'html5-video-player';
+import { slug, gutenbergTabIcon, shortcodeTabIcon, elementorTabIcon } from './shared'
 
-const gutenbergTabIcon = <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
-    <rect x='3' y='3' width='7' height='7' rx='1' />
-    <rect x='14' y='3' width='7' height='7' rx='1' />
-    <rect x='3' y='14' width='7' height='7' rx='1' />
-    <rect x='14' y='14' width='7' height='7' rx='1' />
-</svg>;
-
-const shortcodeTabIcon = <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
-    <polyline points='16 18 22 12 16 6' />
-    <polyline points='8 6 2 12 8 18' />
-</svg>;
-
-const elementorTabIcon = <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
-    <rect x='3' y='3' width='18' height='18' rx='2' />
-    <line x1='9' y1='9' x2='15' y2='9' />
-    <line x1='9' y1='13' x2='15' y2='13' />
-    <line x1='9' y1='17' x2='15' y2='17' />
-</svg>;
 
 export const dashboardInfo = (info) => {
-    const { version, adminUrl = '' } = info;
+    const { version, adminUrl = '', setupUrl = '', editor = '' } = info;
 
     return {
         name: `HTML5 Video Player`,
+        adminUrl,
+        setupUrl,
+        editor,
         displayName: `HTML5 Video Player - Embed and Play Videos in Custom Player`,
         description:
-            "HTML5 Video Player Plugin lets you embed responsive videos in WordPress. It’s easy to use, fast, and supports MP4, WebM, OGG, FLV, Youtube and Vimeo.",
+            "HTML5 Video Player Plugin lets you embed responsive videos in WordPress. It’s easy to use, fast, and supports MP4, WebM, OGG, Youtube and Vimeo.",
         slug,
         version,
         displayOurPlugins: true,
@@ -51,54 +36,34 @@ export const dashboardInfo = (info) => {
         },
         startButton: {
             label: 'Start Now',
-            url: `${adminUrl}/post-new.php?post_type=videoplayer`
+            url: `${adminUrl}post-new.php?post_type=videoplayer`
         }
     }
 }
 
-export const welcomeInfo = (adminUrl) => ({
+
+
+
+
+export const welcomeInfo = (adminUrl, editor = '') => ({
     keywords: ['MP4', 'YouTube', 'Vimeo', 'HLS', 'VAST Ads', 'Chapters'],
     keywordsLabel: 'Formats & Features',
     gettingStarted: {
+        // Opens on the workflow chosen during guided setup; falls back to the
+        // first tab when nothing was picked.
+        defaultTab: editor,
         tabs: [
-            {
-                key: 'gutenberg',
-                label: 'Gutenberg',
-                icon: gutenbergTabIcon,
-                steps: [
-                    {
-                        num: 1,
-                        title: 'Add the Block',
-                        body: 'Open the Gutenberg editor, click <strong>+</strong> or type <strong>/Video Player</strong> to insert the HTML5 Video Player parent block.',
-                        link: { url: `${adminUrl}/post-new.php`, label: 'Open Editor' }
-                    },
-                    {
-                        num: 2,
-                        title: 'Insert Source Block',
-                        body: 'Add a child block like <strong>Video File</strong>, <strong>YouTube</strong>, or <strong>Vimeo</strong> depending on your video format.'
-                    },
-                    {
-                        num: 3,
-                        title: 'Configure Settings',
-                        body: 'Select the block and adjust settings like Autoplay, Mute, Loop, Watermark, and Subtitles in the inspector sidebar.'
-                    },
-                    {
-                        num: 4,
-                        title: 'Publish & Preview',
-                        body: 'Publish or preview your page to see the video player rendered live.'
-                    }
-                ]
-            },
             {
                 key: 'shortcode',
                 label: 'Shortcode',
                 icon: shortcodeTabIcon,
+                video: 'https://youtube.com/watch?v=M0TCSXgK-RU',
                 steps: [
                     {
                         num: 1,
                         title: 'Create Player CPT',
                         body: 'Go to <strong>Video Player &rsaquo; Add New Player</strong> from the WordPress admin menu.',
-                        link: { url: `${adminUrl}/post-new.php?post_type=videoplayer`, label: 'Add Player' }
+                        link: { url: `${adminUrl}post-new.php?post_type=videoplayer`, label: 'Add Player' }
                     },
                     {
                         num: 2,
@@ -118,9 +83,39 @@ export const welcomeInfo = (adminUrl) => ({
                 ]
             },
             {
+                key: 'gutenberg',
+                label: 'Gutenberg',
+                icon: gutenbergTabIcon,
+                video: 'https://youtube.com/watch?v=FkS3J1Eu51M',
+                steps: [
+                    {
+                        num: 1,
+                        title: 'Add the Block',
+                        body: 'Open the Gutenberg editor, click <strong>+</strong> or type <strong>/Video Player</strong> to insert the HTML5 Video Player parent block.',
+                        link: { url: `${adminUrl}post-new.php`, label: 'Open Editor' }
+                    },
+                    {
+                        num: 2,
+                        title: 'Insert Source Block',
+                        body: 'Add a child block like <strong>Video File</strong>, <strong>YouTube</strong>, or <strong>Vimeo</strong> depending on your video format.'
+                    },
+                    {
+                        num: 3,
+                        title: 'Configure Settings',
+                        body: 'Select the block and adjust settings like Autoplay, Mute, Loop, Watermark, and Subtitles in the inspector sidebar.'
+                    },
+                    {
+                        num: 4,
+                        title: 'Publish & Preview',
+                        body: 'Publish or preview your page to see the video player rendered live.'
+                    }
+                ]
+            },
+            {
                 key: 'elementor',
                 label: 'Elementor',
                 icon: elementorTabIcon,
+                video: 'https://youtube.com/watch?v=FeagU3HH1FM',
                 steps: [
                     {
                         num: 1,
@@ -147,6 +142,15 @@ export const welcomeInfo = (adminUrl) => ({
         ]
     },
     changelogs: [
+        {
+            version: '2.12.0 - 3 August, 2026',
+            type: 'new',
+            list: [
+                '<strong>Added:</strong> Guided setup wizard shown after activation',
+                '<strong>Added:</strong> "Guided Setup" link in the dashboard to re-run it any time',
+                '<strong>Improvement:</strong> Site-wide settings changes now require the manage_options capability'
+            ]
+        },
         {
             version: '2.11.3 - 14 June, 2026',
             type: 'update',

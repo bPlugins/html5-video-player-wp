@@ -1,6 +1,6 @@
 # HTML5 Video Player – Embed and Play Videos in Custom Player
 
-A flexible, fully responsive WordPress video player plugin. Embed MP4, WebM, OGG, FLV, YouTube, and Vimeo videos via shortcode or Gutenberg block — no code required.
+A flexible, fully responsive WordPress video player plugin. Embed MP4, WebM, OGG, YouTube, and Vimeo videos via shortcode or Gutenberg block — no code required.
 
 - **Version:** 2.11.3
 - **Requires WordPress:** 6.5+
@@ -16,7 +16,7 @@ A flexible, fully responsive WordPress video player plugin. Embed MP4, WebM, OGG
 
 - Responsive HTML5 player built on [Plyr](https://plyr.io/)
 - Embed via shortcode or Gutenberg block
-- Supports MP4, WebM, OGG, FLV, YouTube, and Vimeo
+- Supports MP4, WebM, OGG, YouTube, and Vimeo
 - Autoplay, loop, mute, and preload controls
 - Customizable skins, colors, and controls
 - Elementor widget support

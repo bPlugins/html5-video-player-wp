@@ -23,6 +23,16 @@ function h5vp_uninstall_site()
 {
     global $wpdb;
 
+    // Keep everything when the Pro version is still active (per-site or
+    // network-wide): both versions share the same options, "videoplayer"
+    // posts and custom videos table.
+    if (!function_exists('is_plugin_active')) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+    if (is_plugin_active('html5-video-player-pro/html5-video-player.php')) {
+        return;
+    }
+
     // Only remove data when the user opted in via the plugin settings.
     $settings = get_option('h5vp_option', []);
     if (empty($settings['h5vp_delete_data_during_uninstall'])) {
@@ -34,6 +44,8 @@ function h5vp_uninstall_site()
         'h5vp_option',                  // General settings.
         'h5vp_quick',                   // Quick player settings.
         'h5vp_videos_database_version', // Custom table schema version.
+        'h5vp_onboarding_completed',    // Guided-setup completion marker.
+        'h5vp_onboarding_redirect',     // Guided-setup one-time redirect flag.
     ];
     foreach ($options as $option) {
         delete_option($option);
