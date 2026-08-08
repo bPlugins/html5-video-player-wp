@@ -13,11 +13,11 @@ languages/
 /test-results
 /screenshots
 /playwright
-/docs
 **/*.mp4
 **/*.webm
 **/*.mp3
 .DS_Store
+.docs
 
 # Local dev / personal files
 gulpfile.js

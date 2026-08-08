@@ -1,0 +1,3971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML5 Video Player — Documentation</title>
+  <meta name="description"
+    content="Official documentation for the HTML5 Video Player WordPress plugin — installation, player configuration, playlists, shortcodes, protection, email capture, analytics and troubleshooting.">
+  <style>
+    :root {
+      --brand: #3b4bf0;
+      --brand-dark: #2f3cc4;
+      --brand-light: #eef0fe;
+      --ink: #1a2036;
+      --ink-soft: #3d4461;
+      --muted: #6b7280;
+      --faint: #9aa1b5;
+      --line: #e6e8f0;
+      --bg: #ffffff;
+      --bg-soft: #f7f8fc;
+      --code-bg: #f4f5fa;
+      --code-ink: #2f3cc4;
+      --green: #0e9f6e;
+      --amber: #c27803;
+      --red: #e02424;
+      --radius: 10px;
+      --topbar-h: 72px;
+      --sidebar-w: 300px;
+      --toc-w: 260px;
+      --content-max: 780px;
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink-soft);
+      background: var(--bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+
+    /* ============ Top bar ============ */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      height: var(--topbar-h);
+      background: var(--brand);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 2rem;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      color: #fff;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .topbar-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #fff;
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .topbar-logo svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .topbar-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: .01em;
+      white-space: nowrap;
+    }
+
+    .topbar-name .thin {
+      font-weight: 400;
+      opacity: .85;
+    }
+
+    .topbar-sep {
+      width: 1px;
+      height: 26px;
+      background: rgba(255, 255, 255, .35);
+    }
+
+    .topbar-docs {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .topbar-search {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 46px;
+      border: none;
+      border-radius: 8px;
+      padding: 0 3rem 0 2.7rem;
+      font-size: .95rem;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: var(--faint);
+    }
+
+    .search-box .s-icon {
+      position: absolute;
+      left: .95rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 17px;
+      height: 17px;
+      color: var(--faint);
+      pointer-events: none;
+    }
+
+    .search-box kbd {
+      position: absolute;
+      right: .8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: .1rem .55rem;
+      font-size: .8rem;
+      color: var(--faint);
+      font-family: inherit;
+      background: #fff;
+    }
+
+    .search-results {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 16px 40px rgba(20, 24, 60, .14);
+      max-height: 360px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .search-results.open {
+      display: block;
+    }
+
+    .search-results a {
+      display: block;
+      padding: .65rem 1rem;
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .search-results a:last-child {
+      border-bottom: none;
+    }
+
+    .search-results a:hover,
+    .search-results a.sel {
+      background: var(--bg-soft);
+    }
+
+    .search-results .r-title {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .search-results .r-crumb {
+      font-size: .76rem;
+      color: var(--faint);
+    }
+
+    .search-results .empty {
+      padding: .9rem 1rem;
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    .topbar-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .topbar-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: .95rem;
+      font-weight: 500;
+      opacity: .95;
+      white-space: nowrap;
+    }
+
+    .topbar-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      padding: .3rem;
+    }
+
+    .menu-btn svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* ============ Layout ============ */
+    .layout {
+      display: flex;
+      padding-top: var(--topbar-h);
+      min-height: 100vh;
+    }
+
+    /* ============ Sidebar ============ */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      border-right: 1px solid var(--line);
+      padding: 2rem 0 3rem;
+      position: sticky;
+      top: var(--topbar-h);
+      height: calc(100vh - var(--topbar-h));
+      overflow-y: auto;
+      background: var(--bg);
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: 3px;
+    }
+
+    .nav-group {
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav-group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: .8rem 1.6rem .8rem 2rem;
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--ink);
+      font-family: inherit;
+      text-align: left;
+    }
+
+    .nav-group-head:hover {
+      color: var(--brand);
+    }
+
+    .nav-group-head .chev {
+      width: 14px;
+      height: 14px;
+      color: var(--faint);
+      transition: transform .2s ease;
+      flex-shrink: 0;
+    }
+
+    .nav-group.open .nav-group-head .chev {
+      transform: rotate(90deg);
+    }
+
+    .nav-group-items {
+      display: none;
+      padding: 0 0 .6rem;
+    }
+
+    .nav-group.open .nav-group-items {
+      display: block;
+    }
+
+    .nav-group-items a {
+      display: block;
+      padding: .38rem 1.6rem .38rem 2.7rem;
+      font-size: .89rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+    }
+
+    .nav-group-items a:hover {
+      color: var(--brand);
+    }
+
+    .nav-group-items a.active {
+      color: var(--brand);
+      font-weight: 600;
+      border-left-color: var(--brand);
+      background: linear-gradient(90deg, var(--brand-light), transparent 85%);
+    }
+
+    /* ============ Main ============ */
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      justify-content: center;
+      padding: 2.4rem 3rem 5rem;
+      gap: 3rem;
+    }
+
+    .content {
+      width: 100%;
+      max-width: var(--content-max);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .55rem;
+      font-size: .88rem;
+      color: var(--muted);
+      margin-bottom: 1.6rem;
+    }
+
+    .breadcrumb svg {
+      width: 15px;
+      height: 15px;
+      color: var(--faint);
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--brand);
+    }
+
+    .breadcrumb .bc-sep {
+      color: var(--faint);
+    }
+
+    .breadcrumb .bc-current {
+      color: var(--ink-soft);
+    }
+
+    .doc-article {
+      display: none;
+    }
+
+    .doc-article.active {
+      display: block;
+      animation: fadein .18s ease;
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .doc-article h1 {
+      font-size: 2.15rem;
+      line-height: 1.25;
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: -.015em;
+      margin-bottom: 1.1rem;
+    }
+
+    .doc-article .lead {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    .doc-article h2 {
+      font-size: 1.45rem;
+      color: var(--ink);
+      font-weight: 700;
+      margin: 2.6rem 0 .9rem;
+      letter-spacing: -.01em;
+      scroll-margin-top: calc(var(--topbar-h) + 24px);
+    }
+
+    .doc-article h3 {
+      font-size: 1.08rem;
+      color: var(--ink);
+      font-weight: 650;
+      margin: 1.8rem 0 .6rem;
+      scroll-margin-top: calc(var(--topbar-h) + 24px);
+    }
+
+    .doc-article p {
+      margin-bottom: 1rem;
+    }
+
+    .doc-article ul,
+    .doc-article ol {
+      margin: 0 0 1.1rem 1.4rem;
+    }
+
+    .doc-article li {
+      margin-bottom: .45rem;
+    }
+
+    .doc-article li::marker {
+      color: var(--brand);
+    }
+
+    .doc-article a {
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    .doc-article a:hover {
+      text-decoration: underline;
+    }
+
+    .doc-article strong {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .doc-article code {
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: .1rem .4rem;
+      font-size: .85em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .codeblock {
+      position: relative;
+      margin: 0 0 1.2rem;
+    }
+
+    .codeblock pre {
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      font-size: .87rem;
+      line-height: 1.6;
+    }
+
+    .codeblock pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--code-ink);
+    }
+
+    .codeblock .copy-btn {
+      position: absolute;
+      top: .55rem;
+      right: .55rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: .74rem;
+      font-weight: 600;
+      color: var(--muted);
+      padding: .25rem .6rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .codeblock .copy-btn:hover {
+      color: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .callout {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--brand);
+      background: var(--bg-soft);
+      border-radius: 8px;
+      padding: .9rem 1.1rem;
+      margin: 0 0 1.2rem;
+      font-size: .93rem;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .callout .co-label {
+      font-weight: 700;
+      color: var(--ink);
+      display: block;
+      margin-bottom: .15rem;
+    }
+
+    .callout.tip {
+      border-left-color: var(--green);
+    }
+
+    .callout.warn {
+      border-left-color: var(--amber);
+    }
+
+    .callout.danger {
+      border-left-color: var(--red);
+    }
+
+    table.doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 1.3rem;
+      font-size: .89rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-bottom: 1.3rem;
+    }
+
+    .table-wrap table.doc-table {
+      margin-bottom: 0;
+    }
+
+    table.doc-table th {
+      text-align: left;
+      background: var(--bg-soft);
+      color: var(--ink);
+      font-weight: 650;
+      padding: .6rem .8rem;
+      border: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    table.doc-table td {
+      padding: .6rem .8rem;
+      border: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    table.doc-table td code {
+      white-space: nowrap;
+    }
+
+    .badge-pro {
+      display: inline-block;
+      vertical-align: 2px;
+      background: linear-gradient(90deg, #f59e0b, #f97316);
+      color: #fff;
+      font-size: .62rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      padding: .12rem .45rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      margin-left: .45rem;
+    }
+
+    .switch-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .9rem;
+      margin: 0 0 1.4rem;
+      padding: .85rem 1.1rem;
+      background: var(--brand-light);
+      border: 1px solid #ccd2fb;
+      border-radius: 10px;
+    }
+
+    .switch-label {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .editor-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid #ccd2fb;
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .editor-switch button {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      padding: .45rem 1.15rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease;
+    }
+
+    .editor-switch button svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    .editor-switch button:hover:not(.on) {
+      background: var(--brand-light);
+      color: var(--brand-dark);
+    }
+
+    .editor-switch button.on {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(59, 75, 240, .35);
+    }
+
+    .editor-switch button:focus-visible {
+      outline: 2px solid var(--brand-dark);
+      outline-offset: 2px;
+    }
+
+    body.editor-gutenberg .only-classic,
+    body.editor-gutenberg .only-elementor,
+    body.editor-gutenberg .hide-gutenberg,
+    body.editor-classic .only-gutenberg,
+    body.editor-classic .only-elementor,
+    body.editor-classic .hide-classic,
+    body.editor-elementor .only-gutenberg,
+    body.editor-elementor .only-classic,
+    body.editor-elementor .hide-elementor {
+      display: none !important;
+    }
+
+    .section-hidden {
+      display: none !important;
+    }
+
+    .no-support {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--amber);
+      background: var(--bg-soft);
+      border-radius: 8px;
+      padding: .9rem 1.1rem;
+      margin: 0 0 1.2rem;
+      font-size: .93rem;
+    }
+
+    .no-support .ns-label {
+      font-weight: 700;
+      color: var(--ink);
+      display: block;
+      margin-bottom: .15rem;
+    }
+
+    .no-support p:last-child {
+      margin-bottom: 0;
+    }
+
+    .media-slot {
+      margin: 1.4rem 0 1.8rem;
+    }
+
+    .media-slot img,
+    .media-slot video {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 32px rgba(20, 24, 60, .10);
+    }
+
+    .media-slot .yt-wrap {
+      position: relative;
+      padding-top: 56.25%;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 32px rgba(20, 24, 60, .10);
+      background: #10132b;
+    }
+
+    .media-slot .yt-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .media-slot figcaption {
+      font-size: .82rem;
+      color: var(--faint);
+      text-align: center;
+      margin-top: .6rem;
+    }
+
+    /* ===== Image lightbox ===== */
+    .media-slot img {
+      cursor: zoom-in;
+      transition: box-shadow .18s ease;
+    }
+
+    .media-slot img:hover {
+      box-shadow: 0 14px 38px rgba(20, 24, 60, .22);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 3.2rem 4.5rem 2rem;
+      background: rgba(12, 15, 35, .88);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 100%;
+      max-height: calc(100vh - 8.5rem);
+      object-fit: contain;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .5);
+    }
+
+    .lb-caption {
+      color: #eef0fe;
+      font-size: .92rem;
+      text-align: center;
+      max-width: 60ch;
+      line-height: 1.5;
+    }
+
+    .lb-count {
+      color: #9aa1c8;
+      font-size: .8rem;
+    }
+
+    .lightbox button {
+      position: absolute;
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .22);
+      color: #fff;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .15s ease;
+    }
+
+    .lightbox button:hover {
+      background: rgba(255, 255, 255, .26);
+    }
+
+    .lightbox button:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .lightbox button svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .lb-close {
+      top: 1.1rem;
+      right: 1.4rem;
+    }
+
+    .lb-prev {
+      left: 1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lb-next {
+      right: 1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lightbox.single .lb-prev,
+    .lightbox.single .lb-next {
+      display: none;
+    }
+
+    body.lb-open {
+      overflow: hidden;
+    }
+
+    @media (max-width: 640px) {
+      .lightbox {
+        padding: 3.2rem 1rem 1.5rem;
+      }
+
+      .lb-prev {
+        left: .4rem;
+      }
+
+      .lb-next {
+        right: .4rem;
+      }
+    }
+
+    .media-ph {
+      border: 2px dashed #c7cbe3;
+      border-radius: 12px;
+      background: var(--bg-soft);
+      padding: 2.1rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .45rem;
+      text-align: center;
+    }
+
+    .media-ph .ph-icon {
+      width: 36px;
+      height: 36px;
+      color: #aab0d0;
+    }
+
+    .media-ph .ph-label {
+      font-weight: 650;
+      color: var(--ink-soft);
+      font-size: .92rem;
+    }
+
+    .media-ph .ph-path {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .76rem;
+      color: var(--muted);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: .18rem .6rem;
+    }
+
+    .media-ph .ph-hint {
+      font-size: .75rem;
+      color: var(--faint);
+    }
+
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      margin: 0 0 1.3rem;
+    }
+
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 0 0 1.1rem 2.7rem;
+      margin: 0;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: .1rem;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+      font-size: .82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .steps li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 12.5px;
+      top: 30px;
+      bottom: 2px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .article-footer {
+      margin-top: 3.2rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .pager-link {
+      display: flex;
+      flex-direction: column;
+      gap: .15rem;
+      text-decoration: none;
+      max-width: 46%;
+    }
+
+    .pager-link .pl-dir {
+      font-size: .78rem;
+      color: var(--faint);
+    }
+
+    .pager-link .pl-title {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--brand);
+    }
+
+    .pager-link:hover .pl-title {
+      text-decoration: underline;
+    }
+
+    .pager-link.next {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    /* ============ TOC ============ */
+    .toc {
+      width: var(--toc-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: calc(var(--topbar-h) + 24px);
+      align-self: flex-start;
+      max-height: calc(100vh - var(--topbar-h) - 48px);
+      overflow-y: auto;
+      padding-left: .4rem;
+    }
+
+    .toc-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: .8rem;
+    }
+
+    .toc ul {
+      list-style: none;
+    }
+
+    .toc li {
+      margin-bottom: .55rem;
+    }
+
+    .toc a {
+      font-size: .88rem;
+      color: var(--muted);
+      text-decoration: none;
+      display: block;
+      line-height: 1.45;
+    }
+
+    .toc a:hover {
+      color: var(--brand);
+    }
+
+    .toc a.active {
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: var(--topbar-h) 0 0 0;
+      background: rgba(15, 18, 40, .45);
+      z-index: 140;
+    }
+
+    /* ============ Responsive ============ */
+    @media (max-width: 1280px) {
+      .toc {
+        display: none;
+      }
+
+      .topbar-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .menu-btn {
+        display: block;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: var(--topbar-h);
+        bottom: 0;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform .22s ease;
+        box-shadow: 8px 0 28px rgba(20, 24, 60, .12);
+        height: auto;
+      }
+
+      body.nav-open .sidebar {
+        transform: none;
+      }
+
+      body.nav-open .overlay {
+        display: block;
+      }
+
+      .main {
+        padding: 1.8rem 1.4rem 4rem;
+      }
+
+      .topbar {
+        padding: 0 1.1rem;
+        gap: 1rem;
+      }
+
+      .topbar-sep,
+      .topbar-docs {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .doc-article h1 {
+        font-size: 1.65rem;
+      }
+
+      .search-box kbd {
+        display: none;
+      }
+
+      .topbar-name .thin {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="editor-gutenberg">
+
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 6h18M3 12h18M3 18h18" />
+      </svg>
+    </button>
+    <a class="topbar-brand" href="#introduction">
+      <span class="topbar-logo">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l11.2-6.86a1.03 1.03 0 0 0 0-1.76L9.56 4.26A1.03 1.03 0 0 0 8 5.14z" />
+        </svg>
+      </span>
+      <span class="topbar-name">HTML5 <span class="thin">Video Player</span></span>
+    </a>
+    <span class="topbar-sep"></span>
+    <span class="topbar-docs">Docs</span>
+
+    <div class="topbar-search">
+      <div class="search-box">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
+        <kbd>/</kbd>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <nav class="topbar-links">
+      <a href="https://bplugins.com/products/html5-video-player/" target="_blank" rel="noopener">What&rsquo;s New</a>
+      <a href="https://bplugins.com/support/" target="_blank" rel="noopener">Contact &amp; Support</a>
+      <a href="#shortcodes" data-nav>Developer Docs</a>
+    </nav>
+  </header>
+
+  <div class="overlay" id="overlay"></div>
+
+  <div class="layout">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar" id="sidebar">
+      <nav id="sideNav">
+
+        <div class="nav-group" data-group="Getting Started">
+          <button class="nav-group-head">Getting Started
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#introduction" data-nav>Introduction</a>
+            <a href="#installation" data-nav>Installation &amp; Activation</a>
+            <a href="#quick-start" data-nav>Quick Start: Your First Player</a>
+          </div>
+        </div>
+
+        <div class="nav-group" data-group="Creating Players">
+          <button class="nav-group-head">Creating Players
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#choosing-editor" data-nav>Choosing Your Editor</a>
+            <a href="#classic-editor" data-nav>Classic Metabox Editor</a>
+            <a href="#gutenberg-editor" data-nav>Gutenberg Editor</a>
+          </div>
+        </div>
+
+        <div class="nav-group" data-group="Player Setup">
+          <button class="nav-group-head">Player Setup
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#video-sources" data-nav>Video Sources</a>
+            <a href="#quality-subtitles" data-nav>Quality Switcher &amp; Subtitles</a>
+            <a href="#skins-controls" data-nav>Skins &amp; Controls</a>
+            <a href="#playback-settings" data-nav>Playback Settings</a>
+          </div>
+        </div>
+
+        <div class="nav-group" data-group="Features">
+          <button class="nav-group-head">Features
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#popup-player" data-nav>Popup Player</a>
+            <a href="#password-protection" data-nav>Password Protection &amp; Roles</a>
+            <a href="#watermark" data-nav>Watermark</a>
+            <a href="#end-screen" data-nav>End Screen</a>
+            <a href="#branding-overlay" data-nav>Branding &amp; Overlay</a>
+            <a href="#chapters-markers" data-nav>Chapters &amp; Markers</a>
+            <a href="#video-seo" data-nav>Video SEO</a>
+            <a href="#email-capture" data-nav>Email Capture</a>
+          </div>
+        </div>
+
+        <div class="nav-group" data-group="Playlists">
+          <button class="nav-group-head">Playlists
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#playlists" data-nav>Creating Playlists</a>
+          </div>
+        </div>
+
+        <div class="nav-group" data-group="Usage">
+          <button class="nav-group-head">Usage
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#shortcodes" data-nav>Shortcode Reference</a>
+            <a href="#blocks-builders" data-nav>Blocks &amp; Page Builders</a>
+            <a href="#quick-player" data-nav>Quick Player</a>
+            <a href="#analytics" data-nav>Analytics</a>
+            <a href="#global-settings" data-nav>Global Settings &amp; Extensions</a>
+          </div>
+        </div>
+
+        <div class="nav-group" data-group="Troubleshooting">
+          <button class="nav-group-head">Troubleshooting
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#troubleshooting" data-nav>Common Issues</a>
+            <a href="#faq" data-nav>FAQ</a>
+          </div>
+        </div>
+
+      </nav>
+    </aside>
+
+    <!-- ===================== MAIN ===================== -->
+    <main class="main">
+      <div class="content">
+
+        <nav class="breadcrumb" id="breadcrumb">
+          <a href="#introduction" data-nav aria-label="Home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            </svg>
+          </a>
+          <span class="bc-sep">/</span>
+          <a href="#introduction" data-nav>Docs</a>
+          <span class="bc-sep">/</span>
+          <span id="bcGroup"></span>
+          <span class="bc-sep">/</span>
+          <span class="bc-current" id="bcTitle"></span>
+        </nav>
+
+        <div id="articles">
+          <!-- ============ GETTING STARTED ============ -->
+
+          <article class="doc-article" id="introduction" data-group="Getting Started" data-title="Introduction">
+            <h1>HTML5 Video Player — Introduction</h1>
+            <p class="lead">HTML5 Video Player is a flexible, fully responsive video player plugin for WordPress,
+              trusted by 30,000+ websites. It lets you embed self-hosted MP4, WebM and OGG files — as well as YouTube,
+              Vimeo and Amazon&nbsp;S3 videos — anywhere on your site using shortcodes, Gutenberg blocks or Elementor,
+              with no code required.</p>
+
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/GlETIGgVqHY?list=PLD33HvWKDDNw"
+              data-caption="Video walkthrough — building a branded player from scratch"></figure>
+
+            <h2 id="intro-what-you-get">What You Get</h2>
+            <p>Every player you create is an independent, reusable item. You configure it once in the WordPress
+              dashboard, then place it on any post, page or widget with its shortcode or block. The player adapts
+              seamlessly to all devices and screen sizes and works across all major browsers.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/fully-customized-HTML5-Video-Player.png"
+              data-caption="A fully customized player on the front end"></figure>
+            <ul>
+              <li><strong>Multiple video sources</strong> — media library, CDN URL, YouTube, Vimeo, and AWS&nbsp;S3.
+              </li>
+              <li><strong>Full control customization</strong> — show or hide every button on the control bar.</li>
+              <li><strong>Skins &amp; brand colors</strong> — seven skins plus color options to match your site. <span
+                  class="badge-pro">Pro</span></li>
+              <li><strong>Quality switcher &amp; subtitles</strong> — YouTube-style resolution switching and
+                multilingual captions. <span class="badge-pro">Pro</span></li>
+              <li><strong>Protection</strong> — password protection, role-based access and watermarking. <span
+                  class="badge-pro">Pro</span></li>
+              <li><strong>Monetization &amp; marketing</strong> — Google VAST ads, email capture with CRM integrations,
+                end screens with calls to action. <span class="badge-pro">Pro</span></li>
+              <li><strong>Playlists</strong> — modern playlist layouts with search, keyboard navigation and
+                autoplay-next. <span class="badge-pro">Pro</span></li>
+              <li><strong>SEO ready</strong> — schema markup so Google can index your videos.</li>
+            </ul>
+
+            <h2 id="intro-requirements">Requirements</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Requirement</th>
+                  <th>Free version</th>
+                  <th>Pro version</th>
+                </tr>
+                <tr>
+                  <td>WordPress</td>
+                  <td>6.5 or higher</td>
+                  <td>6.5 or higher</td>
+                </tr>
+                <tr>
+                  <td>PHP</td>
+                  <td>7.1 or higher</td>
+                  <td>8.1 or higher</td>
+                </tr>
+                <tr>
+                  <td>Browsers</td>
+                  <td colspan="2">Chrome, Firefox, Safari, Edge — plus full iOS and Android support</td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="intro-how-docs-organized">How These Docs Are Organized</h2>
+            <ul>
+              <li><a href="#installation" data-nav><strong>Getting Started</strong></a> — install the plugin and publish
+                your first player in minutes.</li>
+              <li><a href="#choosing-editor" data-nav><strong>Creating Players</strong></a> — the two ways to build a
+                player and its shortcode: the Classic metabox editor and the Gutenberg editor.</li>
+              <li><a href="#video-sources" data-nav><strong>Player Setup</strong></a> — sources, quality, subtitles,
+                skins, controls and playback behavior.</li>
+              <li><a href="#popup-player" data-nav><strong>Features</strong></a> — popup, protection, watermark, end
+                screen, branding, chapters, SEO and email capture.</li>
+              <li><a href="#playlists" data-nav><strong>Playlists</strong></a> — build multi-video playlists in four
+                layouts.</li>
+              <li><a href="#shortcodes" data-nav><strong>Usage</strong></a> — shortcode reference, blocks, Quick Player,
+                analytics and global settings.</li>
+              <li><a href="#troubleshooting" data-nav><strong>Troubleshooting</strong></a> — solutions to common issues
+                and frequently asked questions.</li>
+            </ul>
+            <div class="callout tip"><span class="co-label">Tip</span>
+              <p>Press <code>/</code> anywhere in these docs to jump to the search box.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="installation" data-group="Getting Started"
+            data-title="Installation &amp; Activation">
+            <h1>Installation &amp; Activation</h1>
+            <p class="lead">HTML5 Video Player installs like any standard WordPress plugin. Choose whichever method
+              suits you.</p>
+
+            <h2 id="install-dashboard">Install from the WordPress Dashboard</h2>
+            <ol class="steps">
+              <li>In your WordPress admin, go to <strong>Plugins &rarr; Add New Plugin</strong>.</li>
+              <li>Search for <strong>&ldquo;HTML5 Video Player&rdquo;</strong> by bPlugins.</li>
+              <li>Click <strong>Install Now</strong>, then <strong>Activate</strong>.</li>
+            </ol>
+
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/install-plugin-search.png"
+              data-caption="Search results for HTML5 Video Player in the plugin directory"></figure>
+
+            <h2 id="install-upload">Install by Uploading a ZIP</h2>
+            <ol class="steps">
+              <li>Download the plugin ZIP file (Pro users download it from their <a href="https://bplugins.com"
+                  target="_blank" rel="noopener">bPlugins account</a>).</li>
+              <li>Go to <strong>Plugins &rarr; Add New Plugin &rarr; Upload Plugin</strong> and choose the ZIP file.
+              </li>
+              <li>Click <strong>Install Now</strong>, then <strong>Activate</strong>.</li>
+            </ol>
+            <p>Alternatively, upload the extracted plugin folder to <code>/wp-content/plugins/</code> over FTP and
+              activate it from the <strong>Plugins</strong> menu.</p>
+
+            <h2 id="install-after">After Activation</h2>
+            <p>A new <strong>Html5 Video Player</strong> menu appears in the WordPress admin sidebar with the following
+              items:</p>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Menu item</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><strong>All Players</strong></td>
+                  <td>Lists every video player you have created, with its shortcode.</td>
+                </tr>
+                <tr>
+                  <td><strong>Add New</strong></td>
+                  <td>Creates a new player — see <a href="#quick-start" data-nav>Quick Start</a>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Playlists</strong></td>
+                  <td>Builds multi-video playlists — see <a href="#playlists" data-nav>Creating Playlists</a>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Emails</strong></td>
+                  <td>Shows email addresses collected by <a href="#email-capture" data-nav>Email Capture</a>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Quick Player</strong></td>
+                  <td>Default settings for the <code>[video_player]</code> shortcode — see <a href="#quick-player"
+                      data-nav>Quick Player</a>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Settings</strong></td>
+                  <td>Global plugin settings, organized into Player, Shortcode &amp; Tools, and Marketing groups.</td>
+                </tr>
+                <tr>
+                  <td><strong>Analytics</strong></td>
+                  <td>Playback statistics for your videos — see <a href="#analytics" data-nav>Analytics</a>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Demo &amp; Help</strong></td>
+                  <td>Live demos, documentation links and support.</td>
+                </tr>
+              </table>
+            </div>
+
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/admin-menu.png"
+              data-caption="The Html5 Video Player menu in the WordPress admin sidebar"></figure>
+
+            <h2 id="install-license">Activating a Pro License</h2>
+            <p>After installing the Pro version, you&rsquo;ll be asked to activate your license key. Activation unlocks
+              premium features and enables automatic updates. You can manage the license later from the
+              <strong>Account</strong> submenu.
+            </p>
+            <div class="callout"><span class="co-label">Note</span>
+              <p>The Pro version can run alongside an existing Free installation — your players are migrated
+                automatically when you upgrade.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="quick-start" data-group="Getting Started"
+            data-title="Quick Start: Your First Player">
+            <h1>Quick Start: Your First Player</h1>
+            <p class="lead">You can go from a video file to a published, fully working player in under five minutes.
+              Here&rsquo;s the complete flow.</p>
+
+            <h2 id="qs-editor">Step 1 — Pick Your Editor (First Run Only)</h2>
+            <p>Right after activation the plugin asks how you want to build players — the <strong>Classic Metabox
+                Editor</strong> (a tabbed settings panel) or the <strong>Gutenberg Editor</strong> (block-based, with
+              live preview). Both produce the same shortcode; pick whichever feels familiar. See <a
+                href="#choosing-editor" data-nav>Choosing Your Editor</a> for the full comparison — you can change this
+              anytime in settings.</p>
+
+            <h2 id="qs-create">Step 2 — Create the Player</h2>
+            <ol class="steps">
+              <li>Go to <strong>Html5 Video Player &rarr; Add New</strong> in your WordPress dashboard.</li>
+              <li>Give the player a name at the top — for example <em>&ldquo;View From A Blue Moon&rdquo;</em>. The name
+                is only for you; visitors never see it.</li>
+              <li>Choose a <strong>Video Source</strong> — Library/CDN, YouTube, Vimeo, or AWS&nbsp;S3 — and paste your
+                video URL, or pick a file from the media library. You&rsquo;ll find this in the <strong>Media
+                  tab</strong> (<a href="#classic-editor" data-nav>Classic editor</a>) or the <strong>Media
+                  panel</strong> of the block sidebar (<a href="#gutenberg-editor" data-nav>Gutenberg editor</a>).</li>
+              <li>Optionally set a <strong>Video Thumbnail</strong> (the poster image shown before playback starts).
+              </li>
+              <li>Click <strong>Publish / Update</strong> to save.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quick-start.png"
+              data-caption="The Add New player screen with a video source configured"></figure>
+
+            <h2 id="qs-shortcode">Step 3 — Copy the Shortcode</h2>
+            <p>In the Classic editor the shortcode bar sits right below the player name — click it to copy. In the
+              Gutenberg editor, copy it from the <strong>All Players</strong> list:</p>
+            <div class="codeblock">
+              <pre><code>[html5_video id='1453']</code></pre>
+            </div>
+            <p>The <code>id</code> points at this specific player, so every setting you change later automatically
+              follows the shortcode wherever it is used.</p>
+
+            <h2 id="qs-embed">Step 4 — Place It on a Page</h2>
+            <ol class="steps">
+              <li>Edit any post or page in the block editor.</li>
+              <li>Add a <strong>Shortcode</strong> block and paste the shortcode in — or use the dedicated <strong>HTML5
+                  Video Player</strong> Gutenberg block and pick your player from a dropdown.</li>
+              <li>Publish the page. Your video is live.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quick-start-page.png"
+              data-caption="The published player on the front end"></figure>
+            <p>To print a player from a theme template, use PHP:</p>
+            <div class="codeblock">
+              <pre><code>&lt;?php echo do_shortcode("[html5_video id='1453']"); ?&gt;</code></pre>
+            </div>
+
+            <h2 id="qs-next">Where to Go Next</h2>
+            <ul>
+              <li>Change the player&rsquo;s look in <a href="#skins-controls" data-nav>Skins &amp; Controls</a>.</li>
+              <li>Add resolutions and captions in <a href="#quality-subtitles" data-nav>Quality Switcher &amp;
+                  Subtitles</a>.</li>
+              <li>Fine-tune autoplay, loop and sticky behavior in <a href="#playback-settings" data-nav>Playback
+                  Settings</a>.</li>
+              <li>Restrict who can watch in <a href="#password-protection" data-nav>Password Protection &amp; Roles</a>.
+              </li>
+            </ul>
+            <div class="callout tip"><span class="co-label">Tip</span>
+              <p>Each player&rsquo;s configuration is scoped to that one player, so you can build completely different
+                setups side by side — a locked course video here, an autoplaying background loop there.</p>
+            </div>
+          </article>
+          <!-- ARTICLES:GETTING-STARTED-END -->
+
+          <!-- ============ CREATING PLAYERS ============ -->
+
+          <article class="doc-article" id="choosing-editor" data-group="Creating Players"
+            data-title="Choosing Your Editor">
+            <h1>Choosing Your Editor</h1>
+            <p class="lead">There are <strong>two ways to create a player and its shortcode</strong>: the
+              <strong>Classic Metabox Editor</strong> — a tabbed settings panel — and the <strong>Gutenberg
+                Editor</strong> — visual, block-based editing with a live preview. Both produce exactly the same
+              <code>[html5_video id='…']</code> shortcode; the only difference is how you configure the player.
+            </p>
+
+            <h2 id="ce-first-run">The First-Run Chooser</h2>
+            <p>Right after activation the plugin shows an <strong>&ldquo;HTML5 Video Player is ready&rdquo;</strong>
+              screen asking how you want to build your players:</p>
+            <ol class="steps">
+              <li>Review the two cards — <strong>Classic Editor</strong> and <strong>Gutenberg Editor</strong>. Each has
+                an <strong>Eye/Preview</strong> button that shows exactly how the editing experience will look.</li>
+              <li>Select the one you prefer (Gutenberg is pre-selected by default).</li>
+              <li>Click <strong>Continue</strong>. You&rsquo;re taken to the plugin dashboard, and every new player now
+                opens in your chosen editor.</li>
+            </ol>
+            <figure class="media-slot" data-media="image" data-src="img/editor-chooser.png"
+              data-caption="The first-run editor chooser"></figure>
+            <div class="callout"><span class="co-label">Note</span>
+              <p>This is a preference, not a commitment — you can change it anytime in the plugin settings (see below).
+              </p>
+            </div>
+
+            <h2 id="ce-compare">Classic vs. Gutenberg at a Glance</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th></th>
+                  <th><a href="#classic-editor" data-nav>Classic Metabox Editor</a></th>
+                  <th><a href="#gutenberg-editor" data-nav>Gutenberg Editor</a></th>
+                </tr>
+                <tr>
+                  <td><strong>Interface</strong></td>
+                  <td>A tabbed &ldquo;Configure Your Video Player&rdquo; settings panel</td>
+                  <td>The WordPress block editor with the player as a block</td>
+                </tr>
+                <tr>
+                  <td><strong>Configuration</strong></td>
+                  <td>11 tabs down the left side (Media, Settings, Popup, &hellip;)</td>
+                  <td>Inspector panels in the block sidebar</td>
+                </tr>
+                <tr>
+                  <td><strong>Preview</strong></td>
+                  <td>Configure, save, then view on the front end</td>
+                  <td>Live preview right on the editor canvas</td>
+                </tr>
+                <tr>
+                  <td><strong>Feels familiar if</strong></td>
+                  <td>You use the Classic Editor / settings-page style workflows</td>
+                  <td>You build pages with Gutenberg blocks</td>
+                </tr>
+                <tr>
+                  <td><strong>Resulting shortcode</strong></td>
+                  <td colspan="2" style="text-align:center"><code>[html5_video id='…']</code> — identical either way
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="ce-switch">Switching Editors Later</h2>
+            <p>Go to <strong>Html5 Video Player &rarr; Settings &rarr; Shortcode &amp; Tools &rarr;
+                Shortcode/Player</strong> and toggle <strong>Enable Gutenberg Shortcode Generator</strong>:</p>
+            <ul>
+              <li><strong>On</strong> — new players open in the Gutenberg editor.</li>
+              <li><strong>Off</strong> — new players open in the Classic metabox editor.</li>
+            </ul>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/enable-gutenberg-shortcode-generator-html5-video-player.png"
+              data-caption="The Enable Gutenberg Shortcode Generator toggle in Settings"></figure>
+            <div class="callout warn"><span class="co-label">Players remember their editor</span>
+              <p>Each player keeps opening in the editor it was <em>created</em> with, even if you switch the preference
+                later. A player built in Gutenberg always reopens in Gutenberg; a player built in the Classic metabox
+                always reopens there. The setting only affects players you create from that point on.</p>
+            </div>
+
+            <h2 id="ce-same-result">Same Shortcode, Same Features</h2>
+            <p>Every capability documented in <a href="#video-sources" data-nav>Player Setup</a> and <a
+                href="#popup-player" data-nav>Features</a> is available in both editors — the Classic editor presents
+              them as tabs, the Gutenberg editor as inspector panels. Wherever these docs mention a tab (for example
+              &ldquo;the Media tab&rdquo;), the same options live in the matching Gutenberg panel.</p>
+          </article>
+
+          <article class="doc-article" id="classic-editor" data-group="Creating Players"
+            data-title="Classic Metabox Editor">
+            <h1>Classic Metabox Editor</h1>
+            <p class="lead">The Classic editor presents every player option in a single tabbed panel — <strong>Configure
+                Your Video Player</strong> — on the player edit screen.</p>
+
+            <h2 id="cl-create">Creating a Player</h2>
+            <ol class="steps">
+              <li>Make sure the Classic editor is your preference (see <a href="#choosing-editor" data-nav>Choosing Your
+                  Editor</a>), then go to <strong>Html5 Video Player &rarr; Add New</strong>.</li>
+              <li>Give the player a name at the top — it&rsquo;s only for you; visitors never see it.</li>
+              <li>Right below the title sits the player&rsquo;s <strong>shortcode bar</strong>. Click it any time to
+                copy <code>[html5_video id='…']</code> to your clipboard — a &ldquo;Copied!&rdquo; confirmation appears.
+              </li>
+              <li>Work through the tabs of the <strong>Configure Your Video Player</strong> panel (see below). At
+                minimum, set a video source in the <strong>Media</strong> tab.</li>
+              <li>Click <strong>Publish / Update</strong>. Paste the shortcode into any post, page or widget.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/classic-editor-overview.png"
+              data-caption="The Classic edit screen — title, shortcode bar and the Configure Your Video Player panel">
+            </figure>
+
+            <h2 id="cl-tabs">The Tab Rail</h2>
+            <p>Eleven tabs run down the left side of the panel. Each one is documented in detail on its own page:</p>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Tab</th>
+                  <th>What it configures</th>
+                  <th>Documentation</th>
+                </tr>
+                <tr>
+                  <td><strong>Media</strong></td>
+                  <td>Video source, poster thumbnail, download URL, qualities, subtitles</td>
+                  <td><a href="#video-sources" data-nav>Video Sources</a>, <a href="#quality-subtitles" data-nav>Quality
+                      &amp; Subtitles</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Settings</strong></td>
+                  <td>Skin, control buttons, playback behavior, preload, VAST</td>
+                  <td><a href="#skins-controls" data-nav>Skins &amp; Controls</a>, <a href="#playback-settings"
+                      data-nav>Playback Settings</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Popup</strong></td>
+                  <td>Open the video in a lightbox</td>
+                  <td><a href="#popup-player" data-nav>Popup Player</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Protected</strong></td>
+                  <td>Password and role-based access</td>
+                  <td><a href="#password-protection" data-nav>Password Protection &amp; Roles</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Watermark</strong></td>
+                  <td>Text stamped over the video</td>
+                  <td><a href="#watermark" data-nav>Watermark</a></td>
+                </tr>
+                <tr>
+                  <td><strong>End Screen</strong></td>
+                  <td>Message and call-to-action after playback</td>
+                  <td><a href="#end-screen" data-nav>End Screen</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Branding/Overlay</strong></td>
+                  <td>Logo or text overlay on the player</td>
+                  <td><a href="#branding-overlay" data-nav>Branding &amp; Overlay</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Chapters/Markers</strong></td>
+                  <td>Named sections viewers can jump to</td>
+                  <td><a href="#chapters-markers" data-nav>Chapters &amp; Markers</a></td>
+                </tr>
+                <tr>
+                  <td><strong>SEO (Google)</strong></td>
+                  <td>Schema markup for video search results</td>
+                  <td><a href="#video-seo" data-nav>Video SEO</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Additional</strong></td>
+                  <td>Extra CSS ID/class for custom styling</td>
+                  <td>&mdash;</td>
+                </tr>
+                <tr>
+                  <td><strong>Email Capture</strong></td>
+                  <td>Gate the video behind an email form</td>
+                  <td><a href="#email-capture" data-nav>Email Capture</a></td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="cl-shortcode">Finding the Shortcode Again</h2>
+            <p>Besides the shortcode bar on the edit screen, <strong>Html5 Video Player &rarr; All Players</strong>
+              lists every player with its shortcode in a dedicated column — including the older deprecated form
+              <code>[video id='…']</code> for sites still using it.
+            </p>
+
+            <div class="callout tip"><span class="co-label">Tip</span>
+              <p>Every change you save is scoped to that one player and follows its shortcode everywhere it&rsquo;s
+                embedded — no need to touch the pages that use it.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="gutenberg-editor" data-group="Creating Players"
+            data-title="Gutenberg Editor">
+            <h1>Gutenberg Editor</h1>
+            <p class="lead">The Gutenberg editor builds the same players inside the WordPress block editor — you see a
+              <strong>live preview of the player on the canvas</strong> while configuring it through inspector panels in
+              the sidebar.
+            </p>
+
+            <h2 id="gb-create">Creating a Player</h2>
+            <ol class="steps">
+              <li>Make sure Gutenberg is your preference (see <a href="#choosing-editor" data-nav>Choosing Your
+                  Editor</a>), then go to <strong>Html5 Video Player &rarr; Add New</strong>.</li>
+              <li>The block editor opens with the <strong>HTML5 Video Player block already in place</strong> — the
+                layout is template-locked, so the player block can&rsquo;t be accidentally deleted or replaced.</li>
+              <li>Give the player a title, then select the block and configure it from the <strong>inspector
+                  panels</strong> on the right (see below).</li>
+              <li>Use the <strong>Edit icon in the block toolbar</strong> to change or upload a new video at any time.
+              </li>
+              <li>Click <strong>Publish / Update</strong>, then copy the shortcode from <strong>All Players</strong> and
+                paste it anywhere.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quick-start.png"
+              data-caption="The player block on the canvas with inspector panels on the right"></figure>
+
+            <h2 id="gb-panels">The Inspector Panels</h2>
+            <p>The block sidebar mirrors the Classic editor&rsquo;s tabs, organized as collapsible panels with an icon
+              before each title:</p>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Panel</th>
+                  <th>What it configures</th>
+                  <th>Documentation</th>
+                </tr>
+                <tr>
+                  <td><strong>Presets</strong></td>
+                  <td>Apply a saved player configuration</td>
+                  <td><a href="#skins-controls" data-nav>Skins &amp; Controls</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Media</strong></td>
+                  <td>Video source, poster thumbnail, download URL</td>
+                  <td><a href="#video-sources" data-nav>Video Sources</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Settings</strong></td>
+                  <td>Skin, control buttons, playback behavior</td>
+                  <td><a href="#skins-controls" data-nav>Skins &amp; Controls</a>, <a href="#playback-settings"
+                      data-nav>Playback Settings</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Qualities</strong></td>
+                  <td>Multiple resolutions for the quality switcher</td>
+                  <td><a href="#quality-subtitles" data-nav>Quality &amp; Subtitles</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Subtitle/Caption</strong></td>
+                  <td>VTT caption tracks</td>
+                  <td><a href="#quality-subtitles" data-nav>Quality &amp; Subtitles</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Popup</strong></td>
+                  <td>Open the video in a lightbox</td>
+                  <td><a href="#popup-player" data-nav>Popup Player</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Protected</strong></td>
+                  <td>Password and role-based access</td>
+                  <td><a href="#password-protection" data-nav>Password Protection &amp; Roles</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Watermark</strong></td>
+                  <td>Text stamped over the video</td>
+                  <td><a href="#watermark" data-nav>Watermark</a></td>
+                </tr>
+                <tr>
+                  <td><strong>End Screen</strong></td>
+                  <td>Message and call-to-action after playback</td>
+                  <td><a href="#end-screen" data-nav>End Screen</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Overlay</strong></td>
+                  <td>Logo or text overlay on the player</td>
+                  <td><a href="#branding-overlay" data-nav>Branding &amp; Overlay</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Chapters</strong></td>
+                  <td>Named sections viewers can jump to</td>
+                  <td><a href="#chapters-markers" data-nav>Chapters &amp; Markers</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Email Capture</strong></td>
+                  <td>Gate the video behind an email form</td>
+                  <td><a href="#email-capture" data-nav>Email Capture</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Additional</strong></td>
+                  <td>Extra CSS ID/class for custom styling</td>
+                  <td>&mdash;</td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="gb-preview">Live Preview on the Canvas</h2>
+            <p>Unlike the Classic editor, changes are reflected immediately on the editor canvas — switch a skin, toggle
+              a control button or set a poster image and you see the result without saving and reloading the front end.
+            </p>
+
+            <h2 id="gb-vs-embedding">Creating vs. Embedding — Don&rsquo;t Mix Them Up</h2>
+            <p>This page is about <em>creating a saved player</em> under Html5 Video Player &rarr; Add New, which gives
+              you a reusable shortcode. Separately, the plugin also ships <a href="#blocks-builders" data-nav>Gutenberg
+                blocks for embedding</a> videos directly into any post or page — those are one-off embeds configured in
+              place, with no shortcode involved.</p>
+          </article>
+          <!-- ============ PLAYER SETUP ============ -->
+
+          <article class="doc-article" id="video-sources" data-group="Player Setup" data-title="Video Sources">
+            <h1>Video Sources</h1>
+            <p class="lead only-gutenberg">The <strong>Media</strong> panel of the block sidebar is where the video
+              itself lives — the source, the poster image, and an optional custom download link.</p>
+            <p class="lead only-classic">The <strong>Media</strong> tab of the player editor is where the video itself
+              lives — the source, the poster image, and an optional custom download link.</p>
+            <p class="lead only-elementor">The widget&rsquo;s <strong>Settings</strong> section is where the video
+              itself lives — the source and the poster image.</p>
+            <figure class="media-slot" data-media="video"
+              data-src="https://www.youtube.com/watch?v=5bcB74goD7A&list=PLD33HvWKDDNw&index=6&pp=iAQB"
+              data-caption="Video tutorial — choosing a video source"></figure>
+            <div data-editor-switch></div>
+            <div class="callout"><span class="co-label">Three ways to build a player</span>
+              <p>Use the toggle above to switch these instructions between <strong>Gutenberg</strong> (block sidebar
+                panels), the <strong>Classic Editor</strong> (metabox tabs), and the <strong>Elementor</strong> widget.
+                Your choice is remembered across the whole documentation. The Elementor widget covers most — but not
+                all — of the options; where something is missing, the Elementor tab says so and gives the workaround.
+              </p>
+            </div>
+
+            <h2 id="src-options">The Four Source Types</h2>
+            <p class="only-gutenberg">Open the player for editing (<strong>Html5 Video Player &rarr; All Players &rarr;
+                Edit</strong>), select the player block on the canvas, and open the <strong>Media</strong> panel in the
+              right-hand sidebar — <strong>Video Source</strong> is the first option, with four pills to choose
+              from:</p>
+            <p class="only-classic">Open the player for editing (<strong>Html5 Video Player &rarr; All Players &rarr;
+                Edit</strong>) and go to the <strong>Media</strong> tab — <strong>Video Source</strong> is the first
+              option, with four pills to choose from:</p>
+            <p class="only-elementor">Edit the page in Elementor, drop in the <strong>HTML5 Video Player</strong>
+              widget, and open its <strong>Settings</strong> section in the widget panel — <strong>Video Source</strong>
+              is the first control:</p>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Source</th>
+                  <th>Use it for</th>
+                </tr>
+                <tr>
+                  <td><strong>Library or CDN source</strong></td>
+                  <td>Files uploaded to the WordPress media library, or a direct URL to an MP4/WebM/OGG file on any
+                    server or CDN. HLS (<code>.m3u8</code>) and DASH (<code>.mpd</code>) streams are also supported.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>YouTube</strong></td>
+                  <td>Paste the regular watch URL (<code>youtube.com/watch?v=…</code>). The plugin wraps the YouTube
+                    embed in its own skinned controls.</td>
+                </tr>
+                <tr>
+                  <td><strong>Vimeo</strong></td>
+                  <td>Paste the Vimeo video URL. Works exactly like the YouTube source.</td>
+                </tr>
+                <tr>
+                  <td><strong>AWS S3 File Manager</strong> <span class="badge-pro">Pro</span></td>
+                  <td>Stream video from private Amazon&nbsp;S3 cloud storage using the built-in S3 file browser.</td>
+                </tr>
+              </table>
+            </div>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/video-source-html5-video-player.png"
+              data-caption="The four Video Source options in the Media panel (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/video-source-classic.png"
+              data-caption="The four Video Source options in the Media tab (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image" data-src="img/video-source-elementor.png"
+              data-caption="Video Source in the Elementor widget&rsquo;s Settings section"></figure>
+            <div class="callout warn"><span class="co-label">Platform limitation</span>
+              <p>The <strong>Download</strong> and <strong>Picture-in-Picture</strong> control buttons do not work for
+                YouTube or Vimeo sources — that&rsquo;s a restriction imposed by those platforms, not by the plugin.</p>
+            </div>
+
+            <h2 id="src-howto">How to Set Each Source</h2>
+            <h3>Library or CDN Source</h3>
+            <ol class="steps only-elementor">
+              <li>Select the <strong>Library or CDN source</strong> pill in the widget&rsquo;s <strong>Settings</strong>
+                section.</li>
+              <li>Use <strong>Select Video</strong> to pick a file from the media library, or paste a direct file URL
+                into the <strong>video id or url</strong> field.</li>
+              <li>The Elementor canvas re-renders the player live — no need to preview the page.</li>
+            </ol>
+            <ol class="steps hide-elementor">
+              <li>Select the <strong>Library or CDN source</strong> pill.</li>
+              <li>Pick a file from the WordPress media library, or paste a direct file URL (MP4, WebM, OGG,
+                <code>.m3u8</code> or <code>.mpd</code>) into <strong>Source URL</strong>.
+              </li>
+              <li><span class="only-gutenberg">The canvas preview reloads with the new source right away. </span>Click
+                <strong>Update</strong> — the change applies everywhere the player&rsquo;s shortcode is embedded.
+              </li>
+            </ol>
+            <h3>YouTube</h3>
+            <ol class="steps">
+              <li>Select the <strong>Youtube</strong> pill.</li>
+              <li>Paste the regular watch URL — for example <code>https://www.youtube.com/watch?v=XXXXXXXX</code> — into
+                <strong>Source URL</strong>.
+              </li>
+              <li>Click <strong>Update</strong>. The plugin wraps the YouTube stream in its own skinned controls.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/youtube-source-html5-video-player.png"
+              data-caption="A YouTube watch URL as the video source (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/youtube-source-classic.png"
+              data-caption="A YouTube watch URL as the video source (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image" data-src="img/youtube-source-elementor.png"
+              data-caption="A YouTube watch URL as the video source (Elementor)"></figure>
+            <h3>Vimeo</h3>
+            <p>Works exactly like YouTube — select the <strong>Vimeo</strong> pill and paste the video&rsquo;s URL into
+              <strong>Source URL</strong>.
+            </p>
+            <div class="no-support only-elementor"><span class="ns-label">Not in the Elementor widget</span>
+              <p>The widget has no S3 file browser. Configure the S3 source on a saved player
+                (<a href="#classic-editor" data-nav>Classic</a> or <a href="#gutenberg-editor" data-nav>Gutenberg</a>),
+                then place that player&rsquo;s shortcode in an Elementor <strong>Shortcode</strong> widget.</p>
+            </div>
+            <h3 class="hide-elementor">AWS S3 <span class="badge-pro">Pro</span></h3>
+            <ol class="steps">
+              <li>Add your S3 credentials — Key ID, Access Key, Bucket and Region — under <strong>Html5 Video Player
+                  &rarr; Settings &rarr; AWS S3</strong>.</li>
+              <li>Back in the player&rsquo;s <span class="only-classic">Media tab</span><span
+                  class="only-gutenberg">Media panel</span>, select <strong>AWS S3 File Manager</strong> and click
+                <strong>Choose From AWS S3 Storage</strong>.
+              </li>
+              <li>Browse the bucket and pick your video file.</li>
+            </ol>
+            <figure class="media-slot" data-media="image" data-src="img/aws-s3-picker.png"
+              data-caption="Browsing a bucket with the AWS S3 file picker"></figure>
+
+            <h2 id="src-thumbnail">Video Thumbnail (Poster Image)</h2>
+            <p>The <strong>Video Thumbnail</strong> field sets the still frame viewers see before pressing play. Pick an
+              image from the media library or paste an image URL.</p>
+            <p>For YouTube and Vimeo sources the thumbnail acts as a <em>backup</em>: the platform&rsquo;s own thumbnail
+              loads first, and yours steps in if that fails.</p>
+            <p>Related option: <strong>Show Thumbnail When Video Pause</strong> (in the <span
+                class="only-classic">Settings tab</span><span class="only-gutenberg">Settings panel</span>) brings the
+              poster back whenever the viewer pauses, so the player looks deliberate instead of frozen mid-frame.</p>
+
+            <h2 id="src-download">Custom Download URL <span class="badge-pro">Pro</span></h2>
+            <p>By default the download button (if enabled) serves the streaming file. Turn on <strong>Custom Download
+                URL</strong> to point the download button at a <em>different</em> file — for example a lower-resolution
+              cut, a ZIP archive, or a version hosted elsewhere.</p>
+
+            <h2 id="src-streams">Adaptive Streams (HLS &amp; DASH)</h2>
+            <p>Point the source URL at an <code>.m3u8</code> (HLS) or <code>.mpd</code> (DASH) manifest and the plugin
+              loads the appropriate streaming engine automatically. The plugin can also hide/encode the stream URL so it
+              isn&rsquo;t exposed in the page source.</p>
+          </article>
+
+          <article class="doc-article" id="quality-subtitles" data-group="Player Setup"
+            data-title="Quality Switcher &amp; Subtitles">
+            <h1>Quality Switcher &amp; Subtitles</h1>
+            <p class="lead">Offer the same video at several resolutions and add caption tracks in any language.<span
+                class="only-classic"> Both are configured on the <strong>Media</strong> <span
+                  class="only-classic">tab</span><span class="only-gutenberg">panel</span>.</span><span
+                class="only-gutenberg"> They live in the <strong>Qualities</strong> and
+                <strong>Subtitle/Caption</strong> panels of the block sidebar.</span></p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/KGNMNUa_49w?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — quality switcher and subtitles"></figure>
+
+            <div data-editor-switch></div>
+
+            <h2 id="qual-switcher">Quality Switcher <span class="badge-pro">Pro</span></h2>
+            <ol class="steps only-elementor">
+              <li>Select the <strong>HTML5 Video Player</strong> widget and open its <strong>Quality</strong> section.
+              </li>
+              <li>Click <strong>Add Item</strong>, type the size (for example <code>1080</code>) and paste the URL of
+                that version of the file.</li>
+              <li>Repeat for each resolution — the canvas re-renders as you go.</li>
+            </ol>
+            <p>The quality switcher lets viewers pick their own resolution from the settings gear during playback, just
+              like YouTube.</p>
+            <ol class="steps only-gutenberg">
+              <li>Edit the player, select the player block, and open the <strong>Qualities</strong> panel in the
+                right-hand sidebar.</li>
+              <li>Click <strong>Add Quality</strong>.</li>
+              <li>Type the size (for example <code>1080</code>) and paste the URL of that version of the file.</li>
+              <li>Repeat for each resolution you want to offer — for example <code>576</code> and <code>1080</code> —
+                then click <strong>Update</strong>.</li>
+            </ol>
+            <ol class="steps only-classic">
+              <li>Edit the player and open the <strong>Media</strong> tab.</li>
+              <li>Click <strong>Add Quality</strong>.</li>
+              <li>Type the size (for example <code>1080</code>) and paste the URL of that version of the file.</li>
+              <li>Repeat for each resolution you want to offer — for example <code>576</code> and <code>1080</code> —
+                then click <strong>Update</strong>.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/qualities-html5-video-player.png"
+              data-caption="Saved qualities in the Qualities panel (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/qualities-classic.png"
+              data-caption="Saved qualities in the Media tab (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quality-elementor-html5-video-player.png"
+              data-caption="Resolutions in the widget&rsquo;s Quality section (Elementor)"></figure>
+            <p>On the front end, viewers pick their resolution from the <strong>settings gear</strong> during playback:
+            </p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/qualities-menu-in-frontpage-html5-video-player.png"
+              data-caption="The quality menu in the player&rsquo;s settings gear"></figure>
+            <div class="callout warn"><span class="co-label">Important</span>
+              <p>When you use the quality switcher, the <strong>main Source URL should be the 720p version</strong> of
+                the video. This is noted right under the Source URL field in the editor.</p>
+            </div>
+
+            <h2 id="sub-add">Adding Subtitles <span class="badge-pro">Pro</span></h2>
+            <ol class="steps only-gutenberg">
+              <li>With the player block selected, open the <strong>Subtitle/Caption</strong> panel in the right-hand
+                sidebar.</li>
+              <li>Click <strong>Add Subtitle</strong>.</li>
+              <li>Give the track a language label and code — for example <code>English/en</code>.</li>
+              <li>Upload or link the subtitle file. <strong>Only <code>.vtt</code> files are accepted.</strong></li>
+              <li>Add as many tracks as you need — one per language — then click <strong>Update</strong>.</li>
+            </ol>
+            <ol class="steps only-classic">
+              <li>In the <strong>Media</strong> tab, scroll to the subtitle section.</li>
+              <li>Click <strong>Add Subtitle</strong>.</li>
+              <li>Give the track a language label and code — for example <code>English/en</code>.</li>
+              <li>Upload or link the subtitle file. <strong>Only <code>.vtt</code> files are accepted.</strong></li>
+              <li>Add as many tracks as you need — one per language — then click <strong>Update</strong>.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/subtitle-html5-video-player.png"
+              data-caption="A subtitle track in the Subtitle/Caption panel (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/subtitle-classic.png"
+              data-caption="A subtitle track in the Media tab (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/elementor-subtitle-html5-video-player.png"
+              data-caption="A caption track in the widget&rsquo;s Subtitle/Captions section (Elementor)"></figure>
+            <p>Viewers switch tracks from the captions (CC) button in the control bar. A toggle below the subtitle list
+              — <strong>Enable caption by default</strong> — turns captions on automatically when playback starts.</p>
+
+            <h2 id="sub-srt">Converting SRT to VTT</h2>
+            <p>If your captions are in <code>.srt</code> format, you don&rsquo;t need an external tool — the plugin has
+              a built-in converter:</p>
+            <ol class="steps">
+              <li>Go to <strong>Html5 Video Player &rarr; Settings &rarr; Shortcode &amp; Tools &rarr; Convert .srt to
+                  .vtt</strong>.</li>
+              <li>Drag your <code>.srt</code> files onto the drop area, or click it to browse. You can drop several at
+                once.</li>
+              <li>Check the preview. If the converter had to repair anything — timestamps missing milliseconds,
+                unsupported styling tags — it lists exactly what it changed.</li>
+              <li>Choose <strong>Save to Media Library</strong> to store the <code>.vtt</code> straight away, or
+                <strong>Download .vtt</strong> to keep a copy.
+              </li>
+              <li>Attach the <code>.vtt</code> to the player&rsquo;s subtitle track — the
+                <span class="only-classic">Media tab</span><span class="only-gutenberg">Subtitle/Caption
+                  panel</span>.
+              </li>
+            </ol>
+            <p>Conversion happens in your browser, so the <code>.srt</code> file is never uploaded to your server. That
+              also sidesteps WordPress&rsquo; upload rules, which block <code>.srt</code> files by default.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/srt-to-vtt-converter-html5-video-player.png"
+              data-caption="The SRT to VTT converter under Settings &rarr; Shortcode &amp; Tools"></figure>
+
+            <h2 id="sub-access">Accessibility</h2>
+            <p>Multiple subtitle tracks make videos accessible and multilingual. Combined with the keyboard-operable
+              Plyr controls, the player is accessibility-ready out of the box.</p>
+          </article>
+
+          <article class="doc-article" id="skins-controls" data-group="Player Setup" data-title="Skins &amp; Controls">
+            <h1>Skins &amp; Controls</h1>
+            <p class="lead">The <strong>Settings</strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">panel and the preset editor are</span> where the player starts to look like
+              <em>yours</em> —
+              pick a skin, choose exactly which buttons appear, and set your brand color.
+            </p>
+            <figure class="media-slot" data-media="video"
+              data-src="https://www.youtube.com/watch?v=9QOzFH8wbVM&list=PLD33HvWKDDNw&index=3&pp=iAQB"
+              data-caption="Video tutorial — skins and controls"></figure>
+
+            <div data-editor-switch></div>
+
+            <div class="no-support only-elementor"><span class="ns-label">Not available in the Elementor widget</span>
+              <p>The widget has no Skin control — it always renders the default control bar. To use a different skin on
+                an Elementor page, set the skin on a saved player (<a href="#gutenberg-editor" data-nav>Gutenberg</a> or
+                <a href="#classic-editor" data-nav>Classic</a>) and place its <code>[html5_video id='…']</code>
+                shortcode in an Elementor <strong>Shortcode</strong> widget. Individual control buttons
+                <em>can</em> be toggled in the widget — see below.
+              </p>
+            </div>
+            <h2 id="skin-list">Skins <span class="badge-pro">Pro</span></h2>
+            <ol class="steps only-gutenberg">
+              <li>Edit the player, select the player block, and open the <strong>Presets</strong> panel in the
+                right-hand sidebar.</li>
+              <li>Click <strong>Add New Preset</strong> (or edit an existing preset) to open the full-screen
+                <a href="#ctrl-presets" data-nav>preset editor</a>.
+              </li>
+              <li>Choose your skin from the <strong>Skin</strong> selector above the preview on the right — the preview
+                redraws instantly, so you can compare all seven without closing the modal.</li>
+              <li>Click <strong>Create Preset</strong> / <strong>Update Preset</strong>, then apply that preset to the
+                block.</li>
+            </ol>
+            <div class="callout only-gutenberg"><span class="co-label">Why the skin lives in the preset editor</span>
+              <p>On the free version a <strong>Skin</strong> dropdown appears in the block&rsquo;s
+                <strong>Settings</strong> panel as a Pro preview. Once Pro is active, skins are chosen in the preset
+                editor instead — so one saved preset can carry the same look across every player on the site.
+              </p>
+            </div>
+            <ol class="steps only-classic">
+              <li>Edit the player and open the <strong>Settings</strong> tab.</li>
+              <li>Pick a skin from the <strong>Skin</strong> picker at the top of the tab — each option shows a
+                thumbnail of its control-bar layout, so you can compare them at a glance.</li>
+              <li>Click <strong>Update</strong>, then refresh the page embedding the player to see the new look.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/skin-gutenberg-html5-video-player.png"
+              data-caption="The Skin selector beside the preset editor preview (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/skin-picker-classic.png"
+              data-caption="The visual Skin picker in the Settings tab (Classic)"></figure>
+            <p>The <strong>Skin</strong> picker changes the whole control bar. Seven skins are included:</p>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Skin</th>
+                  <th>Look</th>
+                </tr>
+                <tr>
+                  <td><strong>Default</strong></td>
+                  <td>The classic layout — controls docked to the bottom edge of the video.</td>
+                </tr>
+                <tr>
+                  <td><strong>Stacked</strong></td>
+                  <td>Controls arranged in stacked rows beneath the progress bar.</td>
+                </tr>
+                <tr>
+                  <td><strong>Modern</strong></td>
+                  <td>A contemporary flat design.</td>
+                </tr>
+                <tr>
+                  <td><strong>Floating Pill</strong></td>
+                  <td>Controls lift off the video into a rounded, floating bar.</td>
+                </tr>
+                <tr>
+                  <td><strong>Classic Minimal</strong></td>
+                  <td>A stripped-back bar with just the essentials.</td>
+                </tr>
+                <tr>
+                  <td><strong>Stacked Dual-Row</strong></td>
+                  <td>A thick progress bar with the transport controls grouped on a second row.</td>
+                </tr>
+                <tr>
+                  <td><strong>Modern Mobile Stack</strong></td>
+                  <td>Controls stack vertically — reads much better on narrow screens.</td>
+                </tr>
+              </table>
+            </div>
+            <figure class="media-slot" data-media="image" data-src="img/skin-examples.png"
+              data-caption="The same player wearing different skins"></figure>
+            <p>Switching skins never changes <em>functionality</em> — the same controls are available in every skin. Try
+              a few and pick whichever suits your site.</p>
+
+            <h2 id="ctrl-buttons">Control Buttons &amp; Components</h2>
+            <p class="only-elementor">Select the <strong>HTML5 Video Player</strong> widget and open its
+              <strong>Controls</strong> section — each control is a switch you can turn on or off:
+            </p>
+            <p class="only-gutenberg">The block sidebar is split into three tabs — <strong>General</strong>,
+              <strong>Controls</strong> and <strong>Style</strong>. Control buttons live on their own
+              <strong>Controls</strong> tab, not inside a panel:
+            </p>
+            <p class="only-classic">Below the skin picker in the <strong>Settings</strong> tab is the <strong>Control
+                buttons and Components</strong> grid. Each highlighted chip is a control that appears in the bar; click
+              a chip to toggle it off or on:</p>
+            <p class="only-gutenberg">Open the <strong>Controls</strong> tab and toggle each control on or off. The same
+              set is also available as the <strong>Controls</strong> section of the
+              <a href="#ctrl-presets" data-nav>preset editor</a>:
+            </p>
+            <p class="only-elementor">Each control is a switch you can turn on or off:</p>
+            <ul>
+              <li>Play Large (the big center button) &middot; Restart &middot; Rewind &middot; Play &middot; Fast
+                Forward</li>
+              <li>Progress bar &middot; Current Time &middot; Duration</li>
+              <li>Mute Button &middot; Volume Control &middot; Captions &middot; Settings Button</li>
+              <li>Picture-in-Picture &middot; AirPlay &middot; Download Button &middot; Full Screen</li>
+            </ul>
+            <figure class="media-slot only-gutenberg" data-media="image" data-src="img/control-chips-gutenberg.png"
+              data-caption="The Control buttons and Components grid (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/control-chips-classic.png"
+              data-caption="The Control buttons and Components grid (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/controls-elementor-html5-video-player.png"
+              data-caption="Control switches in the widget&rsquo;s Controls section (Elementor)"></figure>
+            <p class="only-gutenberg">Toggle a chip and the canvas preview updates straight away, so you can see the
+              trimmed control bar without leaving the editor.</p>
+            <p>The same set is available as the <code>controls</code> attribute in the <a href="#quick-player"
+                data-nav>Quick Player shortcode</a>.</p>
+            <div class="callout warn"><span class="co-label">Heads up</span>
+              <p>Download and Picture-in-Picture don&rsquo;t work for YouTube or Vimeo sources — a platform limitation,
+                not a plugin one.</p>
+            </div>
+
+            <h2 id="ctrl-color">Brand Color</h2>
+            <p>The brand color drives the player&rsquo;s accent — progress bar, buttons and hover states — across every
+              player on the site:</p>
+            <ol class="steps">
+              <li>Go to <strong>Html5 Video Player &rarr; Settings &rarr; Player &rarr; Brand Color</strong>.</li>
+              <li>Pick your color (the default is <code>#00b2ff</code>) and save.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/brand-color-html5-video-player.png"
+              data-caption="The Brand Color picker under Settings &rarr; Player"></figure>
+            <p>Pro users additionally get a full color picker per player, to match a specific page&rsquo;s design
+              exactly.</p>
+
+            <h2 id="ctrl-presets">Presets</h2>
+            <p class="only-gutenberg">In Gutenberg, presets are more than a shortcut — the <strong>Presets</strong>
+              panel opens a full-screen editor where you build a complete player look with a live preview beside you.
+              Several options live <em>only</em> here.</p>
+            <ol class="steps only-gutenberg">
+              <li>Select the player block and open the <strong>Presets</strong> panel (the first panel in the sidebar).
+              </li>
+              <li>Click <strong>Add New Preset</strong> <span class="badge-pro">Pro</span>, or click an existing preset
+                to edit it.</li>
+              <li>Give it a <strong>Preset Name</strong>, then work through the sections in the left column:
+                <strong>Controls</strong>, <strong>Settings</strong>, <strong>Watermark</strong>,
+                <strong>Style</strong>, <strong>End Screen</strong> and <strong>Email Capture</strong>.
+                (<strong>Call To Action</strong> and <strong>Action Bar</strong> are marked <em>Upcoming</em> and
+                aren&rsquo;t functional yet.)
+              </li>
+              <li>Pick the <strong>Skin</strong> from the selector above the preview on the right — the preview redraws
+                instantly, so you can compare skins without leaving the modal.</li>
+              <li>Click <strong>Create Preset</strong> (or <strong>Update Preset</strong>), then apply it to any player.
+              </li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/preset-editor-preview-html5-video-player.png"
+              data-caption="The full-screen preset editor — sections on the left, Skin selector and live preview on the right">
+            </figure>
+            <p>Presets keep a whole video library consistent without repeating setup work. There are two separate
+              systems, and they don&rsquo;t share data:</p>
+            <ul>
+              <li><strong>The Gutenberg preset editor</strong> (above) — a named, reusable bundle covering controls,
+                settings, watermark, style, end screen, email capture and skin, built with a live preview.</li>
+              <li><strong>Settings &rarr; Player &rarr; Preset</strong> — site-wide playback defaults (Repeat, Muted,
+                Auto Play, Player Width, Seek Time and more) used by the <em>Classic Shortcode Generator</em>.</li>
+            </ul>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/preset-classic-html5-video-player.png"
+              data-caption="Preset defaults under Settings &rarr; Player"></figure>
+          </article>
+
+          <article class="doc-article" id="playback-settings" data-group="Player Setup" data-title="Playback Settings">
+            <h1>Playback Settings</h1>
+            <p class="lead">The lower half of the <strong>Settings</strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">panel</span> is a run of playback switches that
+              control how the video behaves — from autoplay to sticky mode.</p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/mu-Wj0emFVg?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — playback settings"></figure>
+
+            <div data-editor-switch></div>
+
+            <div class="no-support only-elementor"><span class="ns-label">Partly available in the Elementor
+                widget</span>
+              <p>The widget&rsquo;s <strong>Settings</strong> section carries the common playback options — autoplay,
+                muted, loop, sticky, preload and seek time. Options it doesn&rsquo;t expose (Save State, Disable Pause,
+                Show Thumbnail on Pause, Custom Play Button, VAST) need a saved player embedded through an Elementor
+                <strong>Shortcode</strong> widget.
+              </p>
+            </div>
+            <h2 id="pb-behavior">Behavior Toggles</h2>
+            <p class="hide-elementor">All of these live in the player&rsquo;s <strong>Settings</strong> <span
+                class="only-classic">tab</span><span class="only-gutenberg">panel</span>, below the controls grid. Flip
+              what
+              you need and click <strong>Update</strong> — the change applies everywhere the shortcode is embedded.</p>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Option</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><strong>Video Start Time</strong></td>
+                  <td>Begins playback at a specific second — great for skipping a long intro.</td>
+                </tr>
+                <tr>
+                  <td><strong>Show Thumbnail When Video Pause</strong></td>
+                  <td>Brings the poster image back whenever the viewer pauses.</td>
+                </tr>
+                <tr>
+                  <td><strong>Disable Pause</strong></td>
+                  <td>Stops viewers from pausing at all — useful for adverts or required training videos.</td>
+                </tr>
+                <tr>
+                  <td><strong>Save State</strong></td>
+                  <td>Remembers where someone stopped watching, so they resume from the same point on their next visit.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Sticky Mode</strong></td>
+                  <td>Keeps a mini player visible in the corner while the reader scrolls down the page.</td>
+                </tr>
+                <tr>
+                  <td><strong>Repeat</strong></td>
+                  <td>Play once, or loop forever.</td>
+                </tr>
+                <tr>
+                  <td><strong>Muted</strong></td>
+                  <td>Starts playback with the sound off.</td>
+                </tr>
+                <tr>
+                  <td><strong>Auto Play</strong></td>
+                  <td>Starts the video automatically on page load — see the autoplay rule below.</td>
+                </tr>
+                <tr>
+                  <td><strong>Autoplay When Visible</strong></td>
+                  <td>Smart autoplay that only triggers when the video scrolls into the viewport.</td>
+                </tr>
+              </table>
+            </div>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/playback-controls-HTML5-Video-Player.png"
+              data-caption="Playback behavior switches in the Settings tab"></figure>
+            <div class="callout warn"><span class="co-label">The autoplay rule</span>
+              <p>Chrome, Safari and Edge only allow autoplay when the video is explicitly <strong>muted</strong>. If
+                autoplay isn&rsquo;t working, switch Muted on.</p>
+            </div>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/sticky-html5-video-player.png"
+              data-caption="Sticky Mode keeps a mini player visible while the reader scrolls"></figure>
+
+            <h2 id="pb-timing">Timing &amp; Display</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Option</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><strong>Seek Time</strong></td>
+                  <td>How many seconds the rewind and fast-forward buttons jump. Default is 10.</td>
+                </tr>
+                <tr>
+                  <td><strong>Auto Hide Control</strong></td>
+                  <td>Fades the controls out during playback; they reappear on mouse movement.</td>
+                </tr>
+                <tr>
+                  <td><strong>Aspect Ratio</strong></td>
+                  <td>Reshapes the frame — keep the original ratio or force 16:9, 4:3, and so on.</td>
+                </tr>
+                <tr>
+                  <td><strong>Reset On End</strong></td>
+                  <td>Rewinds to the start (showing the poster) when playback finishes.</td>
+                </tr>
+                <tr>
+                  <td><strong>Preload</strong></td>
+                  <td><code>Auto</code> loads the whole file up front, <code>Metadata</code> loads only
+                    duration/dimensions, <code>None</code> loads nothing until play. Lighter settings mean faster pages.
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="pb-advanced">Advanced Options</h2>
+            <h3>Google VAST Tag URL <span class="badge-pro">Pro</span></h3>
+            <p>Paste a Google VAST ad tag URL to slot video advertising into the player for monetization.</p>
+            <h3>Custom Play Button CSS Selector <span class="badge-pro">Pro</span></h3>
+            <p>Let <em>any</em> element on your page start the video — a button, an image, anything. Give the element a
+              class and enter the selector here:</p>
+            <div class="codeblock">
+              <pre><code>.play_my_video</code></pre>
+            </div>
+            <ol class="steps">
+              <li>Give any element on your page a class — for example
+                <code>&lt;button class="play_my_video"&gt;Play the demo&lt;/button&gt;</code>.
+              </li>
+              <li>Enter the selector (<code>.play_my_video</code>) in the <strong>Custom Play Button CSS
+                  Selector</strong> field in the Settings tab and update.</li>
+              <li>Clicking that element now starts the video.</li>
+            </ol>
+            <h3>Allow Inline Playback on iOS</h3>
+            <p>Plays the video inline on iPhones and iPads instead of forcing the native fullscreen player.</p>
+            <h3>Pause Other Players</h3>
+            <p>When several players share a page, starting one automatically pauses the others.</p>
+          </article>
+
+          <!-- ============ FEATURES ============ -->
+
+          <article class="doc-article" id="popup-player" data-group="Features" data-title="Popup Player">
+            <h1>Popup Player</h1>
+            <p class="lead">The <strong>Popup</strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">panel</span><span class="only-elementor">option</span> opens your video in a
+              lightbox modal instead of embedding it
+              inline — a tidy way to keep a landing page clean while still offering the full video. <span
+                class="badge-pro">Pro</span></p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/UeGzB_JcMPw?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — popup player"></figure>
+
+            <div data-editor-switch></div>
+
+            <h2 id="popup-enable">Enabling the Popup</h2>
+            <ol class="steps only-elementor">
+              <li>Select the <strong>HTML5 Video Player</strong> widget and open its <strong>Settings</strong> section.
+              </li>
+              <li>Switch <strong>Enable Popup</strong> on.</li>
+              <li>Set the trigger text/button options that appear, then preview the page.</li>
+            </ol>
+            <ol class="steps hide-elementor">
+              <li>Open the player&rsquo;s <strong>Popup</strong> <span class="only-classic">tab</span><span
+                  class="only-gutenberg">panel</span>.</li>
+              <li>Switch <strong>Enable Popup</strong> on and save.</li>
+              <li>Where the shortcode is placed, visitors now see a trigger instead of the inline player; clicking it
+                launches the video in a distraction-free overlay.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/popup-HTML5-Video-Player.png"
+              data-caption="The video playing in a popup overlay"></figure>
+
+            <h2 id="popup-trigger">Pairing It with a Button</h2>
+            <p>A common pattern is a call-to-action button that launches the video. Set <strong>Trigger Type</strong> to
+              <strong>Button</strong>, then pick one of two routes with the <strong>Use Existing Button</strong> toggle.
+            </p>
+
+            <h3>Let the plugin add the button (toggle off)</h3>
+            <ol class="steps">
+              <li>Leave <strong>Use Existing Button</strong> off.</li>
+              <li>Set <strong>Button Text</strong>, alignment and styling. A ready-made trigger button is placed next to
+                the player &mdash; in Gutenberg it is locked so it can&rsquo;t be deleted or moved by accident.</li>
+            </ol>
+
+            <h3>Use a button you already have (toggle on)</h3>
+            <ol class="steps">
+              <li>Switch <strong>Use Existing Button</strong> on.</li>
+              <li>Put the button&rsquo;s CSS class in <strong>Selector</strong> (Classic) or <strong>Button
+                  Class</strong> (Gutenberg). A bare class name is enough &mdash; <code>watch-video</code> is read as
+                <code>.watch-video</code> &mdash; and <code>#watch-video</code> or <code>[data-popup]</code> work too.
+              </li>
+              <li>The button must already exist on the same page as the player. If the selector matches several
+                elements, only the first one becomes clickable.</li>
+            </ol>
+            <p>Either way, clicking the button opens the player in the overlay; closing it returns the visitor to the
+              page exactly where they were.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/popup-existing-button-html5-video-player.png"
+              data-caption="A Watch Video button paired with a popup player"></figure>
+            <div class="callout tip"><span class="co-label">Tip</span>
+              <p>Popup options are also available in the Classic Shortcode Generator and the Gutenberg block settings,
+                so you can enable the lightbox no matter how you embed the player.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="password-protection" data-group="Features"
+            data-title="Password Protection &amp; Roles">
+            <h1>Password Protection &amp; User Roles</h1>
+            <p class="lead">The <strong>Protected</strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">panel</span><span class="only-elementor">feature</span> controls who is allowed
+              to watch each video — by
+              password, by login state, or by specific WordPress user roles. <span class="badge-pro">Pro</span></p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/iXPi5R1AiD0?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — password protection and user roles"></figure>
+
+            <div data-editor-switch></div>
+
+            <div class="no-support only-elementor"><span class="ns-label">Not available in the Elementor widget</span>
+              <p>The widget has no Protected controls. To use it on an Elementor page, configure protection on a saved
+                player
+                (<a href="#gutenberg-editor" data-nav>Gutenberg</a> or
+                <a href="#classic-editor" data-nav>Classic</a>), then drop that player&rsquo;s
+                <code>[html5_video id='…']</code> shortcode into an Elementor <strong>Shortcode</strong> widget — the
+                player keeps every setting you gave it.
+              </p>
+            </div>
+            <h2 id="prot-password" class="hide-elementor">Password Protection</h2>
+            <ol class="steps hide-elementor">
+              <li>Edit the player<span class="only-gutenberg">, select the player block,</span> and open the
+                <strong>Protected</strong> <span class="only-classic">tab</span><span
+                  class="only-gutenberg">panel</span>.
+              </li>
+              <li>Switch <strong>Password Protected</strong> on and set a password.</li>
+              <li>Click <strong>Update</strong>. Visitors are now asked for the password before playback begins — ideal
+                for paid content previews or private screeners.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/password-prompt-html5-video-player.png"
+              data-caption="The password prompt shown before playback"></figure>
+
+            <h2 id="prot-who" class="hide-elementor">Who Can See This Video?</h2>
+            <p>Narrow the audience further with three options:</p>
+            <ul>
+              <li><strong>Everyone</strong> — no restriction (default).</li>
+              <li><strong>Logged-in Users</strong> — only authenticated users can watch.</li>
+              <li><strong>Logged-out Users</strong> — only visitors who are <em>not</em> signed in (useful for promo
+                content aimed at non-members).</li>
+            </ul>
+
+            <h2 id="prot-roles" class="hide-elementor">Restricting by Role</h2>
+            <p>Choose <strong>Logged-in Users</strong> and an <strong>Allowed User Roles</strong> checklist appears —
+              Administrator, Editor, Author, Contributor, Subscriber, plus any custom roles your site defines. Tick
+              exactly which roles qualify.</p>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/role-restriction-gutenberg-html5-video-player.png"
+              data-caption="Role restrictions in the Protected panel (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/role-restriction-classic-html5-video-player.png"
+              data-caption="Role restrictions in the Protected tab (Classic)"></figure>
+
+            <h2 id="prot-message" class="hide-elementor">Custom Access Message</h2>
+            <p>Set the text shown to anyone without access, for example:</p>
+            <div class="codeblock">
+              <pre><code>This video is only for registered users. Please login to view the video.</code></pre>
+            </div>
+
+            <h2 id="prot-testing" class="hide-elementor">Testing the Restriction</h2>
+            <ol class="steps hide-elementor">
+              <li>Load the page normally — signed in, the video plays without restriction.</li>
+              <li>Open an <strong>incognito/private window</strong> (which logs you out) and load the same page.</li>
+              <li>The protection rule kicks in and your custom message appears instead of the player.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/role-restriction-frontend-html5-video-player.png"
+              data-caption="The custom message shown to visitors without access"></figure>
+            <div class="callout tip"><span class="co-label">Tip</span>
+              <p>Testing in a private window is always worth doing — it&rsquo;s the quickest way to see your site
+                exactly as a first-time visitor does.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="watermark" data-group="Features" data-title="Watermark">
+            <h1>Watermark</h1>
+            <p class="lead">The <strong>Watermark</strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">panel</span><span class="only-elementor">feature</span> stamps text over the
+              video during playback to discourage
+              copying and screen recording. <span class="badge-pro">Pro</span></p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/-8SYeHzN3A0?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — watermark"></figure>
+
+            <div data-editor-switch></div>
+
+            <div class="no-support only-elementor"><span class="ns-label">Not available in the Elementor widget</span>
+              <p>The widget renders with the watermark switched off. To use it on an Elementor page, configure the
+                watermark on a saved player
+                (<a href="#gutenberg-editor" data-nav>Gutenberg</a> or
+                <a href="#classic-editor" data-nav>Classic</a>), then drop that player&rsquo;s
+                <code>[html5_video id='…']</code> shortcode into an Elementor <strong>Shortcode</strong> widget — the
+                player keeps every setting you gave it.
+              </p>
+            </div>
+            <h2 id="wm-setup" class="hide-elementor">Setting It Up</h2>
+            <ol class="steps hide-elementor">
+              <li class="only-classic">Edit the player and open the <strong>Watermark</strong> tab.</li>
+              <li class="only-gutenberg">Select the player block. If <em>no preset</em> is applied, open the
+                <strong>Watermark</strong> panel in the sidebar. If the block <em>is</em> using a preset, the sidebar
+                panel is hidden — open the <strong>Presets</strong> panel instead, edit the preset, and use its
+                <strong>Watermark</strong> section.
+              </li>
+              <li>Switch <strong>Enabled</strong> on.</li>
+              <li>Choose a <strong>Type</strong> (see below). For custom text, fill in <strong>Watermark Text</strong>.
+                Set the <strong>Color</strong> so
+                it stays readable against your footage.</li>
+              <li>Click <strong>Update</strong>. The watermark now renders over the video during playback.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/watermark-gutenberg-html5-video-player.png"
+              data-caption="The Watermark panel in the block sidebar (Gutenberg, no preset applied)"></figure>
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/watermark-classic-html5-video-player.png"
+              data-caption="The Watermark tab — type and color (Classic)"></figure>
+
+            <div class="callout only-gutenberg"><span class="co-label">Where the Watermark panel lives</span>
+              <p>The sidebar <strong>Watermark</strong> panel appears only while the block has <strong>no preset
+                  applied</strong>. Apply a preset and the panel disappears, because the watermark then comes from the
+                preset — edit it in the <a href="#ctrl-presets" data-nav>preset editor</a> instead.</p>
+            </div>
+
+            <h2 id="wm-types">Watermark Types</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Type</th>
+                  <th>What is displayed</th>
+                </tr>
+                <tr>
+                  <td><strong>Email</strong></td>
+                  <td>The logged-in viewer&rsquo;s email address.</td>
+                </tr>
+                <tr>
+                  <td><strong>Username</strong></td>
+                  <td>The logged-in viewer&rsquo;s username.</td>
+                </tr>
+                <tr>
+                  <td><strong>Custom text</strong></td>
+                  <td>Any text you choose — a copyright line, your brand name, etc.</td>
+                </tr>
+              </table>
+            </div>
+            <p>You can also set the <strong>Watermark Color</strong> to keep it readable against your footage.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/watermark-frontend-html5-video-player.png"
+              data-caption="The viewer&rsquo;s email watermarked over the video"></figure>
+
+            <h2 id="wm-why">Why Show the Viewer&rsquo;s Email?</h2>
+            <p>Displaying a viewer&rsquo;s own email over the video is a strong deterrent: if a screen recording leaks,
+              it&rsquo;s traceable back to the account that made it. This is a common technique for online courses and
+              paid screeners.</p>
+
+            <div class="callout warn"><span class="co-label">Note</span>
+              <p>Enabling the watermark disables autoplay for that player.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="end-screen" data-group="Features" data-title="End Screen">
+            <h1>End Screen</h1>
+            <p class="lead">The <strong>End Screen</strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">section of the preset editor</span><span class="only-elementor">section</span>
+              shows a custom message — and optionally a call-to-action
+              button — once the video finishes. <span class="badge-pro">Pro</span></p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/LpEZEa1q_9E?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — end screen"></figure>
+
+            <div data-editor-switch></div>
+
+            <h2 id="es-setup">Setting It Up</h2>
+            <ol class="steps only-elementor">
+              <li>Select the widget and open its <strong>End Screen</strong> section.</li>
+              <li>Switch <strong>Enable</strong> on and write your message.</li>
+              <li>Add the button label and link, then check that <strong>Reset On End</strong> and
+                <strong>Repeat</strong> are off in the Settings section.
+              </li>
+            </ol>
+            <ol class="steps hide-elementor">
+              <li class="only-gutenberg">Select the player block and open the <strong>Presets</strong> panel, then click
+                <strong>Add New Preset</strong> (or edit an existing one) to open the full-screen preset editor.
+              </li>
+              <li class="only-gutenberg">Open the <strong>End Screen</strong> section in the modal&rsquo;s left column
+                and switch <strong>Enable</strong> on.</li>
+              <li class="only-classic">Open the player&rsquo;s <strong>End Screen</strong> tab and switch
+                <strong>Enable</strong> on.
+              </li>
+              <li>Enter the <strong>Text</strong> shown when playback ends — for example <em>&ldquo;Thanks for
+                  watching!&rdquo;</em>.</li>
+              <li>Optionally add a button: set the <strong>Button Text</strong> (for example &ldquo;Visit
+                Website&rdquo;) and its link URL.</li>
+              <li class="only-gutenberg">Give the preset a name, click <strong>Create Preset</strong>, then apply it to
+                this player. The modal&rsquo;s live preview shows the end screen as you build it.</li>
+              <li class="hide-gutenberg">Click <strong>Update</strong> and play the video to the end on the front end to
+                see it.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/endscreen-gutenberg-html5-video-player.png"
+              data-caption="End Screen options in the preset editor (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/endscreen-classic-html5-video-player.png"
+              data-caption="End Screen options in the metabox (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/endscreen-elementor-html5-video-player.png"
+              data-caption="The widget&rsquo;s End Screen section (Elementor)"></figure>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/endscreen-frontend-html5-video-player.png"
+              data-caption="An end screen with a call-to-action button"></figure>
+            <p>With a button in place, the end of every viewing becomes a call to action — send viewers to a signup
+              page, the next lesson, or your store.</p>
+
+            <h2 id="es-requirements">Required Player Settings</h2>
+            <div class="callout danger"><span class="co-label">Important</span>
+              <p>The end screen only appears when <strong>Reset On End</strong> and <strong>Repeat</strong> are both
+                switched <strong>off</strong> in Playback Settings. If either is on, the player rewinds or loops before
+                the end screen can display.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="branding-overlay" data-group="Features" data-title="Branding &amp; Overlay">
+            <h1>Branding &amp; Overlay</h1>
+            <p class="lead">The <strong><span class="only-classic">Branding/Overlay</span><span
+                  class="only-gutenberg">Overlay</span></strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">panel</span> places your logo or a line of text on top of the
+              player — persistent, positioned in any corner, and optionally linked. <span class="badge-pro">Pro</span>
+            </p>
+            <figure class="media-slot" data-media="video" data-src="https://youtube.com/watch?v=q05VKHtmz3o"
+              data-caption="Video tutorial — branding and overlay"></figure>
+
+            <div data-editor-switch></div>
+
+            <h2 id="bo-setup">Setting It Up</h2>
+            <ol class="steps only-elementor">
+              <li>Select the widget and open its <strong>Branding</strong> section.</li>
+              <li>Switch it on and choose Image or Text, then set the content and link.</li>
+              <li>Pick the colors, opacity and corner position — the canvas updates live.</li>
+            </ol>
+            <ol class="steps hide-elementor">
+              <li>Edit the player<span class="only-gutenberg">, select the player block,</span> and open the
+                <strong><span class="only-classic">Branding/Overlay</span><span
+                    class="only-gutenberg">Overlay</span></strong> <span class="only-classic">tab</span><span
+                  class="only-gutenberg">panel</span>.
+              </li>
+              <li>Switch <strong>Enable</strong> on and pick the <strong>Type</strong> — Image for a logo, Text for a
+                caption.</li>
+              <li>Set the content, link, colors, opacity and position (all options below).</li>
+              <li>Click <strong>Update</strong> and check the result on the front end.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/overlay-gutenberg-html5-video-player.png"
+              data-caption="Overlay options in the block sidebar (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/overlay-classic-html5-video-player.png"
+              data-caption="Branding/Overlay options in the metabox (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/branding-elementor-html5-video-player.png"
+              data-caption="The widget&rsquo;s Branding section (Elementor)"></figure>
+
+            <h2 id="bo-config">Configuration</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Option</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><strong>Enable</strong></td>
+                  <td>Turns the overlay on for this player.</td>
+                </tr>
+                <tr>
+                  <td><strong>Type</strong></td>
+                  <td>Flip between <strong>Image</strong> (a logo) and <strong>Text</strong>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Text / Image</strong></td>
+                  <td>The overlay content itself.</td>
+                </tr>
+                <tr>
+                  <td><strong>Link</strong></td>
+                  <td>Where clicking the overlay takes the viewer (e.g. your homepage).</td>
+                </tr>
+                <tr>
+                  <td><strong>Text Color / Background Color</strong></td>
+                  <td>Colors for text overlays.</td>
+                </tr>
+                <tr>
+                  <td><strong>Opacity</strong></td>
+                  <td>From subtle (0.3) to solid (1).</td>
+                </tr>
+                <tr>
+                  <td><strong>Position</strong></td>
+                  <td>Drops the overlay into any corner of the video.</td>
+                </tr>
+              </table>
+            </div>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/overlay-frontend-html5-video-player.png"
+              data-caption="A text overlay positioned in the top-left corner"></figure>
+            <div class="callout tip"><span class="co-label">Tip</span>
+              <p><strong>Top Left</strong> keeps the overlay visible without covering the control bar, which lives at
+                the bottom of the frame in most skins.</p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="chapters-markers" data-group="Features" data-title="Chapters &amp; Markers">
+            <h1>Chapters &amp; Markers</h1>
+            <p class="lead">Chapters break a long video into named sections that viewers can jump between from a menu in
+              the control bar — a real help on anything longer than a few minutes. <span class="badge-pro">Pro</span>
+            </p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/R6SSHkVgMnI?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — chapters and markers"></figure>
+
+            <div data-editor-switch></div>
+
+            <h2 id="ch-add">Adding Chapters</h2>
+            <ol class="steps only-elementor">
+              <li>Select the widget and open its <strong>Chapter</strong> section.</li>
+              <li>Click <strong>Add Item</strong> and give the chapter a title and start time.</li>
+              <li>Repeat for each section, then preview the page.</li>
+            </ol>
+            <ol class="steps hide-elementor">
+              <li>Open the player&rsquo;s <strong><span class="only-classic">Chapters/Markers</span><span
+                    class="only-gutenberg">Chapters</span></strong> <span class="only-classic">tab</span><span
+                  class="only-gutenberg">panel</span>.</li>
+              <li>Click <strong>Add Chapter</strong>.</li>
+              <li>Give the chapter a <strong>title</strong> and a <strong>start time</strong>.</li>
+              <li>Repeat for each section, then save.</li>
+            </ol>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/chapter-gutenberg-HTML5-Video-Player-1.png"
+              data-caption="Chapter rows in the Chapters panel (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/chapters-classic.png"
+              data-caption="Chapter rows in the Chapters/Markers tab (Classic)"></figure>
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/chapter-elementor-html5-video-player.png"
+              data-caption="Chapter items in the widget&rsquo;s Chapter section (Elementor)"></figure>
+
+            <h2 id="ch-viewing">How Viewers Use Them</h2>
+            <p>A chapters icon appears in the control bar. Opening it lists every section by name; selecting one jumps
+              straight to that timestamp. Markers are also indicated along the progress bar, so viewers can see section
+              boundaries at a glance.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/chapter-gutenberg-HTML5-Video-Player.png"
+              data-caption="The chapters menu open in the control bar"></figure>
+
+            <h2 id="ch-when">When to Use Chapters</h2>
+            <ul>
+              <li>Tutorials and course lessons — let students revisit a specific step.</li>
+              <li>Webinar recordings — separate the talk from the Q&amp;A.</li>
+              <li>Product demos — one chapter per feature.</li>
+            </ul>
+          </article>
+
+          <article class="doc-article" id="video-seo" data-group="Features" data-title="Video SEO">
+            <h1>Video SEO</h1>
+            <p class="lead">The <strong><span class="only-classic">SEO (Google index)</span><span
+                  class="only-gutenberg">SEO (google)</span></strong> <span class="only-classic">tab</span><span
+                class="only-gutenberg">panel</span> adds structured data (schema markup) to the page
+              so search engines can understand and index your video properly — it&rsquo;s a couple of minutes&rsquo;
+              work that can earn you a video result in search.</p>
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/Xd5lpA-BgEg?list=PLD33HvWKDDNw"
+              data-caption="Video tutorial — video SEO"></figure>
+
+            <div data-editor-switch></div>
+
+            <div class="no-support only-elementor"><span class="ns-label">Not available in the Elementor widget</span>
+              <p>The widget has no SEO fields, so no schema markup is printed for it. To use it on an Elementor page,
+                configure SEO on a saved player
+                (<a href="#gutenberg-editor" data-nav>Gutenberg</a> or
+                <a href="#classic-editor" data-nav>Classic</a>), then drop that player&rsquo;s
+                <code>[html5_video id='…']</code> shortcode into an Elementor <strong>Shortcode</strong> widget — the
+                player keeps every setting you gave it.
+              </p>
+            </div>
+            <h2 id="seo-howto" class="hide-elementor">How to Enable It</h2>
+            <ol class="steps hide-elementor">
+              <li>Edit the player<span class="only-gutenberg">, select the player block,</span> and open the
+                <strong><span class="only-classic">SEO (Google index)</span><span class="only-gutenberg">SEO
+                    (google)</span></strong> <span class="only-classic">tab</span><span
+                  class="only-gutenberg">panel</span>.
+              </li>
+              <li>Fill in the <strong>Name</strong>, <strong>Description</strong> and <strong>Duration</strong> fields
+                (details below).</li>
+              <li>Click <strong>Update</strong>. The plugin prints video schema markup on every page that embeds the
+                player.</li>
+              <li>Verify with Google&rsquo;s <a href="https://search.google.com/test/rich-results" target="_blank"
+                  rel="noopener">Rich Results Test</a> — paste the page URL and look for the Video result type.</li>
+            </ol>
+
+            <h2 id="seo-fields">The Fields</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Field</th>
+                  <th>What to enter</th>
+                </tr>
+                <tr>
+                  <td><strong>Name</strong></td>
+                  <td>The video&rsquo;s title as it should appear in search results.</td>
+                </tr>
+                <tr>
+                  <td><strong>Description</strong></td>
+                  <td>A short, accurate summary of the content.</td>
+                </tr>
+                <tr>
+                  <td><strong>Duration</strong></td>
+                  <td>The video&rsquo;s length.</td>
+                </tr>
+              </table>
+            </div>
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/seo-html5-video-player.png"
+              data-caption="The SEO (google) panel in the block sidebar (Gutenberg)"></figure>
+            <figure class="media-slot only-classic" data-media="image" data-src="img/seo-classic.png"
+              data-caption="The SEO (Google index) tab in the metabox (Classic)"></figure>
+            <p>Combined with the <a href="#video-sources" data-nav>poster thumbnail</a>, this gives Google everything it
+              needs for a rich video snippet.</p>
+
+            <h2 id="seo-tips">Tips for Better Video Results</h2>
+            <ul>
+              <li>Write the description for humans first — search engines reward clarity.</li>
+              <li>Set an accurate duration; mismatched metadata can prevent rich results.</li>
+              <li>Use a high-quality, relevant poster image.</li>
+              <li>Keep one primary video per page where possible — pages focused on a single video rank best.</li>
+            </ul>
+          </article>
+
+          <article class="doc-article" id="email-capture" data-group="Features" data-title="Email Capture">
+            <h1>Email Capture</h1>
+            <p class="lead">Email Capture gates the video behind a form — anyone who wants to watch enters their email
+              first, turning the player into a lead-generation tool. <span class="badge-pro">Pro</span></p>
+            <figure class="media-slot" data-media="video" data-src="img/email-capture-tutorial.mp4"
+              data-caption="Video tutorial — email capture"></figure>
+
+            <div data-editor-switch></div>
+
+            <div class="no-support only-elementor"><span class="ns-label">Not available in the Elementor widget</span>
+              <p>The widget has no Email Capture controls. To use it on an Elementor page, configure the email gate on a
+                saved player
+                (<a href="#gutenberg-editor" data-nav>Gutenberg</a> or
+                <a href="#classic-editor" data-nav>Classic</a>), then drop that player&rsquo;s
+                <code>[html5_video id='…']</code> shortcode into an Elementor <strong>Shortcode</strong> widget — the
+                player keeps every setting you gave it.
+              </p>
+            </div>
+            <h2 id="ec-player" class="hide-elementor">Per-Player Setup</h2>
+            <ol class="steps hide-elementor">
+              <li class="only-gutenberg">Select the player block, open the <strong>Presets</strong> panel and click
+                <strong>Add New Preset</strong> (or edit one) — the <strong>Email Capture</strong> section lives in the
+                preset editor&rsquo;s left column. Switch the gate on there.
+              </li>
+              <li class="only-classic">Edit the player, open the <strong>Email Capture</strong> tab, then switch the
+                gate on.</li>
+              <li>Configure the form (options below) and click <strong>Update</strong>.</li>
+              <li>Visit the page — the form now covers the player until an email is submitted.</li>
+            </ol>
+            <p>The form options:</p>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Option</th>
+                  <th>Example</th>
+                </tr>
+                <tr>
+                  <td><strong>Heading</strong></td>
+                  <td>&ldquo;Enter Your Email to Watch The Video&rdquo;</td>
+                </tr>
+                <tr>
+                  <td><strong>Bottom Text</strong></td>
+                  <td>A privacy note or incentive line under the form.</td>
+                </tr>
+                <tr>
+                  <td><strong>Play Button Text</strong></td>
+                  <td>&ldquo;Watch Video&rdquo;</td>
+                </tr>
+                <tr>
+                  <td><strong>Play Button Color / Background</strong></td>
+                  <td>Match your brand colors.</td>
+                </tr>
+                <tr>
+                  <td><strong>Round Corner</strong></td>
+                  <td>Corner radius of the form, e.g. <code>8px</code>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Integration</strong></td>
+                  <td>Where captured emails are sent — see below.</td>
+                </tr>
+              </table>
+            </div>
+
+            <figure class="media-slot" data-media="image" data-src="img/email-capture-form.png"
+              data-caption="The email gate viewers see before playback"></figure>
+
+            <h2 id="ec-integrations" class="hide-elementor">Integrations</h2>
+            <p>The <strong>Integration</strong> dropdown connects the form to your mailing list. Supported destinations:
+            </p>
+            <ul>
+              <li><strong>None</strong> — addresses are stored in WordPress only (see <strong>Html5 Video Player &rarr;
+                  Emails</strong>).</li>
+              <li><strong>Mailchimp</strong></li>
+              <li><strong>MailerLite</strong></li>
+              <li><strong>ActiveCampaign</strong></li>
+              <li><strong>FluentCRM</strong></li>
+              <li><strong>Webhook</strong> — POST captured addresses to any endpoint you define.</li>
+            </ul>
+
+            <h2 id="ec-global" class="hide-elementor">Global API Keys</h2>
+            <p>API credentials are entered once, globally, under <strong>Html5 Video Player &rarr; Settings &rarr; Email
+                Capture</strong>:</p>
+            <ol class="steps hide-elementor">
+              <li>Add your <strong>Mailchimp</strong>, <strong>MailerLite</strong> or <strong>ActiveCampaign</strong>
+                API key (ActiveCampaign also needs your account URL).</li>
+              <li>Connect <strong>FluentCRM</strong> if it&rsquo;s installed on the same site.</li>
+              <li>Or click <strong>Add Webhook</strong> to register an outgoing webhook URL.</li>
+            </ol>
+            <p>Once connected, every player&rsquo;s capture form can deliver addresses to that service — captured leads
+              land wherever you need them.</p>
+            <figure class="media-slot" data-media="image" data-src="img/email-capture-settings.png"
+              data-caption="Integration API keys under Settings &rarr; Email Capture"></figure>
+
+            <h2 id="ec-viewing">Viewing Captured Emails</h2>
+            <p>All captured addresses are listed under <strong>Html5 Video Player &rarr; Emails</strong> in the
+              dashboard, regardless of which integration is active.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/email-list-html5-video-player.png"
+              data-caption="Captured addresses under Html5 Video Player &rarr; Emails"></figure>
+          </article>
+          <!-- ARTICLES:FEATURES-END -->
+          <!-- ============ PLAYLISTS ============ -->
+
+          <article class="doc-article" id="playlists" data-group="Playlists" data-title="Creating Playlists">
+            <h1>Creating Video Playlists</h1>
+            <p class="lead">Playlists group multiple videos — self-hosted, YouTube or Vimeo, mixed freely — into a
+              single player with a browsable list, search, and autoplay-next. <span class="badge-pro">Pro</span></p>
+
+            <h2 id="pl-create">Building a Playlist</h2>
+            <ol class="steps">
+              <li>Go to <strong>Html5 Video Player &rarr; Playlists</strong> and add a new playlist.</li>
+              <li>Add each video: source (Library/CDN, YouTube or Vimeo), title, and thumbnail.</li>
+              <li>Pick a layout (see below) and configure playlist options.</li>
+              <li>Save, copy the shortcode, and place it on any page:</li>
+            </ol>
+            <div class="codeblock">
+              <pre><code>[video_playlist id='1234']</code></pre>
+            </div>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/plalist-classic-html5-video-player.png"
+              data-caption="The playlist editor — videos, layout and options"></figure>
+            <p>Prefer blocks? The <strong>Video Playlist</strong> Gutenberg block builds the same playlists visually
+              right in the editor — add videos, choose the layout, and enable search or autoplay without leaving the
+              page.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/playlist-gutenberg-html5-video-player-1.png"
+              data-caption="Building a playlist in the Video Playlist block"></figure>
+
+            <h2 id="pl-layouts">Layouts</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Layout</th>
+                  <th>Description</th>
+                </tr>
+                <tr>
+                  <td><strong>Simple List</strong></td>
+                  <td>A clean text list of titles below the player.</td>
+                </tr>
+                <tr>
+                  <td><strong>List With Thumb</strong></td>
+                  <td>List items with video thumbnails.</td>
+                </tr>
+                <tr>
+                  <td><strong>List on Right Side</strong></td>
+                  <td>The classic two-column view — player left, scrollable list right.</td>
+                </tr>
+                <tr>
+                  <td><strong>Grid / Gallery</strong></td>
+                  <td>A thumbnail grid; clicking a tile loads that video into the player.</td>
+                </tr>
+              </table>
+            </div>
+
+            <figure class="media-slot" data-media="image" data-src="img/playlist-layouts.png"
+              data-caption="The four playlist layouts"></figure>
+
+            <h2 id="pl-features">Playlist Features</h2>
+            <ul>
+              <li><strong>Search</strong> — viewers filter the list by title as they type.</li>
+              <li><strong>Keyboard navigation</strong> — move through the list without a mouse.</li>
+              <li><strong>Now-playing &amp; duration badges</strong> — the active video is highlighted and every item
+                shows its length.</li>
+              <li><strong>Autoplay next with countdown</strong> — when a video ends, a countdown starts the next one
+                automatically.</li>
+              <li><strong>Previous/Next overlay buttons</strong> — optional navigation arrows that appear smoothly when
+                hovering the player (disabled by default; enable them in the block settings or Classic Editor options).
+              </li>
+            </ul>
+
+            <figure class="media-slot" data-media="video" data-src="https://youtu.be/puBB4bVk92Q?list=PLD33HvWKDDNw"
+              data-caption="Playlist demo — search, switching and autoplay-next"></figure>
+
+            <h2 id="pl-streams">Streams in Playlists</h2>
+            <p>Playlist items can be HLS (<code>.m3u8</code>) or DASH (<code>.mpd</code>) streams — the plugin detects
+              them and loads the streaming engine automatically. Embedded YouTube and Vimeo items switch cleanly when
+              clicked, including their captions and analytics tracking.</p>
+          </article>
+
+          <!-- ============ USAGE ============ -->
+
+          <article class="doc-article" id="shortcodes" data-group="Usage" data-title="Shortcode Reference">
+            <h1>Shortcode Reference</h1>
+            <p class="lead">Everything the plugin renders can be placed with a shortcode — in posts, pages, widgets, or
+              theme templates via <code>do_shortcode()</code>.</p>
+
+            <h2 id="sc-player">Saved Player: <code>[html5_video]</code></h2>
+            <p>Renders a player you created under <strong>Html5 Video Player &rarr; Add New</strong> — whether it was
+              built with the <a href="#classic-editor" data-nav>Classic metabox editor</a> or the <a
+                href="#gutenberg-editor" data-nav>Gutenberg editor</a>, the shortcode is identical:</p>
+            <div class="codeblock">
+              <pre><code>[html5_video id='1453']</code></pre>
+            </div>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Attribute</th>
+                  <th>Description</th>
+                </tr>
+                <tr>
+                  <td><code>id</code></td>
+                  <td>The player&rsquo;s ID — shown next to each player under All Players and on the edit screen.</td>
+                </tr>
+              </table>
+            </div>
+
+            <figure class="media-slot" data-media="image" data-src="img/all-players-shortcodes.png"
+              data-caption="The Shortcode column on the All Players screen"></figure>
+
+            <h2 id="sc-quick">Quick Player: <code>[video_player]</code></h2>
+            <p>Renders a player directly from a URL, with no saved player needed. Ideal for one-off embeds:</p>
+            <div class="codeblock">
+              <pre><code>[video_player src="https://example.com/video.mp4"]</code></pre>
+            </div>
+            <p>With attributes:</p>
+            <div class="codeblock">
+              <pre><code>[video_player src="https://example.com/video.mp4" autoplay="false" muted="true" preload="metadata" width="500px" skin="modern" controls="play-large, progress, current-time, mute, volume, settings, fullscreen"]</code></pre>
+            </div>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Attribute</th>
+                  <th>Values</th>
+                  <th>Description</th>
+                </tr>
+                <tr>
+                  <td><code>src</code></td>
+                  <td>URL</td>
+                  <td>Direct link to the video file (required).</td>
+                </tr>
+                <tr>
+                  <td><code>controls</code></td>
+                  <td>comma-separated list</td>
+                  <td>Which controls to render: <code>play-large</code>, <code>restart</code>, <code>rewind</code>,
+                    <code>play</code>, <code>fast-forward</code>, <code>progress</code>, <code>current-time</code>,
+                    <code>mute</code>, <code>volume</code>, <code>captions</code>, <code>settings</code>,
+                    <code>pip</code>, <code>airplay</code>, <code>download</code>, <code>fullscreen</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>autoplay</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Start playback on load (browsers require <code>muted="true"</code>).</td>
+                </tr>
+                <tr>
+                  <td><code>muted</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Start with sound off.</td>
+                </tr>
+                <tr>
+                  <td><code>preload</code></td>
+                  <td><code>auto</code> / <code>metadata</code> / <code>none</code></td>
+                  <td>How much of the video loads up front.</td>
+                </tr>
+                <tr>
+                  <td><code>width</code></td>
+                  <td>e.g. <code>500px</code></td>
+                  <td>Player width.</td>
+                </tr>
+                <tr>
+                  <td><code>reset_on_end</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Rewind to the start when playback finishes.</td>
+                </tr>
+                <tr>
+                  <td><code>skin</code> <span class="badge-pro">Pro</span></td>
+                  <td><code>default</code> / <code>stacked</code> / <code>modern</code> / <code>floating-pill</code> /
+                    <code>classic-minimal</code> / <code>stacked-dual-row</code> / <code>modern-mobile-stack</code>
+                  </td>
+                  <td>Control-bar skin for this embed — see <a href="#skins-controls" data-nav>Skins &amp; Controls</a>.
+                    Unrecognized values fall back to <code>default</code>.</td>
+                </tr>
+              </table>
+            </div>
+            <p>Site-wide defaults for this shortcode live under <a href="#quick-player" data-nav><strong>Html5 Video
+                  Player &rarr; Quick Player</strong></a>.</p>
+
+            <h2 id="sc-playlist">Playlist: <code>[video_playlist]</code> <span class="badge-pro">Pro</span></h2>
+            <div class="codeblock">
+              <pre><code>[video_playlist id='1234']</code></pre>
+            </div>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Attribute</th>
+                  <th>Description</th>
+                </tr>
+                <tr>
+                  <td><code>id</code></td>
+                  <td>The playlist&rsquo;s ID from <strong>Html5 Video Player &rarr; Playlists</strong>.</td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="sc-video">The <code>[video]</code> Override</h2>
+            <p>The plugin can also take over WordPress&rsquo;s built-in <code>[video]</code> shortcode so core-embedded
+              videos get the same skinned player. If this conflicts with another plugin or your theme, disable it under
+              <strong>Settings</strong> (&ldquo;disable [video] shortcode&rdquo;).
+            </p>
+
+            <h2 id="sc-php">Using Shortcodes in Templates</h2>
+            <div class="codeblock">
+              <pre><code>&lt;?php echo do_shortcode("[html5_video id='1453']"); ?&gt;</code></pre>
+            </div>
+            <p>Works in any theme PHP file — headers, footers, custom page templates or hooks.</p>
+          </article>
+
+          <article class="doc-article" id="blocks-builders" data-group="Usage" data-title="Blocks &amp; Page Builders">
+            <h1>Gutenberg Blocks &amp; Page Builders</h1>
+            <p class="lead">Besides shortcodes, videos can be embedded <em>directly</em> into content — with native
+              Gutenberg blocks, an Elementor widget, or the Classic Editor shortcode generator. These are one-off embeds
+              configured in place; to build a reusable player with a shortcode, see <a href="#choosing-editor"
+                data-nav>Creating Players</a>.</p>
+
+            <h2 id="bb-blocks">Gutenberg Blocks</h2>
+            <ol class="steps">
+              <li>Edit any post or page in the block editor and click the <strong>+</strong> inserter.</li>
+              <li>Search for <strong>&ldquo;HTML5&rdquo;</strong> — the plugin&rsquo;s blocks appear (table below).</li>
+              <li>Insert one and configure it from the sidebar inspector; the video previews live on the canvas.</li>
+            </ol>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Block</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><strong>HTML5 Video Player</strong></td>
+                  <td>Embeds a video with the full player — pick a saved player or configure it inline. Includes an Edit
+                    icon in the toolbar to change or upload a new video.</td>
+                </tr>
+                <tr>
+                  <td><strong>YouTube Player</strong></td>
+                  <td>A dedicated block for YouTube sources.</td>
+                </tr>
+                <tr>
+                  <td><strong>Vimeo Player</strong></td>
+                  <td>A dedicated block for Vimeo sources.</td>
+                </tr>
+                <tr>
+                  <td><strong>Video Playlist</strong> <span class="badge-pro">Pro</span></td>
+                  <td>Builds playlists visually — multiple videos, four layouts, search and autoplay options.</td>
+                </tr>
+              </table>
+            </div>
+            <p>Every block exposes its settings in the sidebar inspector, organized into panels (Media, Controls,
+              Behavior, and so on) that mirror the dashboard player editor.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/block-inserter-html5-video-player.png"
+              data-caption="The plugin&rsquo;s blocks in the Gutenberg inserter"></figure>
+
+            <h2 id="bb-elementor">Elementor</h2>
+            <p>Drag the <strong>HTML5 Video Player</strong> widget into any Elementor section and configure it from the
+              widget panel. Elementor embeds also support <strong>Autoplay When Visible on Screen</strong>.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/elementor-widget.png"
+              data-caption="The HTML5 Video Player widget in Elementor"></figure>
+
+            <h2 id="bb-classic">Classic Editor Shortcode Generator</h2>
+            <p>Using the Classic Editor? An <strong>Advanced Shortcode Generator</strong> lives right in the post/page
+              toolbar. It builds the full shortcode visually — including Popup and Save State options — and inserts it
+              at the cursor. If you don&rsquo;t use it, it can be disabled in the plugin settings.</p>
+
+            <h2 id="bb-editor-choice">Player Creation Is Separate</h2>
+            <p>None of the above replaces the saved-player workflow: players created under <strong>Html5 Video Player
+                &rarr; Add New</strong> (in either the <a href="#classic-editor" data-nav>Classic metabox</a> or <a
+                href="#gutenberg-editor" data-nav>Gutenberg</a> editor) remain the way to get a reusable
+              <code>[html5_video]</code> shortcode with the full feature set — protection, chapters, email capture and
+              the rest.
+            </p>
+          </article>
+
+          <article class="doc-article" id="quick-player" data-group="Usage" data-title="Quick Player">
+            <h1>Quick Player</h1>
+            <p class="lead">Quick Player is the fastest way to drop a video on a page: one shortcode, one URL, no saved
+              player required.</p>
+
+            <h2 id="qp-usage">Basic Usage</h2>
+            <div class="codeblock">
+              <pre><code>[video_player src="https://example.com/my-video.mp4"]</code></pre>
+            </div>
+            <p>That&rsquo;s a complete, skinned, responsive player. Add attributes to override behavior per-embed — the
+              full list is in the <a href="#shortcodes" data-nav>Shortcode Reference</a>.</p>
+
+            <h2 id="qp-defaults">Site-Wide Defaults</h2>
+            <p>Under <strong>Html5 Video Player &rarr; Quick Player</strong> you set the defaults every
+              <code>[video_player]</code> embed inherits: which controls appear, autoplay/muted/loop behavior, preload
+              strategy, seek time, and aspect ratio. Attributes on an individual shortcode always win over the defaults.
+            </p>
+            <ol class="steps">
+              <li>Go to <strong>Html5 Video Player &rarr; Quick Player</strong>.</li>
+              <li>Adjust the defaults — controls, autoplay, muted, loop, preload, seek time, aspect ratio.</li>
+              <li>Save. Every <code>[video_player]</code> embed without its own attributes now follows these defaults.
+              </li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quick-player-settings.png"
+              data-caption="The Quick Player defaults screen"></figure>
+
+            <h2 id="qp-when">Quick Player vs. Saved Players</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th></th>
+                  <th>Quick Player</th>
+                  <th>Saved Player</th>
+                </tr>
+                <tr>
+                  <td><strong>Setup</strong></td>
+                  <td>None — just a URL</td>
+                  <td>Created in the dashboard</td>
+                </tr>
+                <tr>
+                  <td><strong>Best for</strong></td>
+                  <td>One-off embeds</td>
+                  <td>Videos reused or updated over time</td>
+                </tr>
+                <tr>
+                  <td><strong>Advanced features</strong> (protection, chapters, email capture, end screen&hellip;)</td>
+                  <td>&mdash;</td>
+                  <td>&#10003;</td>
+                </tr>
+                <tr>
+                  <td><strong>Central editing</strong></td>
+                  <td>Edit each shortcode</td>
+                  <td>Edit once, updates everywhere</td>
+                </tr>
+              </table>
+            </div>
+          </article>
+
+          <article class="doc-article" id="analytics" data-group="Usage" data-title="Analytics">
+            <h1>Analytics</h1>
+            <p class="lead">See how your videos actually perform — right inside WordPress, with optional Google
+              Analytics forwarding.</p>
+
+            <h2 id="an-dashboard">The Analytics Page</h2>
+            <ol class="steps">
+              <li>Built-in tracking is on by default — confirm under <strong>Html5 Video Player &rarr; Settings &rarr;
+                  Marketing &rarr; Analytics &rarr; Analytics Enabled</strong>.</li>
+              <li>Open <strong>Html5 Video Player &rarr; Analytics</strong> to browse the numbers.</li>
+            </ol>
+            <p>You&rsquo;ll see which videos are watched and how often. Tracking works for self-hosted files and for
+              embedded YouTube and Vimeo videos — including videos switched inside playlists.</p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/analytics-html5-video-player.png"
+              data-caption="The Analytics page in the dashboard"></figure>
+
+            <h2 id="an-ga4">Google Analytics (GA4) <span class="badge-pro">Pro</span></h2>
+            <p>Forward playback events to Google Analytics to segment video engagement alongside the rest of your site
+              metrics:</p>
+            <ol class="steps">
+              <li>Go to <strong>Html5 Video Player &rarr; Settings &rarr; Marketing &rarr; Analytics</strong>.</li>
+              <li>Switch <strong>Enable Google Analytics (GA4)</strong> on.</li>
+              <li>Enter your GA4 Tracking ID (<code>G-XXXXXXXXXX</code>) — <em>only if Google Analytics isn&rsquo;t
+                  already installed on the site</em>. If it is, leave the field empty; the player uses the existing
+                setup automatically.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/ga4-analytics-settings-html5-video-player.png"
+              data-caption="GA4 options under Settings &rarr; Marketing &rarr; Analytics"></figure>
+
+            <h2 id="an-privacy">Data &amp; Privacy</h2>
+            <p>Analytics data is stored in your own WordPress database. If you ever remove the plugin, the
+              <strong>Remove Data on Uninstall</strong> option (Settings) controls whether analytics — along with
+              players, playlists and captured emails — are deleted; it is disabled by default so nothing is lost
+              accidentally.
+            </p>
+          </article>
+
+          <article class="doc-article" id="global-settings" data-group="Usage"
+            data-title="Global Settings &amp; Extensions">
+            <h1>Global Settings &amp; Extensions</h1>
+            <p class="lead">The <strong>Settings</strong> page holds everything that applies plugin-wide, organized into
+              collapsible groups: <strong>Player</strong>, <strong>Shortcode &amp; Tools</strong>, and
+              <strong>Marketing</strong>.
+            </p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/global-settings-html5-video-player.png"
+              data-caption="The Settings page with its collapsible groups"></figure>
+
+            <h2 id="gs-player">Player</h2>
+            <ul>
+              <li><strong>Preset</strong> — site-wide playback defaults (Repeat, Muted, Auto Play, Player Width, Seek
+                Time and more) used by the Classic Shortcode Generator.</li>
+              <li><strong>Brand Color</strong> — the accent color every player inherits (default <code>#00b2ff</code>).
+              </li>
+              <li><strong>Custom Style</strong> — plugin-wide custom CSS for fine-tuning the player.</li>
+              <li><strong>Caption</strong> — caption and subtitle appearance defaults.</li>
+            </ul>
+
+            <h2 id="gs-tools">Shortcode &amp; Tools</h2>
+            <ul>
+              <li><strong>Disable <code>[video]</code> shortcode</strong> — hand WordPress&rsquo;s built-in video
+                shortcode back to core if another plugin conflicts.</li>
+              <li><strong>Shortcode generator toggle</strong> — enable/disable the Classic Editor generator.</li>
+              <li><strong>SRT &rarr; VTT converter</strong> — convert subtitle files to the required <code>.vtt</code>
+                format (the <strong>Convert</strong> section).</li>
+              <li><strong>Import/Export</strong> — enable to add an Export/Import column on the All Players screen, for
+                moving players between sites.</li>
+            </ul>
+
+            <h2 id="gs-marketing">Marketing</h2>
+            <ul>
+              <li><strong>Email Capture integrations</strong> — Mailchimp, MailerLite and ActiveCampaign API keys,
+                FluentCRM connection, and outgoing webhooks. See <a href="#email-capture" data-nav>Email Capture</a>.
+              </li>
+              <li><strong>Analytics</strong> — built-in tracking toggle and Google Analytics (GA4) forwarding. See <a
+                  href="#analytics" data-nav>Analytics</a>.</li>
+            </ul>
+
+            <h2 id="gs-aws">AWS S3</h2>
+            <p>Streaming from Amazon&nbsp;S3 needs credentials — <strong>Key ID, Access Key, Bucket and Region</strong>
+              — entered under <strong>Settings &rarr; AWS S3</strong>. Once saved, the S3 file picker in every
+              player&rsquo;s Media tab can browse your bucket. See <a href="#video-sources" data-nav>Video Sources</a>.
+            </p>
+
+            <h2 id="gs-uninstall">Remove Data on Uninstall</h2>
+            <p>Off by default. When enabled, deleting the plugin also deletes all its data — video players, playlists,
+              captured emails, analytics, and settings. Leave it off if there&rsquo;s any chance you&rsquo;ll reinstall
+              later.</p>
+
+            <h2 id="gs-extensions">Extensions Manager</h2>
+            <p>Introduced in version 2.13.0, the <strong>Extensions manager</strong> lets you browse and enable optional
+              add-on modules that extend the player — keeping the core plugin lean while letting you switch on only the
+              functionality you need.</p>
+            <ol class="steps">
+              <li>Go to <strong>Html5 Video Player &rarr; Extensions</strong> in the admin menu.</li>
+              <li>Browse the catalog of available modules.</li>
+              <li>Install and activate the ones you want — their options appear alongside the plugin&rsquo;s own
+                settings.</li>
+            </ol>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/extension-manager-html5-video-player.png"
+              data-caption="The Extensions manager"></figure>
+          </article>
+
+          <!-- ============ TROUBLESHOOTING ============ -->
+
+          <article class="doc-article" id="troubleshooting" data-group="Troubleshooting" data-title="Common Issues">
+            <h1>Common Issues</h1>
+            <p class="lead">Most support questions come down to a handful of predictable causes. Check these first.</p>
+
+            <h2 id="ts-autoplay">Autoplay Isn&rsquo;t Working</h2>
+            <p>Modern browsers (Chrome, Safari, Edge) only allow autoplay when the video is explicitly
+              <strong>muted</strong>. Enable <strong>Muted</strong> together with <strong>Auto Play</strong> in the
+              player&rsquo;s Settings tab. Also note that enabling a <a href="#watermark" data-nav>Watermark</a>
+              disables autoplay for that player.
+            </p>
+
+            <h2 id="ts-endscreen">The End Screen Never Appears</h2>
+            <p>Switch <strong>Reset On End</strong> and <strong>Repeat</strong> off. If the player rewinds or loops at
+              the end, the end screen can&rsquo;t display. See <a href="#end-screen" data-nav>End Screen</a>.</p>
+
+            <h2 id="ts-subtitles">Subtitles Won&rsquo;t Upload or Display</h2>
+            <p>The player only accepts <code>.vtt</code> files. If your captions are <code>.srt</code>, convert them
+              with the built-in SRT&rarr;VTT converter in <strong>Settings &rarr; Shortcode &amp; Tools</strong>, then
+              re-upload.</p>
+
+            <h2 id="ts-download-pip">Download or PIP Button Missing</h2>
+            <p>For YouTube and Vimeo sources, the Download and Picture-in-Picture buttons are unavailable — the
+              platforms don&rsquo;t permit them. For self-hosted files, check that the buttons are enabled in
+              <strong>Control buttons and Components</strong>.
+            </p>
+
+            <h2 id="ts-quality">Quality Switcher Shows the Wrong Resolution</h2>
+            <p>When using the quality switcher, the main <strong>Source URL should be the 720p version</strong> of the
+              video; the alternates you add (576, 1080, &hellip;) are offered in the settings gear.</p>
+
+            <h2 id="ts-video-shortcode">Conflict with Another Video Plugin</h2>
+            <p>If another plugin or your theme also handles the WordPress <code>[video]</code> shortcode, disable the
+              plugin&rsquo;s <code>[video]</code> override in <strong>Settings &rarr; Shortcode &amp; Tools</strong> to
+              avoid double-rendering.</p>
+
+            <h2 id="ts-protected">Protected Video Shows for Everyone (or No One)</h2>
+            <p>Test in an incognito window — your admin session may be satisfying the rule. Check the <strong>Who Can
+                See This Video</strong> selection and the <strong>Allowed User Roles</strong> checklist. See <a
+                href="#password-protection" data-nav>Password Protection &amp; Roles</a>.</p>
+
+            <h2 id="ts-theme">Theme or Plugin Conflicts</h2>
+            <p>The plugin is compatible with most themes and plugins, but third-party conflicts can happen. To diagnose:
+              switch temporarily to a default theme (e.g. Twenty Twenty-Four) and disable other plugins one at a time.
+              If you find a conflict, <a href="https://bplugins.com/support/" target="_blank" rel="noopener">report it
+                to support</a> — compatibility fixes ship regularly.</p>
+
+            <h2 id="ts-security">Reporting Security Issues</h2>
+            <p>Please report security bugs through the <a
+                href="https://patchstack.com/database/vdp/9e5fb205-6f66-453b-bdaa-c7c587b83810" target="_blank"
+                rel="noopener">Patchstack Vulnerability Disclosure Program</a>, which handles verification, CVE
+              assignment and developer notification.</p>
+          </article>
+
+          <article class="doc-article" id="faq" data-group="Troubleshooting" data-title="FAQ">
+            <h1>Frequently Asked Questions</h1>
+            <p class="lead">Quick answers to the questions we hear most.</p>
+
+            <h2 id="faq-formats">What video formats can I play?</h2>
+            <p>Self-hosted MP4, WebM and OGG files; HLS (<code>.m3u8</code>) and DASH (<code>.mpd</code>) streams; plus
+              YouTube, Vimeo and AWS&nbsp;S3 sources.</p>
+
+            <h2 id="faq-limit">How many players can I publish?</h2>
+            <p>Unlimited. There are no limits on players, playlists, or embeds.</p>
+
+            <h2 id="faq-php">What PHP version is required?</h2>
+            <p>The free version requires PHP <strong>7.1</strong> or higher. The Pro version requires PHP
+              <strong>8.1</strong> or higher.
+            </p>
+
+            <h2 id="faq-theme">Will it work with my theme?</h2>
+            <p>The plugin is compatible with most themes. If you hit a conflict with a third-party theme, <a
+                href="https://bplugins.com/support/" target="_blank" rel="noopener">let us know</a> — where a fix is
+              possible on the plugin side, it ships as an update.</p>
+
+            <h2 id="faq-pro">What does Pro add?</h2>
+            <p>Color picker, AWS&nbsp;S3 and external hosting, multiple subtitles, quality switcher, full control
+              customization, sticky mode, popup player, password protection and role-based access, watermarking, end
+              screens, branding/overlay, chapters, Google VAST ads, email capture with CRM integrations, playlists, GA4
+              analytics, and an ad-free admin experience. See the <a
+                href="https://bplugins.com/products/html5-video-player/pricing/" target="_blank" rel="noopener">pricing
+                page</a> for details.</p>
+
+            <h2 id="faq-migrate">Will my free players survive upgrading to Pro?</h2>
+            <p>Yes — existing free players are migrated automatically into the Pro data table when you upgrade.</p>
+
+            <h2 id="faq-support">Where do I get help?</h2>
+            <p>Open a ticket at <a href="https://bplugins.com/support/" target="_blank"
+                rel="noopener">bplugins.com/support</a>. For security reports, use the <a
+                href="https://patchstack.com/database/vdp/9e5fb205-6f66-453b-bdaa-c7c587b83810" target="_blank"
+                rel="noopener">Patchstack VDP</a>.</p>
+          </article>
+          <!-- ARTICLES:USAGE-END -->
+        </div>
+
+        <div class="article-footer" id="pager"></div>
+      </div>
+
+      <!-- ===================== TOC ===================== -->
+      <aside class="toc" id="toc">
+        <div class="toc-title">Table of Contents</div>
+        <ul id="tocList"></ul>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var articles = Array.prototype.slice.call(document.querySelectorAll(".doc-article"));
+      var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav-group-items a"));
+      var order = navLinks.map(function (a) { return a.getAttribute("href").slice(1); });
+      var tocList = document.getElementById("tocList");
+      var toc = document.getElementById("toc");
+      var pager = document.getElementById("pager");
+      var bcGroup = document.getElementById("bcGroup");
+      var bcTitle = document.getElementById("bcTitle");
+      var spy = null;
+
+      function articleById(id) {
+        return document.getElementById(id) && document.getElementById(id).classList.contains("doc-article")
+          ? document.getElementById(id) : null;
+      }
+
+      function buildToc(article) {
+        tocList.innerHTML = "";
+        var heads = Array.prototype.filter.call(article.querySelectorAll("h2"), function (h) {
+          return h.offsetParent !== null || getComputedStyle(h).display !== "none";
+        });
+        /* keep the column's width reserved when empty, so the content never shifts */
+        toc.style.visibility = heads.length ? "" : "hidden";
+        Array.prototype.forEach.call(heads, function (h) {
+          var li = document.createElement("li");
+          var a = document.createElement("a");
+          a.href = "#" + h.id;
+          a.textContent = h.textContent;
+          a.addEventListener("click", function (e) {
+            e.preventDefault();
+            h.scrollIntoView({ behavior: "smooth" });
+            history.replaceState(null, "", "#" + article.id);
+          });
+          li.appendChild(a);
+          tocList.appendChild(li);
+        });
+        if (spy) spy.disconnect();
+        spy = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) {
+              tocList.querySelectorAll("a").forEach(function (a) {
+                a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id);
+              });
+            }
+          });
+        }, { rootMargin: "-80px 0px -70% 0px", threshold: 0 });
+        Array.prototype.forEach.call(heads, function (h) { spy.observe(h); });
+      }
+
+      function buildPager(id) {
+        pager.innerHTML = "";
+        var i = order.indexOf(id);
+        if (i > 0) {
+          var prev = document.createElement("a");
+          prev.className = "pager-link"; prev.href = "#" + order[i - 1];
+          prev.setAttribute("data-nav", "");
+          prev.innerHTML = '<span class="pl-dir">&larr; Previous</span><span class="pl-title">' +
+            articleById(order[i - 1]).getAttribute("data-title") + "</span>";
+          pager.appendChild(prev);
+        }
+        if (i > -1 && i < order.length - 1) {
+          var next = document.createElement("a");
+          next.className = "pager-link next"; next.href = "#" + order[i + 1];
+          next.setAttribute("data-nav", "");
+          next.innerHTML = '<span class="pl-dir">Next &rarr;</span><span class="pl-title">' +
+            articleById(order[i + 1]).getAttribute("data-title") + "</span>";
+          pager.appendChild(next);
+        }
+      }
+
+      function show(id, scroll) {
+        var article = articleById(id) || articleById("introduction");
+        id = article.id;
+        articles.forEach(function (a) { a.classList.toggle("active", a === article); });
+        navLinks.forEach(function (a) {
+          var on = a.getAttribute("href") === "#" + id;
+          a.classList.toggle("active", on);
+          if (on) a.closest(".nav-group").classList.add("open");
+        });
+        bcGroup.textContent = article.getAttribute("data-group");
+        bcTitle.textContent = article.getAttribute("data-title");
+        document.title = article.getAttribute("data-title") + " — HTML5 Video Player Docs";
+        buildToc(article);
+        buildPager(id);
+        if (scroll !== false) window.scrollTo({ top: 0 });
+        document.body.classList.remove("nav-open");
+      }
+
+      document.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-nav]");
+        if (!a) return;
+        var id = a.getAttribute("href").slice(1);
+        if (!articleById(id)) return;
+        e.preventDefault();
+        history.pushState(null, "", "#" + id);
+        show(id);
+      });
+
+      window.addEventListener("popstate", function () {
+        show(location.hash.slice(1) || "introduction", false);
+      });
+
+      document.querySelectorAll(".nav-group-head").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          btn.parentElement.classList.toggle("open");
+        });
+      });
+
+      /* Mobile nav */
+      document.getElementById("menuBtn").addEventListener("click", function () {
+        document.body.classList.toggle("nav-open");
+      });
+      document.getElementById("overlay").addEventListener("click", function () {
+        document.body.classList.remove("nav-open");
+      });
+
+      /* Copy buttons */
+      document.querySelectorAll(".codeblock").forEach(function (block) {
+        var btn = document.createElement("button");
+        btn.className = "copy-btn"; btn.type = "button"; btn.textContent = "Copy";
+        btn.addEventListener("click", function () {
+          var text = block.querySelector("code").innerText;
+          (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+            .then(function () { btn.textContent = "Copied!"; })
+            .catch(function () {
+              var ta = document.createElement("textarea");
+              ta.value = text; document.body.appendChild(ta); ta.select();
+              document.execCommand("copy"); document.body.removeChild(ta);
+              btn.textContent = "Copied!";
+            });
+          setTimeout(function () { btn.textContent = "Copy"; }, 1600);
+        });
+        block.appendChild(btn);
+      });
+
+      /* Editor switcher: Gutenberg/Classic/Elementor instruction variants, synced across pages */
+      var EDITORS = [
+        { id: "gutenberg", label: "Gutenberg", icon: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>' },
+        { id: "classic", label: "Classic Editor", icon: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>' },
+        { id: "elementor", label: "Elementor", icon: '<path d="M4 3h3v18H4z"/><path d="M10 3h10v4H10z"/><path d="M10 10h10v4H10z"/><path d="M10 17h10v4H10z"/>' }
+      ];
+      document.querySelectorAll("[data-editor-switch]").forEach(function (row) {
+        row.classList.add("switch-row");
+        row.innerHTML = '<span class="switch-label">Show instructions for:</span>' +
+          '<div class="editor-switch" role="tablist" aria-label="Editor">' +
+          EDITORS.map(function (ed) {
+            return '<button type="button" data-editor="' + ed.id + '">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+              'stroke-linecap="round" stroke-linejoin="round">' + ed.icon + '</svg>' + ed.label + '</button>';
+          }).join("") + "</div>";
+      });
+      /* Tag each block with the h2 section it belongs to, so hiding a heading hides its whole section */
+      document.querySelectorAll(".doc-article").forEach(function (art) {
+        var current = null;
+        Array.prototype.forEach.call(art.children, function (el) {
+          if (el.tagName === "H2") { current = el.id || null; return; }
+          if (current) el.setAttribute("data-section", current);
+        });
+      });
+      function applySectionVisibility() {
+        document.querySelectorAll(".doc-article h2[id]").forEach(function (h) {
+          var hidden = getComputedStyle(h).display === "none";
+          document.querySelectorAll('[data-section="' + h.id + '"]').forEach(function (el) {
+            el.classList.toggle("section-hidden", hidden);
+          });
+        });
+      }
+      function setDocsEditor(mode) {
+        if (!EDITORS.some(function (ed) { return ed.id === mode; })) mode = "gutenberg";
+        document.body.classList.remove("editor-classic", "editor-gutenberg", "editor-elementor");
+        document.body.classList.add("editor-" + mode);
+        try { localStorage.setItem("h5vpDocsEditor", mode); } catch (e) { }
+        document.querySelectorAll(".editor-switch button").forEach(function (b) {
+          b.classList.toggle("on", b.getAttribute("data-editor") === mode);
+        });
+        applySectionVisibility();
+      }
+      document.addEventListener("click", function (e) {
+        var b = e.target.closest(".editor-switch button");
+        if (!b) return;
+        setDocsEditor(b.getAttribute("data-editor"));
+        var active = document.querySelector(".doc-article.active");
+        if (active) buildToc(active);
+      });
+      var savedEditor = "gutenberg";
+      try { savedEditor = localStorage.getItem("h5vpDocsEditor") || "gutenberg"; } catch (e) { }
+      setDocsEditor(savedEditor);
+
+      /* Media slots: show the real image/video when the file exists, a labeled placeholder otherwise */
+      var PH_ICONS = {
+        image: '<svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>',
+        video: '<svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>'
+      };
+      function youtubeId(src) {
+        var m = src.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?[^#]*v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+        return m ? m[1] : null;
+      }
+      document.querySelectorAll(".media-slot").forEach(function (slot) {
+        var src = (slot.getAttribute("data-src") || "").trim();
+        var type = slot.getAttribute("data-media") || "image";
+        var caption = slot.getAttribute("data-caption") || "";
+        var isRemote = /^https?:\/\//i.test(src);
+        function renderPlaceholder() {
+          slot.innerHTML = "";
+          var box = document.createElement("div");
+          box.className = "media-ph";
+          box.innerHTML = PH_ICONS[type] || PH_ICONS.image;
+          var label = document.createElement("div");
+          label.className = "ph-label"; label.textContent = caption;
+          var path = document.createElement("div");
+          path.className = "ph-path"; path.textContent = src;
+          var hint = document.createElement("div");
+          hint.className = "ph-hint";
+          hint.textContent = type === "video"
+            ? "Placeholder — paste the YouTube link into this slot's data-src and it will embed here"
+            : "Placeholder — paste the CDN image URL into this slot's data-src and it will appear here";
+          box.appendChild(label); box.appendChild(path); box.appendChild(hint);
+          slot.appendChild(box);
+        }
+        function renderMedia(el) {
+          slot.innerHTML = "";
+          slot.appendChild(el);
+          if (caption) {
+            var fc = document.createElement("figcaption");
+            fc.textContent = caption;
+            slot.appendChild(fc);
+          }
+        }
+        renderPlaceholder();
+        if (!src) return;
+        var yid = type === "video" ? youtubeId(src) : null;
+        if (yid) {
+          var wrap = document.createElement("div");
+          wrap.className = "yt-wrap";
+          var fr = document.createElement("iframe");
+          fr.src = "https://www.youtube-nocookie.com/embed/" + yid;
+          fr.title = caption;
+          fr.loading = "lazy";
+          fr.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+          fr.allowFullscreen = true;
+          wrap.appendChild(fr);
+          renderMedia(wrap);
+        } else if (type === "video") {
+          if (!isRemote && src.indexOf("/") === -1) return;
+          var v = document.createElement("video");
+          v.controls = true; v.preload = "metadata";
+          v.addEventListener("loadedmetadata", function () { renderMedia(v); });
+          v.addEventListener("error", renderPlaceholder);
+          v.src = src;
+        } else {
+          var im = new Image();
+          im.addEventListener("load", function () { im.alt = caption; renderMedia(im); });
+          im.addEventListener("error", renderPlaceholder);
+          im.src = src;
+        }
+      });
+
+      /* Image lightbox — click any screenshot to view it full size */
+      var lb = document.createElement("div");
+      lb.className = "lightbox";
+      lb.setAttribute("role", "dialog");
+      lb.setAttribute("aria-modal", "true");
+      lb.setAttribute("aria-label", "Image viewer");
+      lb.innerHTML =
+        '<button class="lb-close" type="button" aria-label="Close (Esc)">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+        '<button class="lb-prev" type="button" aria-label="Previous image">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>' +
+        '<button class="lb-next" type="button" aria-label="Next image">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>' +
+        '<img alt=""><div class="lb-caption"></div><div class="lb-count"></div>';
+      document.body.appendChild(lb);
+      var lbImg = lb.querySelector("img");
+      var lbCap = lb.querySelector(".lb-caption");
+      var lbCount = lb.querySelector(".lb-count");
+      var lbGroup = [], lbIndex = 0, lbReturnFocus = null;
+
+      function lbShow(i) {
+        if (!lbGroup.length) return;
+        lbIndex = (i + lbGroup.length) % lbGroup.length;
+        var img = lbGroup[lbIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || "";
+        var cap = img.closest(".media-slot");
+        cap = cap && cap.querySelector("figcaption");
+        lbCap.textContent = cap ? cap.textContent : (img.alt || "");
+        lbCount.textContent = lbGroup.length > 1 ? lbIndex + 1 + " / " + lbGroup.length : "";
+        lb.classList.toggle("single", lbGroup.length < 2);
+      }
+      function lbOpen(img) {
+        var article = img.closest(".doc-article") || document;
+        lbGroup = Array.prototype.filter.call(
+          article.querySelectorAll(".media-slot img"),
+          function (el) { return el.offsetParent !== null; }
+        );
+        var start = lbGroup.indexOf(img);
+        if (start === -1) { lbGroup = [img]; start = 0; }
+        lbReturnFocus = document.activeElement;
+        lb.classList.add("open");
+        document.body.classList.add("lb-open");
+        lbShow(start);
+        lb.querySelector(".lb-close").focus();
+      }
+      function lbClose() {
+        lb.classList.remove("open");
+        document.body.classList.remove("lb-open");
+        lbImg.removeAttribute("src");
+        if (lbReturnFocus && lbReturnFocus.focus) lbReturnFocus.focus();
+      }
+
+      document.addEventListener("click", function (e) {
+        var img = e.target.closest(".media-slot img");
+        if (img) { e.preventDefault(); lbOpen(img); return; }
+        if (!lb.classList.contains("open")) return;
+        if (e.target.closest(".lb-close")) return lbClose();
+        if (e.target.closest(".lb-prev")) return lbShow(lbIndex - 1);
+        if (e.target.closest(".lb-next")) return lbShow(lbIndex + 1);
+        if (e.target === lb) lbClose();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (!lb.classList.contains("open")) return;
+        if (e.key === "Escape") { e.preventDefault(); lbClose(); }
+        else if (e.key === "ArrowLeft" && lbGroup.length > 1) { e.preventDefault(); lbShow(lbIndex - 1); }
+        else if (e.key === "ArrowRight" && lbGroup.length > 1) { e.preventDefault(); lbShow(lbIndex + 1); }
+        else if (e.key === "Tab") {
+          var f = lb.querySelectorAll("button:not([style*='display: none'])");
+          var list = Array.prototype.filter.call(f, function (b) { return b.offsetParent !== null; });
+          if (!list.length) return;
+          var i = list.indexOf(document.activeElement);
+          e.preventDefault();
+          list[(i + (e.shiftKey ? -1 : 1) + list.length) % list.length].focus();
+        }
+      });
+
+      /* Search */
+      var input = document.getElementById("searchInput");
+      var results = document.getElementById("searchResults");
+      var index = articles.map(function (a) {
+        return {
+          id: a.id,
+          title: a.getAttribute("data-title"),
+          group: a.getAttribute("data-group"),
+          heads: Array.prototype.map.call(a.querySelectorAll("h2"), function (h) { return h.textContent; }),
+          text: a.textContent.replace(/\s+/g, " ").toLowerCase()
+        };
+      });
+
+      function runSearch() {
+        var q = input.value.trim().toLowerCase();
+        results.innerHTML = "";
+        if (q.length < 2) { results.classList.remove("open"); return; }
+        var hits = index.map(function (it) {
+          var score = 0;
+          if (it.title.toLowerCase().indexOf(q) > -1) score = 3;
+          else if (it.heads.some(function (h) { return h.toLowerCase().indexOf(q) > -1; })) score = 2;
+          else if (it.text.indexOf(q) > -1) score = 1;
+          return { it: it, score: score };
+        }).filter(function (r) { return r.score > 0; })
+          .sort(function (a, b) { return b.score - a.score; })
+          .map(function (r) { return r.it; })
+          .slice(0, 8);
+        if (!hits.length) {
+          results.innerHTML = '<div class="empty">No results for &ldquo;' + q.replace(/</g, "&lt;") + '&rdquo;</div>';
+        } else {
+          hits.forEach(function (it) {
+            var a = document.createElement("a");
+            a.href = "#" + it.id;
+            a.innerHTML = '<div class="r-title">' + it.title + '</div><div class="r-crumb">Docs / ' + it.group + "</div>";
+            a.addEventListener("click", function (e) {
+              e.preventDefault();
+              history.pushState(null, "", "#" + it.id);
+              show(it.id);
+              input.value = ""; results.classList.remove("open");
+            });
+            results.appendChild(a);
+          });
+        }
+        results.classList.add("open");
+      }
+
+      input.addEventListener("input", runSearch);
+      input.addEventListener("focus", runSearch);
+      input.addEventListener("keydown", function (e) {
+        var items = results.querySelectorAll("a");
+        var sel = results.querySelector("a.sel");
+        var i = Array.prototype.indexOf.call(items, sel);
+        if (e.key === "ArrowDown" && items.length) {
+          e.preventDefault();
+          if (sel) sel.classList.remove("sel");
+          items[(i + 1) % items.length].classList.add("sel");
+        } else if (e.key === "ArrowUp" && items.length) {
+          e.preventDefault();
+          if (sel) sel.classList.remove("sel");
+          items[(i - 1 + items.length) % items.length].classList.add("sel");
+        } else if (e.key === "Enter" && sel) {
+          e.preventDefault(); sel.click();
+        } else if (e.key === "Escape") {
+          results.classList.remove("open"); input.blur();
+        }
+      });
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".search-box")) results.classList.remove("open");
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "/" && document.activeElement !== input &&
+          !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
+          e.preventDefault(); input.focus();
+        }
+      });
+
+      show(location.hash.slice(1) || "introduction", false);
+    })();
+  </script>
+</body>
+
+</html>
