@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HTML5 Video Player — Documentation</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20512%20512%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cg%20clip-path%3D%22url(%23h5vp_clip0_3_86)%22%3E%20%3Cmask%20id%3D%22h5vp_mask0_3_86%22%20style%3D%22mask-type%3Aluminance%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22512%22%3E%20%3Cpath%20d%3D%22M156.643%200H355.357C441.806%200%20512%2070.194%20512%20156.643V355.357C512%20441.806%20441.806%20512%20355.357%20512H156.643C70.194%20512%200%20441.806%200%20355.357V156.643C0%2070.194%2070.194%200%20156.643%200Z%22%20fill%3D%22white%22%2F%3E%20%3C%2Fmask%3E%20%3Cg%20mask%3D%22url(%23h5vp_mask0_3_86)%22%3E%20%3Cpath%20d%3D%22M223.996%20-253.896L-254.025%20288.122L287.993%20766.143L766.014%20224.125L223.996%20-253.896Z%22%20fill%3D%22url(%23h5vp_paint0_linear_3_86)%22%2F%3E%20%3C%2Fg%3E%20%3Cpath%20d%3D%22M127.733%20147.137C127.733%20147.137%20130.489%20136.394%20138.138%20125.933C148.375%20111.871%20169.298%20105.797%20185.215%20112.715C195.508%20117.159%20204.732%20125.314%20220.087%20137.126C222%20138.588%20223.856%20140.107%20225.656%20141.738C240.898%20155.518%20340.846%20240.504%20366.831%20262.552C374.649%20269.189%20380.499%20277.964%20383.03%20287.863C385.673%20298.212%20385.223%20311.204%20374.368%20323.86C369.306%20329.765%20362.781%20334.265%20355.638%20337.302L202.707%20402.209L346.414%20311.992C347.708%20311.204%20348.945%20310.417%20350.239%20309.686C357.101%20305.636%20386.911%20285.5%20355.976%20258.953C353.107%20256.478%20349.957%20254.284%20346.695%20252.26L173.516%20145.619C172.391%20144.944%20171.323%20144.212%20170.254%20143.425C165.529%20140.163%20147.137%20129.589%20127.789%20147.081%22%20fill%3D%22white%22%2F%3E%20%3Cpath%20d%3D%22M157.036%20196.633V366.043C157.036%20374.593%20166.429%20379.767%20173.685%20375.268L312.836%20288.088C319.754%20283.757%20319.585%20273.689%20312.611%20269.527L173.46%20187.296C166.204%20183.022%20157.093%20188.252%20157.093%20196.633%22%20fill%3D%22white%22%2F%3E%20%3C%2Fg%3E%20%3Cdefs%3E%20%3ClinearGradient%20id%3D%22h5vp_paint0_linear_3_86%22%20x1%3D%2270.6237%22%20y1%3D%22486.922%22%20x2%3D%22467.728%22%20y2%3D%2236.6538%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%20%3Cstop%20stop-color%3D%22%23EA4F83%22%2F%3E%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2361489C%22%2F%3E%20%3C%2FlinearGradient%3E%20%3CclipPath%20id%3D%22h5vp_clip0_3_86%22%3E%20%3Crect%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22white%22%2F%3E%20%3C%2FclipPath%3E%20%3C%2Fdefs%3E%20%3C%2Fsvg%3E">
   <meta name="description"
     content="Official documentation for the HTML5 Video Player WordPress plugin — installation, player configuration, playlists, shortcodes, protection, email capture, analytics and troubleshooting.">
   <style>
@@ -82,9 +84,6 @@
     .topbar-logo {
       width: 34px;
       height: 34px;
-      border-radius: 50%;
-      background: #fff;
-      color: var(--brand);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -92,8 +91,9 @@
     }
 
     .topbar-logo svg {
-      width: 16px;
-      height: 16px;
+      width: 34px;
+      height: 34px;
+      display: block;
     }
 
     .topbar-name {
@@ -1138,9 +1138,35 @@
     </button>
     <a class="topbar-brand" href="#introduction">
       <span class="topbar-logo">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l11.2-6.86a1.03 1.03 0 0 0 0-1.76L9.56 4.26A1.03 1.03 0 0 0 8 5.14z" />
+        <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#h5vp_clip0_3_86)">
+            <mask id="h5vp_mask0_3_86" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="512"
+              height="512">
+              <path
+                d="M156.643 0H355.357C441.806 0 512 70.194 512 156.643V355.357C512 441.806 441.806 512 355.357 512H156.643C70.194 512 0 441.806 0 355.357V156.643C0 70.194 70.194 0 156.643 0Z"
+                fill="white" />
+            </mask>
+            <g mask="url(#h5vp_mask0_3_86)">
+              <path d="M223.996 -253.896L-254.025 288.122L287.993 766.143L766.014 224.125L223.996 -253.896Z"
+                fill="url(#h5vp_paint0_linear_3_86)" />
+            </g>
+            <path
+              d="M127.733 147.137C127.733 147.137 130.489 136.394 138.138 125.933C148.375 111.871 169.298 105.797 185.215 112.715C195.508 117.159 204.732 125.314 220.087 137.126C222 138.588 223.856 140.107 225.656 141.738C240.898 155.518 340.846 240.504 366.831 262.552C374.649 269.189 380.499 277.964 383.03 287.863C385.673 298.212 385.223 311.204 374.368 323.86C369.306 329.765 362.781 334.265 355.638 337.302L202.707 402.209L346.414 311.992C347.708 311.204 348.945 310.417 350.239 309.686C357.101 305.636 386.911 285.5 355.976 258.953C353.107 256.478 349.957 254.284 346.695 252.26L173.516 145.619C172.391 144.944 171.323 144.212 170.254 143.425C165.529 140.163 147.137 129.589 127.789 147.081"
+              fill="white" />
+            <path
+              d="M157.036 196.633V366.043C157.036 374.593 166.429 379.767 173.685 375.268L312.836 288.088C319.754 283.757 319.585 273.689 312.611 269.527L173.46 187.296C166.204 183.022 157.093 188.252 157.093 196.633"
+              fill="white" />
+          </g>
+          <defs>
+            <linearGradient id="h5vp_paint0_linear_3_86" x1="70.6237" y1="486.922" x2="467.728" y2="36.6538"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#EA4F83" />
+              <stop offset="1" stop-color="#61489C" />
+            </linearGradient>
+            <clipPath id="h5vp_clip0_3_86">
+              <rect width="512" height="512" fill="white" />
+            </clipPath>
+          </defs>
         </svg>
       </span>
       <span class="topbar-name">HTML5 <span class="thin">Video Player</span></span>
@@ -1250,6 +1276,20 @@
           </div>
         </div>
 
+        <div class="nav-group" data-group="Quick Player">
+          <button class="nav-group-head">Quick Player
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <div class="nav-group-items">
+            <a href="#quick-player" data-nav>Overview &amp; Usage</a>
+            <a href="#qp-attributes" data-nav>Attribute Reference</a>
+            <a href="#qp-defaults" data-nav>Site-Wide Defaults</a>
+          </div>
+        </div>
+
         <div class="nav-group" data-group="Usage">
           <button class="nav-group-head">Usage
             <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -1260,7 +1300,6 @@
           <div class="nav-group-items">
             <a href="#shortcodes" data-nav>Shortcode Reference</a>
             <a href="#blocks-builders" data-nav>Blocks &amp; Page Builders</a>
-            <a href="#quick-player" data-nav>Quick Player</a>
             <a href="#analytics" data-nav>Analytics</a>
             <a href="#global-settings" data-nav>Global Settings &amp; Extensions</a>
           </div>
@@ -1440,7 +1479,7 @@
                 </tr>
                 <tr>
                   <td><strong>Quick Player</strong></td>
-                  <td>Default settings for the <code>[video_player]</code> shortcode — see <a href="#quick-player"
+                  <td>Default settings for the <code>[video_player]</code> shortcode — see <a href="#qp-defaults"
                       data-nav>Quick Player</a>.</td>
                 </tr>
                 <tr>
@@ -2259,7 +2298,7 @@
               data-caption="Control switches in the widget&rsquo;s Controls section (Elementor)"></figure>
             <p class="only-gutenberg">Toggle a chip and the canvas preview updates straight away, so you can see the
               trimmed control bar without leaving the editor.</p>
-            <p>The same set is available as the <code>controls</code> attribute in the <a href="#quick-player"
+            <p>The same set is available as the <code>controls</code> attribute in the <a href="#qp-attributes"
                 data-nav>Quick Player shortcode</a>.</p>
             <div class="callout warn"><span class="co-label">Heads up</span>
               <p>Download and Picture-in-Picture don&rsquo;t work for YouTube or Vimeo sources — a platform limitation,
@@ -3157,6 +3196,9 @@
               data-caption="The Shortcode column on the All Players screen"></figure>
 
             <h2 id="sc-quick">Quick Player: <code>[video_player]</code></h2>
+            <p>The essentials are below; for every accepted attribute see
+              <a href="#qp-attributes" data-nav>the full attribute list</a>.
+            </p>
             <p>Renders a player directly from a URL, with no saved player needed. Ideal for one-off embeds:</p>
             <div class="codeblock">
               <pre><code>[video_player src="https://example.com/video.mp4"]</code></pre>
@@ -3212,16 +3254,18 @@
                   <td>Rewind to the start when playback finishes.</td>
                 </tr>
                 <tr>
-                  <td><code>skin</code> <span class="badge-pro">Pro</span></td>
+                  <td><code>skin</code></td>
                   <td><code>default</code> / <code>stacked</code> / <code>modern</code> / <code>floating-pill</code> /
                     <code>classic-minimal</code> / <code>stacked-dual-row</code> / <code>modern-mobile-stack</code>
                   </td>
-                  <td>Control-bar skin for this embed — see <a href="#skins-controls" data-nav>Skins &amp; Controls</a>.
-                    Unrecognized values fall back to <code>default</code>.</td>
+                  <td>Control-bar skin for this embed; unrecognized values fall back to <code>default</code>.
+                    <strong>Not honoured on the Pro build</strong> — set the skin on a saved player instead (see
+                    <a href="#skins-controls" data-nav>Skins &amp; Controls</a>).
+                  </td>
                 </tr>
               </table>
             </div>
-            <p>Site-wide defaults for this shortcode live under <a href="#quick-player" data-nav><strong>Html5 Video
+            <p>Site-wide defaults for this shortcode live under <a href="#qp-defaults" data-nav><strong>Html5 Video
                   Player &rarr; Quick Player</strong></a>.</p>
 
             <h2 id="sc-playlist">Playlist: <code>[video_playlist]</code> <span class="badge-pro">Pro</span></h2>
@@ -3319,44 +3363,62 @@
             </p>
           </article>
 
-          <article class="doc-article" id="quick-player" data-group="Usage" data-title="Quick Player">
+          <article class="doc-article" id="quick-player" data-group="Quick Player" data-title="Overview &amp; Usage">
             <h1>Quick Player</h1>
-            <p class="lead">Quick Player is the fastest way to drop a video on a page: one shortcode, one URL, no saved
-              player required.</p>
+            <p class="lead">Quick Player is the fastest way to put a video on a page: one shortcode, one URL, no saved
+              player and no dashboard setup. Everything is configured inline as shortcode attributes, with site-wide
+              defaults filling in the rest.</p>
+            <figure class="media-slot" data-media="video" data-src="https://www.youtube.com/watch?v=FPH77vl0sIg"
+              data-caption="Video tutorial — the Quick Player shortcode"></figure>
 
             <h2 id="qp-usage">Basic Usage</h2>
+            <p>Add a <strong>Shortcode</strong> block (or paste into any post, page, widget or Elementor Shortcode
+              widget) and point <code>src</code> at a video file:</p>
             <div class="codeblock">
               <pre><code>[video_player src="https://example.com/my-video.mp4"]</code></pre>
             </div>
-            <p>That&rsquo;s a complete, skinned, responsive player. Add attributes to override behavior per-embed — the
-              full list is in the <a href="#shortcodes" data-nav>Shortcode Reference</a>.</p>
+            <p>That alone renders a fully skinned, responsive player. Add attributes to change how it behaves:</p>
+            <div class="codeblock">
+              <pre><code>[video_player src="https://example.com/my-video.mp4" poster="https://example.com/poster.jpg" muted="true" autoplay="true" width="640px"]</code></pre>
+            </div>
+            <div class="callout tip"><span class="co-label">Where to find it</span>
+              <p>A ready-to-copy shortcode sits at the top of <strong>Html5 Video Player &rarr; Quick Player</strong>,
+                next to a copy button — and the rest of that screen holds the
+                <a href="#qp-defaults" data-nav>defaults every embed inherits</a>.
+              </p>
+            </div>
 
-            <h2 id="qp-defaults">Site-Wide Defaults</h2>
-            <p>Under <strong>Html5 Video Player &rarr; Quick Player</strong> you set the defaults every
-              <code>[video_player]</code> embed inherits: which controls appear, autoplay/muted/loop behavior, preload
-              strategy, seek time, and aspect ratio. Attributes on an individual shortcode always win over the defaults.
+            <h2 id="qp-sources">YouTube, Vimeo and Self-Hosted</h2>
+            <p>The <code>source</code> attribute picks where the video comes from. It defaults to
+              <code>library</code>, which covers media-library files and any direct URL (including HLS and DASH
+              streams):
             </p>
-            <ol class="steps">
-              <li>Go to <strong>Html5 Video Player &rarr; Quick Player</strong>.</li>
-              <li>Adjust the defaults — controls, autoplay, muted, loop, preload, seek time, aspect ratio.</li>
-              <li>Save. Every <code>[video_player]</code> embed without its own attributes now follows these defaults.
-              </li>
-            </ol>
-            <figure class="media-slot" data-media="image"
-              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quick-player-settings.png"
-              data-caption="The Quick Player defaults screen"></figure>
+            <div class="codeblock">
+              <pre><code>[video_player source="youtube" src="https://www.youtube.com/watch?v=XXXXXXXX"]
+[video_player source="vimeo" src="https://vimeo.com/XXXXXXXX"]</code></pre>
+            </div>
+            <div class="callout warn"><span class="co-label">Platform limitation</span>
+              <p>Download and picture-in-picture aren&rsquo;t available for YouTube or Vimeo sources — those platforms
+                don&rsquo;t permit them.</p>
+            </div>
+
+            <h2 id="qp-php">Using It in Theme Templates</h2>
+            <p>Anywhere you can run PHP, wrap it in <code>do_shortcode()</code>:</p>
+            <div class="codeblock">
+              <pre><code>&lt;?php echo do_shortcode('[video_player src="https://example.com/my-video.mp4"]'); ?&gt;</code></pre>
+            </div>
 
             <h2 id="qp-when">Quick Player vs. Saved Players</h2>
             <div class="table-wrap">
               <table class="doc-table">
                 <tr>
                   <th></th>
-                  <th>Quick Player</th>
-                  <th>Saved Player</th>
+                  <th>Quick Player <code>[video_player]</code></th>
+                  <th>Saved player <code>[html5_video]</code></th>
                 </tr>
                 <tr>
                   <td><strong>Setup</strong></td>
-                  <td>None — just a URL</td>
+                  <td>None — just a URL in the shortcode</td>
                   <td>Created in the dashboard</td>
                 </tr>
                 <tr>
@@ -3365,17 +3427,327 @@
                   <td>Videos reused or updated over time</td>
                 </tr>
                 <tr>
-                  <td><strong>Advanced features</strong> (protection, chapters, email capture, end screen&hellip;)</td>
-                  <td>&mdash;</td>
-                  <td>&#10003;</td>
+                  <td><strong>Editing later</strong></td>
+                  <td>Edit each shortcode where it appears</td>
+                  <td>Edit once — every embed follows</td>
                 </tr>
                 <tr>
-                  <td><strong>Central editing</strong></td>
-                  <td>Edit each shortcode</td>
-                  <td>Edit once, updates everywhere</td>
+                  <td><strong>Covers</strong></td>
+                  <td>Sources, controls, playback, sticky, popup, watermark, role access</td>
+                  <td>All of that plus chapters, subtitles, quality switcher, end screen, email capture and SEO</td>
                 </tr>
               </table>
             </div>
+            <p>Need chapters, captions, the quality switcher, an end screen, email capture or video SEO? Build a
+              <a href="#choosing-editor" data-nav>saved player</a> instead and embed its
+              <code>[html5_video id='…']</code> shortcode.
+            </p>
+
+            <h2 id="qp-missing">If Nothing Renders</h2>
+            <p>When <code>src</code> (or <code>file</code>/<code>mp4</code>) is missing or empty, the shortcode prints
+              <strong>&ldquo;No Video Added&rdquo;</strong> in place of the player — a quick way to spot a typo or an
+              empty template variable.
+            </p>
+          </article>
+
+          <article class="doc-article" id="qp-attributes" data-group="Quick Player" data-title="Attribute Reference">
+            <h1>Quick Player Attribute Reference</h1>
+            <p class="lead">Every attribute accepted by <code>[video_player]</code>. Anything you leave out falls back
+              to the <a href="#qp-defaults" data-nav>site-wide defaults</a>; anything you set here wins over them.</p>
+
+            <h2 id="qpa-source">Source &amp; Appearance</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Attribute</th>
+                  <th>Values</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><code>src</code></td>
+                  <td>URL</td>
+                  <td>The video. Required — <code>file</code> and <code>mp4</code> are accepted aliases.</td>
+                </tr>
+                <tr>
+                  <td><code>source</code></td>
+                  <td><code>library</code> · <code>youtube</code> · <code>vimeo</code></td>
+                  <td>Where the video comes from. Default <code>library</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>poster</code></td>
+                  <td>Image URL</td>
+                  <td>Thumbnail shown before playback starts.</td>
+                </tr>
+                <tr>
+                  <td><code>width</code></td>
+                  <td>e.g. <code>640px</code></td>
+                  <td>Fixed player width. Leave it off to stay responsive.</td>
+                </tr>
+                <tr>
+                  <td><code>ratio</code> / <code>aspect_ratio</code></td>
+                  <td>e.g. <code>16:9</code></td>
+                  <td>Forces the frame shape.</td>
+                </tr>
+                <tr>
+                  <td><code>additional_id</code> <span class="badge-pro">Pro</span></td>
+                  <td>text</td>
+                  <td>Adds an ID to the player wrapper for custom CSS or JS.</td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="qpa-playback">Playback</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Attribute</th>
+                  <th>Values</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><code>autoplay</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Starts on load. Browsers require <code>muted="true"</code> alongside it.</td>
+                </tr>
+                <tr>
+                  <td><code>muted</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Starts with sound off.</td>
+                </tr>
+                <tr>
+                  <td><code>repeat</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Loops the video.</td>
+                </tr>
+                <tr>
+                  <td><code>reset_on_end</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Rewinds to the poster when playback finishes.</td>
+                </tr>
+                <tr>
+                  <td><code>start_time</code> <span class="badge-pro">Pro</span></td>
+                  <td>seconds</td>
+                  <td>Begins playback at a given second.</td>
+                </tr>
+                <tr>
+                  <td><code>preload</code></td>
+                  <td><code>auto</code> · <code>metadata</code> · <code>none</code></td>
+                  <td>How much loads up front.</td>
+                </tr>
+                <tr>
+                  <td><code>seek_time</code> <span class="badge-pro">Pro</span></td>
+                  <td>seconds</td>
+                  <td>How far rewind / fast-forward jump.</td>
+                </tr>
+                <tr>
+                  <td><code>play_when_visible</code> <span class="badge-pro">Pro</span></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Starts only once the player scrolls into view.</td>
+                </tr>
+                <tr>
+                  <td><code>disable_pause</code> <span class="badge-pro">Pro</span></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Stops viewers pausing.</td>
+                </tr>
+                <tr>
+                  <td><code>thumb_in_pause</code> <span class="badge-pro">Pro</span></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Brings the poster back on pause.</td>
+                </tr>
+                <tr>
+                  <td><code>playsinline</code> / <code>ios_native</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Inline playback on iPhone rather than the native fullscreen player.</td>
+                </tr>
+                <tr>
+                  <td><code>hide_loading_placeholder</code> <span class="badge-pro">Pro</span></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Hides the placeholder shown while the video loads.</td>
+                </tr>
+                <tr>
+                  <td><code>hide_youtube_ui</code> <span class="badge-pro">Pro</span></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Suppresses YouTube&rsquo;s own overlays (experimental).</td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="qpa-controls">Controls</h2>
+            <p><code>controls</code> takes a comma-separated list — only what you name is rendered:</p>
+            <div class="codeblock">
+              <pre><code>[video_player src="video.mp4" controls="play-large, progress, current-time, mute, volume, settings, fullscreen"]</code></pre>
+            </div>
+            <p>Accepted values: <code>play-large</code>, <code>restart</code>, <code>rewind</code>, <code>play</code>,
+              <code>fast-forward</code>, <code>progress</code>, <code>current-time</code>, <code>duration</code>,
+              <code>mute</code>, <code>volume</code>, <code>captions</code>, <code>settings</code>, <code>pip</code>,
+              <code>airplay</code>, <code>download</code>, <code>fullscreen</code>. Use
+              <code>hide_controls</code> to hide the bar entirely.
+            </p>
+
+            <h2 id="qpa-pro">Sticky, Popup &amp; Watermark <span class="badge-pro">Pro</span></h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Attribute</th>
+                  <th>Values</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><code>sticky</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Pins a mini player while the reader scrolls.</td>
+                </tr>
+                <tr>
+                  <td><code>sticky_position</code></td>
+                  <td><code>top_right</code> (default), <code>top_left</code>, <code>bottom_right</code>,
+                    <code>bottom_left</code>
+                  </td>
+                  <td>Which corner it docks to.</td>
+                </tr>
+                <tr>
+                  <td><code>popup</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Turns the embed into a trigger that opens the video in a lightbox.</td>
+                </tr>
+                <tr>
+                  <td><code>popup_type</code></td>
+                  <td><code>button</code></td>
+                  <td>How the popup is triggered.</td>
+                </tr>
+                <tr>
+                  <td><code>popup_btn_text</code></td>
+                  <td>text</td>
+                  <td>Trigger label. Default <code>Watch Video</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>popup_btn_color</code> / <code>popup_btn_bg_color</code></td>
+                  <td>hex</td>
+                  <td>Trigger text and background colors.</td>
+                </tr>
+                <tr>
+                  <td><code>watermark</code></td>
+                  <td><code>true</code> / <code>false</code></td>
+                  <td>Stamps text over the video.</td>
+                </tr>
+                <tr>
+                  <td><code>watermark_type</code></td>
+                  <td><code>email</code> (default) · <code>username</code> · custom</td>
+                  <td>What the watermark shows.</td>
+                </tr>
+                <tr>
+                  <td><code>watermark_text</code> / <code>watermark_color</code></td>
+                  <td>text / hex</td>
+                  <td>Custom text and its color (default <code>#f00</code>).</td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="qpa-access">Who Can Watch <span class="badge-pro">Pro</span></h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Attribute</th>
+                  <th>Values</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><code>who_can_see_this_video</code></td>
+                  <td><code>everyone</code> (default) · logged-in · logged-out</td>
+                  <td>Restricts playback by login state.</td>
+                </tr>
+                <tr>
+                  <td><code>allowed_roles</code></td>
+                  <td>comma-separated roles</td>
+                  <td>Which roles may watch, e.g. <code>administrator,editor</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>logged_out_user_text</code></td>
+                  <td>text</td>
+                  <td>Message shown to anyone without access.</td>
+                </tr>
+              </table>
+            </div>
+            <div class="callout"><span class="co-label">Not available here</span>
+              <p>Password protection, chapters, subtitles, the quality switcher, end screens and email capture are
+                saved-player features — they have no <code>[video_player]</code> attribute. Use
+                <code>[html5_video id='…']</code> for those.
+              </p>
+            </div>
+          </article>
+
+          <article class="doc-article" id="qp-defaults" data-group="Quick Player" data-title="Site-Wide Defaults">
+            <h1>Quick Player Site-Wide Defaults</h1>
+            <p class="lead">Rather than repeat attributes on every embed, set them once under
+              <strong>Html5 Video Player &rarr; Quick Player</strong>. Every <code>[video_player]</code> shortcode
+              inherits these — and any attribute written on an individual shortcode overrides them.
+            </p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quick-player-settings.png"
+              data-caption="The Quick Player defaults screen"></figure>
+
+            <h2 id="qpd-options">The Options</h2>
+            <div class="table-wrap">
+              <table class="doc-table">
+                <tr>
+                  <th>Setting</th>
+                  <th>Default</th>
+                  <th>What it does</th>
+                </tr>
+                <tr>
+                  <td><strong>Reset On End</strong></td>
+                  <td>On</td>
+                  <td>Rewinds to the poster when playback finishes.</td>
+                </tr>
+                <tr>
+                  <td><strong>Player Width</strong></td>
+                  <td>empty</td>
+                  <td>Fixed width in pixels; leave empty for a responsive player.</td>
+                </tr>
+                <tr>
+                  <td><strong>Seek Time</strong></td>
+                  <td>10</td>
+                  <td>Seconds the rewind / fast-forward buttons jump.</td>
+                </tr>
+                <tr>
+                  <td><strong>Auto Hide Control</strong></td>
+                  <td>On</td>
+                  <td>Fades the control bar during playback.</td>
+                </tr>
+                <tr>
+                  <td><strong>Preload</strong></td>
+                  <td>Metadata</td>
+                  <td>How much of the file loads before play — Auto, Metadata or None.</td>
+                </tr>
+                <tr>
+                  <td><strong>Control buttons and Components</strong></td>
+                  <td>Play Large, Play, Progressbar, Duration, Current Time, Mute, Volume, Settings, Fullscreen</td>
+                  <td>Click a chip to switch each control on or off.</td>
+                </tr>
+                <tr>
+                  <td><strong>Hide Youtube UI</strong></td>
+                  <td>Off</td>
+                  <td>Suppresses YouTube&rsquo;s own overlays. Marked experimental — verify it on your site.</td>
+                </tr>
+              </table>
+            </div>
+
+            <h2 id="qpd-all-videos">Apply to All Previous Videos</h2>
+            <p>The switch at the top — <strong>Apply Html5 Video Player for all previous videos</strong> — hands every
+              existing video on the site to this player in one move.</p>
+            <div class="callout danger"><span class="co-label">Read before enabling</span>
+              <p>While it is on, the regular <strong>shortcode, Gutenberg block and Elementor players stop
+                  working</strong>. It&rsquo;s useful for upgrading a whole site&rsquo;s legacy videos at once; leave
+                it off otherwise.</p>
+            </div>
+
+            <h2 id="qpd-precedence">Which Setting Wins</h2>
+            <ol class="steps">
+              <li>An attribute written on the shortcode itself.</li>
+              <li>Otherwise, the Quick Player default from this screen.</li>
+              <li>Otherwise, the plugin&rsquo;s built-in default.</li>
+            </ol>
+            <p>So you can set a house style here and still override it on a single embed when one video needs
+              something different.</p>
           </article>
 
           <article class="doc-article" id="analytics" data-group="Usage" data-title="Analytics">
