@@ -927,14 +927,14 @@
       margin: 0 0 1.3rem;
     }
 
-    .steps li {
+    .steps>li {
       counter-increment: step;
       position: relative;
       padding: 0 0 1.1rem 2.7rem;
       margin: 0;
     }
 
-    .steps li::before {
+    .steps>li::before {
       content: counter(step);
       position: absolute;
       left: 0;
@@ -951,7 +951,7 @@
       justify-content: center;
     }
 
-    .steps li:not(:last-child)::after {
+    .steps>li:not(:last-child)::after {
       content: "";
       position: absolute;
       left: 12.5px;
@@ -959,6 +959,16 @@
       bottom: 2px;
       width: 1px;
       background: var(--line);
+    }
+
+    .steps li ul {
+      margin: .5rem 0 0 1.1rem;
+      list-style: disc;
+    }
+
+    .steps li ul li {
+      margin-bottom: .3rem;
+      padding: 0;
     }
 
     .article-footer {
@@ -1539,27 +1549,33 @@
           <article class="doc-article" id="choosing-editor" data-group="Creating Players"
             data-title="Choosing Your Editor">
             <h1>Choosing Your Editor</h1>
-            <p class="lead">There are <strong>two ways to create a player and its shortcode</strong>: the
-              <strong>Classic Metabox Editor</strong> — a tabbed settings panel — and the <strong>Gutenberg
-                Editor</strong> — visual, block-based editing with a live preview. Both produce exactly the same
-              <code>[html5_video id='…']</code> shortcode; the only difference is how you configure the player.
-            </p>
+            <p class="lead">A saved player can be built in the <strong>Classic Metabox Editor</strong> — a tabbed
+              settings panel — or the <strong>Gutenberg Editor</strong> — block-based, with a live preview. Both
+              produce exactly the same <code>[html5_video id='…']</code> shortcode; only the way you configure the
+              player differs. One setting decides which one opens.</p>
 
-            <h2 id="ce-first-run">The First-Run Chooser</h2>
-            <p>Right after activation the plugin shows an <strong>&ldquo;HTML5 Video Player is ready&rdquo;</strong>
-              screen asking how you want to build your players:</p>
+            <h2 id="ce-switch">Set Your Editor in Settings</h2>
             <ol class="steps">
-              <li>Review the two cards — <strong>Classic Editor</strong> and <strong>Gutenberg Editor</strong>. Each has
-                an <strong>Eye/Preview</strong> button that shows exactly how the editing experience will look.</li>
-              <li>Select the one you prefer (Gutenberg is pre-selected by default).</li>
-              <li>Click <strong>Continue</strong>. You&rsquo;re taken to the plugin dashboard, and every new player now
-                opens in your chosen editor.</li>
+              <li>Go to <strong>Html5 Video Player &rarr; Settings</strong>.</li>
+              <li>Open the <strong>Shortcode &amp; Tools</strong> group and select
+                <strong>Shortcode/Player</strong>.
+              </li>
+              <li>Toggle <strong>Use the block editor for new players</strong>:
+                <ul>
+                  <li><strong>On</strong> — <em>Add New</em> opens the Gutenberg block editor.</li>
+                  <li><strong>Off</strong> — <em>Add New</em> opens the Classic metabox screen.</li>
+                </ul>
+              </li>
+              <li>Save. The next player you create uses that editor.</li>
             </ol>
-            <figure class="media-slot" data-media="image" data-src="img/editor-chooser.png"
-              data-caption="The first-run editor chooser"></figure>
-            <div class="callout"><span class="co-label">Note</span>
-              <p>This is a preference, not a commitment — you can change it anytime in the plugin settings (see below).
-              </p>
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/enable-gutenberg-shortcode-generator-html5-video-player.png"
+              data-caption="The editor toggle under Settings &rarr; Shortcode &amp; Tools &rarr; Shortcode/Player">
+            </figure>
+            <div class="callout warn"><span class="co-label">Players remember their editor</span>
+              <p>Which editor a player uses is recorded <em>when it is created</em>. A player built in Gutenberg always
+                reopens in Gutenberg, and one built in the Classic screen always reopens there — flipping this setting
+                only affects players you add from that point on.</p>
             </div>
 
             <h2 id="ce-compare">Classic vs. Gutenberg at a Glance</h2>
@@ -1578,12 +1594,20 @@
                 <tr>
                   <td><strong>Configuration</strong></td>
                   <td>11 tabs down the left side (Media, Settings, Popup, &hellip;)</td>
-                  <td>Inspector panels in the block sidebar</td>
+                  <td>Sidebar panels, split across <strong>General</strong>, <strong>Controls</strong> and
+                    <strong>Style</strong> tabs
+                  </td>
                 </tr>
                 <tr>
                   <td><strong>Preview</strong></td>
                   <td>Configure, save, then view on the front end</td>
                   <td>Live preview right on the editor canvas</td>
+                </tr>
+                <tr>
+                  <td><strong>Presets</strong></td>
+                  <td>Playback defaults under <em>Settings &rarr; Player &rarr; Preset</em></td>
+                  <td>A full-screen <a href="#ctrl-presets" data-nav>preset editor</a> covering controls, watermark,
+                    skin, end screen and email capture</td>
                 </tr>
                 <tr>
                   <td><strong>Feels familiar if</strong></td>
@@ -1598,27 +1622,29 @@
               </table>
             </div>
 
-            <h2 id="ce-switch">Switching Editors Later</h2>
-            <p>Go to <strong>Html5 Video Player &rarr; Settings &rarr; Shortcode &amp; Tools &rarr;
-                Shortcode/Player</strong> and toggle <strong>Enable Gutenberg Shortcode Generator</strong>:</p>
-            <ul>
-              <li><strong>On</strong> — new players open in the Gutenberg editor.</li>
-              <li><strong>Off</strong> — new players open in the Classic metabox editor.</li>
-            </ul>
+            <h2 id="ce-first-run">The First-Run Screen</h2>
+            <p>Straight after activation the plugin offers the same choice on a welcome screen —
+              <strong>&ldquo;HTML5 Video Player is ready&rdquo;</strong> — with a preview of each editing experience.
+              Picking one there simply writes the setting above, so you can ignore it and change your mind later
+              at any time.
+            </p>
             <figure class="media-slot" data-media="image"
-              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/enable-gutenberg-shortcode-generator-html5-video-player.png"
-              data-caption="The Enable Gutenberg Shortcode Generator toggle in Settings"></figure>
-            <div class="callout warn"><span class="co-label">Players remember their editor</span>
-              <p>Each player keeps opening in the editor it was <em>created</em> with, even if you switch the preference
-                later. A player built in Gutenberg always reopens in Gutenberg; a player built in the Classic metabox
-                always reopens there. The setting only affects players you create from that point on.</p>
-            </div>
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/editor-chooser-html5-video-player.png"
+              data-caption="The first-run editor chooser"></figure>
+
+            <h2 id="ce-elementor">Where Elementor Fits</h2>
+            <p>This setting only controls the <em>player editor</em>. <a href="#blocks-builders" data-nav>Elementor</a>
+              is a separate path: its <strong>HTML5 Video Player</strong> widget configures a video in place on the
+              page, without creating a saved player or a shortcode. The feature pages in these docs carry an
+              Elementor tab wherever the widget supports the option, and say so plainly where it doesn&rsquo;t.</p>
 
             <h2 id="ce-same-result">Same Shortcode, Same Features</h2>
-            <p>Every capability documented in <a href="#video-sources" data-nav>Player Setup</a> and <a
-                href="#popup-player" data-nav>Features</a> is available in both editors — the Classic editor presents
-              them as tabs, the Gutenberg editor as inspector panels. Wherever these docs mention a tab (for example
-              &ldquo;the Media tab&rdquo;), the same options live in the matching Gutenberg panel.</p>
+            <p>Everything in <a href="#video-sources" data-nav>Player Setup</a> and
+              <a href="#popup-player" data-nav>Features</a> is available in both player editors — Classic presents the
+              options as tabs, Gutenberg as sidebar panels (a few live in the preset editor). Use the
+              <strong>Gutenberg / Classic Editor / Elementor</strong> toggle at the top of each page to see the steps
+              for the tool you&rsquo;re actually using; your choice is remembered across the docs.
+            </p>
           </article>
 
           <article class="doc-article" id="classic-editor" data-group="Creating Players"
@@ -1903,9 +1929,11 @@
             <figure class="media-slot only-gutenberg" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/video-source-html5-video-player.png"
               data-caption="The four Video Source options in the Media panel (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/video-source-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/4-source-classic-html5-video-player.png"
               data-caption="The four Video Source options in the Media tab (Classic)"></figure>
-            <figure class="media-slot only-elementor" data-media="image" data-src="img/video-source-elementor.png"
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/video-source-elementor-html5-video-player.png"
               data-caption="Video Source in the Elementor widget&rsquo;s Settings section"></figure>
             <div class="callout warn"><span class="co-label">Platform limitation</span>
               <p>The <strong>Download</strong> and <strong>Picture-in-Picture</strong> control buttons do not work for
@@ -1941,9 +1969,11 @@
             <figure class="media-slot only-gutenberg" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/youtube-source-html5-video-player.png"
               data-caption="A YouTube watch URL as the video source (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/youtube-source-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/youtube-source-classic-html5-video-player.png"
               data-caption="A YouTube watch URL as the video source (Classic)"></figure>
-            <figure class="media-slot only-elementor" data-media="image" data-src="img/youtube-source-elementor.png"
+            <figure class="media-slot only-elementor" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/youtube-video-source-elementor-html5-video-player.png"
               data-caption="A YouTube watch URL as the video source (Elementor)"></figure>
             <h3>Vimeo</h3>
             <p>Works exactly like YouTube — select the <strong>Vimeo</strong> pill and paste the video&rsquo;s URL into
@@ -2028,7 +2058,8 @@
             <figure class="media-slot only-gutenberg" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/qualities-html5-video-player.png"
               data-caption="Saved qualities in the Qualities panel (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/qualities-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quality-clssic-html5-video-player.png"
               data-caption="Saved qualities in the Media tab (Classic)"></figure>
             <figure class="media-slot only-elementor" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/quality-elementor-html5-video-player.png"
@@ -2062,7 +2093,8 @@
             <figure class="media-slot only-gutenberg" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/subtitle-html5-video-player.png"
               data-caption="A subtitle track in the Subtitle/Caption panel (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/subtitle-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/subtitle-classic-html5-video-player.png"
               data-caption="A subtitle track in the Media tab (Classic)"></figure>
             <figure class="media-slot only-elementor" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/elementor-subtitle-html5-video-player.png"
@@ -2147,7 +2179,8 @@
             <figure class="media-slot only-gutenberg" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/skin-gutenberg-html5-video-player.png"
               data-caption="The Skin selector beside the preset editor preview (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/skin-picker-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/skin-classic-html5-video-player.png"
               data-caption="The visual Skin picker in the Settings tab (Classic)"></figure>
             <p>The <strong>Skin</strong> picker changes the whole control bar. Seven skins are included:</p>
             <div class="table-wrap">
@@ -2186,7 +2219,8 @@
                 </tr>
               </table>
             </div>
-            <figure class="media-slot" data-media="image" data-src="img/skin-examples.png"
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/modern-skin-html5-video-player.png"
               data-caption="The same player wearing different skins"></figure>
             <p>Switching skins never changes <em>functionality</em> — the same controls are available in every skin. Try
               a few and pick whichever suits your site.</p>
@@ -2214,9 +2248,11 @@
               <li>Mute Button &middot; Volume Control &middot; Captions &middot; Settings Button</li>
               <li>Picture-in-Picture &middot; AirPlay &middot; Download Button &middot; Full Screen</li>
             </ul>
-            <figure class="media-slot only-gutenberg" data-media="image" data-src="img/control-chips-gutenberg.png"
+            <figure class="media-slot only-gutenberg" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/control-chips-gutenberg-html5-video-player.png"
               data-caption="The Control buttons and Components grid (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/control-chips-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/controls-classic-html5-video-player.png"
               data-caption="The Control buttons and Components grid (Classic)"></figure>
             <figure class="media-slot only-elementor" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/controls-elementor-html5-video-player.png"
@@ -2810,7 +2846,8 @@
             <figure class="media-slot only-gutenberg" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/chapter-gutenberg-HTML5-Video-Player-1.png"
               data-caption="Chapter rows in the Chapters panel (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/chapters-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/chapter-classic-html5-video-player.png"
               data-caption="Chapter rows in the Chapters/Markers tab (Classic)"></figure>
             <figure class="media-slot only-elementor" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/chapter-elementor-html5-video-player.png"
@@ -2892,7 +2929,8 @@
             <figure class="media-slot only-gutenberg" data-media="image"
               data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/seo-html5-video-player.png"
               data-caption="The SEO (google) panel in the block sidebar (Gutenberg)"></figure>
-            <figure class="media-slot only-classic" data-media="image" data-src="img/seo-classic.png"
+            <figure class="media-slot only-classic" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/SEO-classic-html5-video-player.png"
               data-caption="The SEO (Google index) tab in the metabox (Classic)"></figure>
             <p>Combined with the <a href="#video-sources" data-nav>poster thumbnail</a>, this gives Google everything it
               needs for a rich video snippet.</p>
@@ -2969,7 +3007,8 @@
               </table>
             </div>
 
-            <figure class="media-slot" data-media="image" data-src="img/email-capture-form.png"
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/email-capture-form-html5-video-player.png"
               data-caption="The email gate viewers see before playback"></figure>
 
             <h2 id="ec-integrations" class="hide-elementor">Integrations</h2>
@@ -2996,7 +3035,8 @@
             </ol>
             <p>Once connected, every player&rsquo;s capture form can deliver addresses to that service — captured leads
               land wherever you need them.</p>
-            <figure class="media-slot" data-media="image" data-src="img/email-capture-settings.png"
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/email-capture-settings-html5-video-player.png"
               data-caption="Integration API keys under Settings &rarr; Email Capture"></figure>
 
             <h2 id="ec-viewing">Viewing Captured Emails</h2>
@@ -3112,7 +3152,8 @@
               </table>
             </div>
 
-            <figure class="media-slot" data-media="image" data-src="img/all-players-shortcodes.png"
+            <figure class="media-slot" data-media="image"
+              data-src="https://templates.bplugins.com/wp-content/uploads/2026/08/all-players-shortcodes-html5-video-player.png"
               data-caption="The Shortcode column on the All Players screen"></figure>
 
             <h2 id="sc-quick">Quick Player: <code>[video_player]</code></h2>
@@ -3401,7 +3442,10 @@
             <ul>
               <li><strong>Disable <code>[video]</code> shortcode</strong> — hand WordPress&rsquo;s built-in video
                 shortcode back to core if another plugin conflicts.</li>
-              <li><strong>Shortcode generator toggle</strong> — enable/disable the Classic Editor generator.</li>
+              <li><strong>Use the block editor for new players</strong> — decides whether <em>Add New</em> opens the
+                Gutenberg or Classic editor. See <a href="#choosing-editor" data-nav>Choosing Your Editor</a>.</li>
+              <li><strong>Play one player at a time</strong> — starting a video pauses any other player on the page.
+              </li>
               <li><strong>SRT &rarr; VTT converter</strong> — convert subtitle files to the required <code>.vtt</code>
                 format (the <strong>Convert</strong> section).</li>
               <li><strong>Import/Export</strong> — enable to add an Export/Import column on the All Players screen, for
