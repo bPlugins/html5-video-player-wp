@@ -5,6 +5,39 @@ import { Features, QualityItem, CaptionItem, PlayerConstructorOptions, DeferredE
 
 
 // ────────────────────────────────────────────────────────────────
+// hls.js on demand
+// ────────────────────────────────────────────────────────────────
+let hlsLibPromise: Promise<any> | null = null;
+
+const loadHlsLib = (): Promise<any> => {
+  if (window.Hls) return Promise.resolve(window.Hls);
+  if (hlsLibPromise) return hlsLibPromise;
+
+  const hasMse =
+    typeof window.MediaSource !== "undefined" || typeof (window as any).ManagedMediaSource !== "undefined";
+
+  const url = window.h5vpBlock?.hlsUrl;
+
+  if (!hasMse || !url) return Promise.resolve(null);
+
+  hlsLibPromise = new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = url;
+    script.async = true;
+    script.onload = () => resolve(window.Hls || null);
+    script.onerror = () => {
+      // Let a later source change retry rather than caching the failure.
+      hlsLibPromise = null;
+      console.warn("MyPlayer: failed to load hls.js from", url);
+      resolve(null);
+    };
+    document.head.appendChild(script);
+  });
+
+  return hlsLibPromise;
+};
+
+// ────────────────────────────────────────────────────────────────
 // MyPlayer Class
 // ────────────────────────────────────────────────────────────────
 
@@ -33,6 +66,7 @@ class MyPlayer extends EventEmitter {
   skin: string;
   uniqueId: string;
   source: string;
+  hls?: any;
 
   constructor(media: HTMLVideoElement, attributes: any, config: PlayerConstructorOptions) {
     super();
@@ -42,9 +76,10 @@ class MyPlayer extends EventEmitter {
 
     // Core state
     this.media = media;
-    this.poster = "";
+    this.poster = attributes.poster || "";
     this.initialized = false;
     this.streamLoaded = false;
+    this.hls = null;
 
     this.isBackend = isBackend;
     this.features = attributes.features;
@@ -146,13 +181,156 @@ class MyPlayer extends EventEmitter {
   }
 
   /**
+   * Checks if a source URL is an HLS (.m3u8) stream.
+   */
+  private isHlsSource(url?: string): boolean {
+    if (!url) return false;
+    const cleanUrl = url.split("?")[0].toLowerCase();
+    return cleanUrl.endsWith(".m3u8") || url.includes(".m3u8");
+  }
+
+  /**
+   * Handles HLS quality level switching.
+   */
+  private onHlsQualityChange(newQuality: number): void {
+    if (!this.hls) return;
+    if (newQuality === 0) {
+      this.hls.currentLevel = -1; // -1 = Auto
+    } else {
+      const levelIndex = this.hls.levels?.findIndex((level: any) => level.height === newQuality);
+      if (levelIndex !== -1 && typeof levelIndex === "number") {
+        this.hls.currentLevel = levelIndex;
+      }
+    }
+  }
+
+  /**
+   * Sets up Hls.js instance on this.media for HLS streaming.
+   */
+  private setupHls(src: string): void {
+    if (this.hls) {
+      this.hls.destroy();
+      this.hls = null;
+    }
+
+    if (window.Hls) {
+      this.attachHls(src);
+      return;
+    }
+
+    loadHlsLib().then(() => {
+      // setSource() may have moved us onto a different video while the library
+      // was in flight; that call owns the player now.
+      if (this.source === src) {
+        this.attachHls(src);
+      }
+    });
+  }
+
+  /**
+   * Wires hls.js (or native HLS) to this.media for `src`.
+   */
+  private attachHls(src: string): void {
+    const Hls = window.Hls;
+
+    if (typeof Hls !== "undefined" && Hls.isSupported && Hls.isSupported()) {
+      const hls = new Hls({
+        enableWorker: true,
+      });
+      this.hls = hls;
+
+      hls.loadSource(src);
+      hls.attachMedia(this.media);
+
+      const manifestEvent = Hls.Events?.MANIFEST_PARSED || "hlsManifestParsed";
+      const levelSwitchedEvent = Hls.Events?.LEVEL_SWITCHED || "hlsLevelSwitched";
+      const errorEvent = Hls.Events?.ERROR || "hlsError";
+
+      hls.on(manifestEvent, () => {
+        if (!this.hls) return;
+        const availableQualities = (this.hls.levels || [])
+          .map((l: any) => l.height)
+          .filter(Boolean);
+
+        if (availableQualities.length > 0 && this.player) {
+          const uniqueQualities = [0, ...Array.from(new Set(availableQualities)).sort((a: any, b: any) => b - a)];
+
+          this.player.options.quality = {
+            default: 0,
+            options: uniqueQualities,
+            forced: true,
+            onChange: (quality: number) => this.onHlsQualityChange(quality),
+          };
+
+          this.player.options.i18n = {
+            ...(this.player.options.i18n || {}),
+            qualityLabel: {
+              0: "Auto",
+            },
+          };
+
+          if (typeof (this.player as any).setQualityMenu === "function") {
+            (this.player as any).setQualityMenu(uniqueQualities);
+          }
+        }
+      });
+
+      hls.on(levelSwitchedEvent, (_event: any, data: any) => {
+        const span = this.container?.querySelector(".plyr__menu__container [data-plyr='quality'][value='0'] span");
+        if (span && this.hls) {
+          if (this.hls.autoLevelEnabled) {
+            const currentLevel = this.hls.levels?.[data.level];
+            span.textContent = currentLevel ? `Auto (${currentLevel.height}p)` : "Auto";
+          } else {
+            span.textContent = "Auto";
+          }
+        }
+      });
+
+      hls.on(errorEvent, (_event: any, data: any) => {
+        if (data.fatal && this.hls) {
+          const errorTypes = Hls.ErrorTypes || {};
+          switch (data.type) {
+            case errorTypes.NETWORK_ERROR:
+              console.warn("HLS network error, attempting recovery...");
+              this.hls.startLoad();
+              break;
+            case errorTypes.MEDIA_ERROR:
+              console.warn("HLS media error, attempting recovery...");
+              this.hls.recoverMediaError();
+              break;
+            default:
+              console.warn("Fatal HLS error, destroying HLS instance...");
+              this.hls.destroy();
+              this.hls = null;
+              break;
+          }
+        }
+      });
+    } else if (
+      this.media.canPlayType("application/vnd.apple.mpegurl") ||
+      this.media.canPlayType("application/x-mpegURL")
+    ) {
+      // Native HLS for Safari
+      this.media.src = src;
+    }
+  }
+
+  /**
    * Instantiates the Plyr player based on source type and wires initial events.
    */
   private createPlayer(): void {
-    // const ext = this.getFileExtension(this.source);
+    const isHls = this.isHlsSource(this.source);
+    if (isHls && this.source) {
+      this.setupHls(this.source);
+    }
+
     const plyrOpts = { ...this.options, i18n: window.h5vpI18n || {} };
 
-    this.player = new window.Plyr(this.media, { ...plyrOpts, playsinline: true });
+    // Plyr only ever *adds* the playsinline attribute, so hardcoding true here
+    const playsinline = this.options?.playsinline !== false;
+
+    this.player = new window.Plyr(this.media, { ...plyrOpts, playsinline });
     this.player.on("ready", () => this.onReady());
     this.player.on("loadedmetadata", () => {
       if (!this.initialized) {
@@ -211,9 +389,9 @@ class MyPlayer extends EventEmitter {
     // Re-apply poster after ready
     this.player?.on("ready", () => {
       setTimeout(() => {
-        if (this.poster && this.player.elements?.poster) {
-          this.player.elements.poster.style.cssText = `background-image:url(${this.poster});`;
-        }
+        // setPoster() rather than cssText, which would wipe any other inline
+        // style Plyr has put on the poster element.
+        this.setPoster(this.poster);
       }, 500);
     });
   }
@@ -274,24 +452,30 @@ class MyPlayer extends EventEmitter {
     }
     this.initialized = true;
 
-    // Build sources & tracks
-    const sources = this.buildSources(this.qualities || [], this.source);
+    const isHls = this.isHlsSource(this.source);
+
+    if (!isHls) {
+      // Build sources & tracks
+      const sources = this.buildSources(this.qualities || [], this.source);
+      this.player.source = {
+        type: "video",
+        sources,
+        poster: this.player.poster && this.player.poster !== "false" ? this.player.poster : "",
+      };
+    } else {
+      if (this.poster) {
+        this.setPoster(this.poster);
+      }
+    }
+
     const tracks = this.buildTracks(this.captions);
-
-
-    this.player.source = {
-      type: "video",
-      sources,
-      poster: this.player.poster && this.player.poster !== "false" ? this.player.poster : "",
-    };
+    this.appendTracks(tracks);
 
     setTimeout(() => {
-      if (!this.options.urls?.enabled) {
+      if (!this.options.urls?.enabled && this.player.source) {
         this.player.download = this.player.source;
       }
     }, 50);
-
-    this.appendTracks(tracks);
 
     // Block playback in wp-admin
     this.player.on("play", () => {
@@ -345,19 +529,33 @@ class MyPlayer extends EventEmitter {
    * Replace the player's source, qualities, and captions at runtime.
    */
   setSource(source: string = "", qualities: any[] = [], captions: any[] = []): void {
+    const nextSource = source || this.source;
+    this.source = nextSource;
     qualities = qualities || this.qualities;
-    const sources = this.buildSources(qualities, source || this.player.source);
-    const tracks = this.buildTracks(this.captions);
+    const tracks = this.buildTracks(captions && captions.length ? captions : this.captions);
 
-    this.player.source = {
-      type: "video",
-      title: "",
-      sources,
-      poster: this.player.poster && this.player.poster !== "false" ? this.player.poster : "",
-    };
+    if (this.isHlsSource(nextSource)) {
+      this.setupHls(nextSource);
+      if (this.poster) {
+        this.setPoster(this.poster);
+      }
+    } else {
+      if (this.hls) {
+        this.hls.destroy();
+        this.hls = null;
+      }
+      const sources = this.buildSources(qualities, nextSource || this.player?.source);
+      if (this.player) {
+        this.player.source = {
+          type: "video",
+          title: "",
+          sources,
+          poster: this.player.poster && this.player.poster !== "false" ? this.player.poster : "",
+        };
+      }
+    }
 
     this.appendTracks(tracks);
-
   }
 
   updateCaptions(): void {
@@ -399,15 +597,23 @@ class MyPlayer extends EventEmitter {
    * Builds track metadata from caption items.
    */
   private buildTracks(captions: CaptionItem[] | null): TrackInfo[] {
-    return (
-      captions
-        ?.map((item) => {
-          if (!item.caption_file) return null;
-          const [label, srclang] = item.label.split("/");
-          return { kind: "captions", label, srclang, src: item.caption_file };
-        })
-        .filter(Boolean) as TrackInfo[]
-    ) || [];
+    if (!Array.isArray(captions)) return [];
+    return captions
+      .map((item, index) => {
+        if (!item || !item.caption_file) return null;
+        const labelRaw = (item.label || "English/en").trim();
+        const parts = labelRaw.split("/");
+        const label = parts[0]?.trim() || "English";
+        const srclang = parts[1]?.trim() || (label.length === 2 ? label.toLowerCase() : "en");
+        return {
+          kind: "captions",
+          label,
+          srclang,
+          src: item.caption_file,
+          default: index === 0,
+        };
+      })
+      .filter(Boolean) as TrackInfo[];
   }
 
   /**
@@ -566,6 +772,10 @@ class MyPlayer extends EventEmitter {
 
 
   destroy(): void {
+    if (this.hls) {
+      this.hls.destroy();
+      this.hls = null;
+    }
     this.player?.destroy();
   }
 

@@ -53,6 +53,10 @@ const VideoPlayer = ({
 
       finalAttributes.options.resetOnEnd = attributes.options.resetOnEnd;
       finalAttributes.options.hideControls = attributes.options.hideControls;
+      // Same treatment as the two above: these stay user-owned, so picking a
+      // preset never silently reverts the inline-playback or preload choice.
+      finalAttributes.options.playsinline = attributes.options.playsinline;
+      finalAttributes.options.preload = attributes.options.preload;
       return finalAttributes;
     } catch {
       return attributes as unknown as VideoPlayerAttributes;
@@ -105,7 +109,7 @@ const VideoPlayer = ({
             autoPlay={autoplay}
             muted={muted}
             loop={loop?.active}
-            preload={options.preload}
+            preload={options.preload || 'metadata'}
             playsInline={options.playsinline}
           />
         )}

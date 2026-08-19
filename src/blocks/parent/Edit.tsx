@@ -1,12 +1,12 @@
 import { InnerBlocks, useBlockProps } from "@wordpress/block-editor";
 import { useEffect } from "@wordpress/element";
 import { useSelect, dispatch } from "@wordpress/data";
-import { Button, Placeholder } from "@wordpress/components";
+import { Placeholder } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { createBlock } from "@wordpress/blocks";
 
 
-import { cameraIcon } from "../constants";
+import { cameraIcon, youtubeIcon, vimeoIcon, audioIcon } from "../constants";
 
 interface ParentEditProps {
   clientId: string;
@@ -41,11 +41,19 @@ const Edit = ({ clientId, isSelected }: ParentEditProps) => {
     return false;
   };
 
+  const playerTypes = [
+    { type: "video", label: __("Video", "html5-video-player"), icon: cameraIcon },
+    { type: "youtube", label: __("YouTube", "html5-video-player"), icon: youtubeIcon("30") },
+    { type: "vimeo", label: __("Vimeo", "html5-video-player"), icon: vimeoIcon("30") },
+    { type: "audio", label: __("Audio", "html5-video-player"), icon: audioIcon("30") },
+  ];
+
   const allowedBlocks = [
     "html5-player/video",
     "html5-player/vimeo",
     "html5-player/youtube",
     "html5-player/popup-trigger",
+    "html5-player/audio",
   ];
 
   if (!innerBlocks?.length) {
@@ -54,18 +62,23 @@ const Edit = ({ clientId, isSelected }: ParentEditProps) => {
         <div {...blockProps}>
           <Placeholder
             icon={cameraIcon}
-            instructions={__("Choose a video type to get started.", "h5vp")}
-            label={__("Choose a Video Type", "h5vp")}
+            instructions={__("Choose a video type to get started.", "html5-video-player")}
+            label={__("Choose a Video Type", "html5-video-player")}
+            className="h5vp-parent-placeholder"
           >
-            <Button variant="primary" onClick={() => insertBlockType("video")}>
-              {__("Video", "h5vp")}
-            </Button>
-            <Button variant="primary" onClick={() => insertBlockType("youtube")}>
-              {__("Youtube", "h5vp")}
-            </Button>
-            <Button variant="primary" onClick={() => insertBlockType("vimeo")}>
-              {__("Vimeo", "h5vp")}
-            </Button>
+            <div className="h5vp-type-grid">
+              {playerTypes.map(({ type, label, icon }) => (
+                <button
+                  key={type}
+                  type="button"
+                  className="h5vp-type-card"
+                  onClick={() => insertBlockType(type)}
+                >
+                  <span className="h5vp-type-card__icon">{icon}</span>
+                  <span className="h5vp-type-card__label">{label}</span>
+                </button>
+              ))}
+            </div>
           </Placeholder>
           <InnerBlocks
             templateLock={false}

@@ -27,7 +27,7 @@ const usePlayerLifecycle = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<MyPlayer | null>(null);
 
-    const { options, poster, provider, skin } = effectiveAttributes;
+    const { options, poster, provider, skin, subtitle } = effectiveAttributes;
 
     // ── Player init / destroy ───────────────────────────────────
     useEffect(() => {
@@ -46,7 +46,7 @@ const usePlayerLifecycle = ({
             playerRef.current?.destroy();
             playerRef.current = null;
         };
-    }, [options, poster, src, skin]);
+    }, [options, poster, src, skin, JSON.stringify(subtitle)]);
 
 
 

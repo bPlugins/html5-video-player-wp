@@ -17,6 +17,7 @@ import isVimeoLink from "../../../utils/isVimeoLink";
 
 import "./../editor.scss";
 import Media from "./Tabs/General/Media";
+import Subtitle from "./Tabs/General/Subtitle";
 import Style from "./Tabs/Style";
 import Presets from "./Tabs/General/Presets";
 
@@ -116,6 +117,7 @@ const BSettings = ({ attributes, setAttributes, clientId, name }: BSettingsProps
                 <>
                   <Panel>
                     <Media {...props} />
+                    <Subtitle {...props} />
                     <Settings name={name} {...props} handleOptions={updateOption} />
                     <Presets {...props} presetId={attributes.presetId} />
 
@@ -133,7 +135,7 @@ const BSettings = ({ attributes, setAttributes, clientId, name }: BSettingsProps
           )}
         </TabPanel>
         <hr />
-        <PremiumPanel description="Subtitle/Caption, Popup, Watermark, SEO, Overlay, Protection is available in premium version" title="Premium Features" pricingUrl={window.h5vpBlock.adminUrl + `edit.php?post_type=videoplayer&page=html5-video-player#/pricing`} buttonLabel="Get Pro">{' '}</PremiumPanel>
+        <PremiumPanel description="Multiple Subtitles, Popup, Watermark, SEO, Overlay, Protection is available in premium version" title="Premium Features" pricingUrl={window.h5vpBlock.adminUrl + `edit.php?post_type=videoplayer&page=html5-video-player#/pricing`} buttonLabel="Get Pro">{' '}</PremiumPanel>
         <br />
       </InspectorControls>
       <BlockControls>

@@ -33,8 +33,8 @@ const CopyShortcode = () => {
     <>
       {postType === "videoplayer" && (
         <Flex justify="center" align="center" className="mb10">
-          <Button title={copied ? __("Copied", "h5vp") : ""} variant="primary" onClick={onCopy}>
-            {copied ? __("Copied", "h5vp") : __("Copy Shortcode", "h5vp")}
+          <Button title={copied ? __("Copied", "html5-video-player") : ""} variant="primary" onClick={onCopy}>
+            {copied ? __("Copied", "html5-video-player") : __("Copy Shortcode", "html5-video-player")}
           </Button>
         </Flex>
       )}

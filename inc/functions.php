@@ -37,6 +37,21 @@ if (!function_exists(('h5vp_process_block_attributes'))) {
             $attributes['poster'] = esc_url_raw((string) $attributes['poster']);
         }
 
+        if (!empty($attributes['subtitle']) && is_array($attributes['subtitle'])) {
+            $cleaned_subtitles = [];
+            foreach ($attributes['subtitle'] as $sub) {
+                if (!empty($sub['caption_file'])) {
+                    $cleaned_subtitles[] = [
+                        'label' => sanitize_text_field($sub['label'] ?? 'English/en'),
+                        'caption_file' => esc_url_raw((string) $sub['caption_file']),
+                    ];
+                }
+            }
+            $attributes['subtitle'] = $cleaned_subtitles;
+        } else {
+            $attributes['subtitle'] = [];
+        }
+
         if (isset($attributes['styles'])) {
             $attributes['styles']['.plyr'] = [
                 '--plyr-color-main' => $option('h5vp_player_primary_color', '#00b2ff')
@@ -56,6 +71,59 @@ if (!function_exists(('h5vp_process_block_attributes'))) {
     }
 }
 
+
+if (!function_exists('h5vp_sanitize_align')) {
+    /**
+     * Normalise a player alignment value.
+     * @param mixed $align Raw stored or user-supplied value.
+     * @return string One of left|center|right|wide|full, or '' when unset.
+     */
+    function h5vp_sanitize_align($align)
+    {
+        if (!is_string($align)) {
+            return '';
+        }
+        $align = strtolower(trim($align));
+
+        return in_array($align, ['left', 'center', 'right', 'wide', 'full'], true) ? $align : '';
+    }
+}
+
+if (!function_exists('h5vp_is_hls_source')) {
+    /**
+     * Whether a source URL is an HLS (.m3u8) stream.
+     * @param mixed $url Source URL.
+     * @return bool
+     */
+    function h5vp_is_hls_source($url)
+    {
+        if (!is_string($url) || '' === $url) {
+            return false;
+        }
+
+        return strpos(strtolower($url), '.m3u8') !== false;
+    }
+}
+
+if (!function_exists('h5vp_maybe_enqueue_hls')) {
+    /**
+     * Enqueue hls.js only when a source on this page actually needs it.
+     * @param string|array $sources One source URL, or a list of them.
+     * @return bool True when hls.js was enqueued.
+     */
+    function h5vp_maybe_enqueue_hls($sources)
+    {
+        foreach ((array) $sources as $source) {
+            if (h5vp_is_hls_source($source)) {
+                wp_enqueue_script('bplugins-hls');
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
 
 if (!function_exists('h5vp_convert_duration_to_iso8601')) {
     function h5vp_convert_duration_to_iso8601($duration)

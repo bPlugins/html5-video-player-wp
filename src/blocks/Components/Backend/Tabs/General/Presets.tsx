@@ -8,7 +8,7 @@ import Notice from "../../../../../../../bpl-tools/Components/Notice"
 
 const Presets = ({ presetId, setAttributes }: { presetId: number | string | null, setAttributes: (attributes: any) => void }) => {
 
-    return <PanelBody title={<Title title={__("Presets", "h5vp")} Icon={PresetsIcon} /> as unknown as string} initialOpen={true}>
+    return <PanelBody title={<Title title={__("Presets", "html5-video-player")} Icon={PresetsIcon} /> as unknown as string} initialOpen={true}>
 
         <div className="h5vp_presets">
             {DEFAULT_PRESETS.map((p) => (

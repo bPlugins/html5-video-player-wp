@@ -1,0 +1,57 @@
+export type PlaylistProvider = "library" | "youtube" | "vimeo";
+
+export interface PlaylistVideo {
+  h5vp_video_provider: PlaylistProvider;
+  video_source: string;
+  h5vp_video_source: string;
+  video_thumb: string;
+  video_title: string;
+  video_desc: string;
+}
+
+export const EMPTY_VIDEO: PlaylistVideo = {
+  h5vp_video_provider: "library",
+  video_source: "",
+  h5vp_video_source: "",
+  video_thumb: "",
+  video_title: "",
+  video_desc: "",
+};
+
+export interface PlaylistBlockAttributes {
+  uniqueId?: string;
+  videos: PlaylistVideo[];
+  playlistType: string;
+  autoplayNextVideo: boolean;
+  showPrevNext: boolean;
+  showSearch: boolean;
+  controls: string[];
+  brandColor: string;
+  playerWidth: string;
+}
+
+export interface PlaylistRuntimeOptions {
+  controls: string[];
+  muted: boolean;
+  seekTime: number;
+  hideControls: boolean;
+  resetOnEnd: boolean;
+  autoplayNextVideo: boolean;
+  showPrevNext: boolean;
+  showSearch: boolean;
+}
+
+export interface PlaylistRuntimeData {
+  uniqueId: string;
+  playlistType: string;
+  options: PlaylistRuntimeOptions;
+  videos: PlaylistVideo[];
+  styles: {
+    h5vp_playlist_container: {
+      width: string;
+      maxWidth: string;
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
+}

@@ -1,0 +1,802 @@
+// ==========================================================================
+// Custom HTML5 Audio Player Styles (Zero-Plyr Native React Multi-Skin)
+// ==========================================================================
+//
+// Structure:
+//   1. Block wrapper + alignment
+//   2. Container tokens — per-skin sizing lives here and nowhere else
+//   3. Shared components — one rule set each, sized by those tokens
+//   4. Per-skin sections — layout and chrome only
+//   5. Mobile
+//
+// Every skin renders the same markup for the same widget, so a widget is
+// styled once. When a skin needs a different size, it overrides a token in
+// section 2 rather than restating the rule set.
+
+// ==========================================================================
+// 1. Block wrapper + alignment
+// ==========================================================================
+.wp-block-html5-player-audio,
+.h5vp-audio-editor-preview {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// Core and most themes implement .alignleft/.alignright as floats, meant for
+.wp-block-html5-player-audio.alignleft,
+.wp-block-html5-player-audio.aligncenter,
+.wp-block-html5-player-audio.alignright,
+.wp-block-html5-player-audio[data-align="left"],
+.wp-block-html5-player-audio[data-align="center"],
+.wp-block-html5-player-audio[data-align="right"],
+.wp-block.alignleft:has(> .h5vp-audio-editor-preview),
+.wp-block.aligncenter:has(> .h5vp-audio-editor-preview),
+.wp-block.alignright:has(> .h5vp-audio-editor-preview),
+.editor-styles-wrapper .wp-block[data-align="left"].wp-block-html5-player-audio,
+.editor-styles-wrapper .wp-block[data-align="center"].wp-block-html5-player-audio,
+.editor-styles-wrapper .wp-block[data-align="right"].wp-block-html5-player-audio {
+  float: none !important;
+  clear: both !important;
+  width: 100% !important;
+  // Centre the wrapper box so it occupies exactly the column an unaligned block
+  // would; the inner container then moves within it.
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-inline-start: auto !important;
+  margin-inline-end: auto !important;
+}
+
+// aligncenter is still constrained by core, so only left/right need this.
+.wp-block-html5-player-audio.alignleft,
+.wp-block-html5-player-audio.alignright,
+.wp-block-html5-player-audio[data-align="left"],
+.wp-block-html5-player-audio[data-align="right"],
+.wp-block.alignleft:has(> .h5vp-audio-editor-preview),
+.wp-block.alignright:has(> .h5vp-audio-editor-preview),
+.editor-styles-wrapper .wp-block[data-align="left"].wp-block-html5-player-audio,
+.editor-styles-wrapper .wp-block[data-align="right"].wp-block-html5-player-audio {
+  max-width: var(--wp--style--global--content-size, 100%) !important;
+}
+
+.wp-block-html5-player-audio.alignleft .h5vp-audio-container,
+.wp-block-html5-player-audio[data-align="left"] .h5vp-audio-container {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+.wp-block-html5-player-audio.aligncenter .h5vp-audio-container,
+.wp-block-html5-player-audio[data-align="center"] .h5vp-audio-container {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.wp-block-html5-player-audio.alignright .h5vp-audio-container,
+.wp-block-html5-player-audio[data-align="right"] .h5vp-audio-container {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+// ==========================================================================
+// 2. Container tokens
+// ==========================================================================
+.h5vp-audio-container {
+  // Palette — overridden inline by AudioPlayer.tsx from block attributes.
+  --h5vp-audio-primary: #005aff;
+  --h5vp-audio-bg: #1e2227;
+  --h5vp-audio-text: #f0f3f6;
+  --h5vp-audio-muted: color-mix(in srgb, var(--h5vp-audio-text) 68%, transparent);
+  --h5vp-audio-rail: color-mix(in srgb, var(--h5vp-audio-text) 18%, transparent);
+  --h5vp-audio-buffered: color-mix(in srgb, var(--h5vp-audio-text) 32%, transparent);
+  --h5vp-audio-border: color-mix(in srgb, var(--h5vp-audio-text) 12%, transparent);
+
+  // Geometry — the default skin's values; each skin overrides what differs.
+  --h5vp-track-h: 24px;
+  --h5vp-rail-h: 5px;
+  --h5vp-rail-r: 3px;
+  --h5vp-thumb: 12px;
+  // 0 keeps the scrub handle hidden until the rail is hovered; 1 pins it on.
+  --h5vp-thumb-scale: 0;
+
+  --h5vp-play-btn: 38px;
+  --h5vp-play-svg: 20px;
+  --h5vp-skip-btn: 30px;
+  --h5vp-skip-svg: 18px;
+  --h5vp-skip-badge: 8px;
+  --h5vp-icon-btn: 28px;
+  --h5vp-icon-svg: 18px;
+
+  --h5vp-time-size: 12px;
+  --h5vp-time-min: 34px;
+
+  --h5vp-speed-pad: 3px 7px;
+  --h5vp-speed-bg: 12%;
+  --h5vp-speed-bg-hover: 22%;
+  --h5vp-speed-item-pad: 5px 12px;
+  // The default skin's speed button sits near the right edge, so its popover
+  // is right-aligned; the podcast skin's sits on the left.
+  --h5vp-speed-anchor-left: auto;
+  --h5vp-speed-anchor-right: 0;
+
+  width: 100%;
+  min-width: 200px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--h5vp-audio-text);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  button,
+  a,
+  input,
+  .h5vp-btn,
+  [role="slider"] {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus,
+    &:focus-visible,
+    &:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .h5vp-audio-native-el {
+    display: none !important;
+  }
+}
+
+.h5vp-skin-type-minimal {
+  --h5vp-play-btn: 36px;
+  --h5vp-play-svg: 22px;
+  --h5vp-time-min: 0;
+}
+
+.h5vp-skin-type-podcast {
+  --h5vp-track-h: 16px;
+  --h5vp-rail-h: 4px;
+  --h5vp-rail-r: 2px;
+  --h5vp-thumb: 10px;
+  --h5vp-thumb-scale: 1;
+
+  --h5vp-play-btn: 44px;
+  --h5vp-play-svg: 24px;
+  --h5vp-skip-btn: 32px;
+  --h5vp-skip-svg: 20px;
+  --h5vp-skip-badge: 9px;
+  --h5vp-icon-btn: 30px;
+  --h5vp-icon-svg: 20px;
+
+  --h5vp-time-size: 11px;
+  --h5vp-time-min: 0;
+
+  --h5vp-speed-pad: 3px 8px;
+  --h5vp-speed-bg: 10%;
+  --h5vp-speed-bg-hover: 20%;
+  --h5vp-speed-item-pad: 4px 10px;
+  --h5vp-speed-anchor-left: 0;
+  --h5vp-speed-anchor-right: auto;
+}
+
+.h5vp-skin-type-compact {
+  --h5vp-track-h: 20px;
+  --h5vp-rail-h: 4px;
+  --h5vp-rail-r: 2px;
+  --h5vp-thumb: 8px;
+  --h5vp-thumb-scale: 1;
+
+  --h5vp-play-btn: 30px;
+  --h5vp-play-svg: 16px;
+  --h5vp-icon-btn: 26px;
+  --h5vp-icon-svg: 16px;
+
+  --h5vp-time-size: 11px;
+  --h5vp-time-min: 0;
+}
+
+// ==========================================================================
+// 3. Shared components
+// ==========================================================================
+
+// Base button — every control button and the download anchor.
+.h5vp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0 !important;
+  outline: none !important;
+  padding: 0;
+  margin: 0;
+  color: var(--h5vp-audio-text);
+  opacity: 0.75;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
+  position: relative;
+  text-decoration: none;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.06);
+    color: var(--h5vp-audio-text);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Primary transport button.
+.h5vp-btn-play {
+  width: var(--h5vp-play-btn);
+  height: var(--h5vp-play-btn);
+  background: var(--h5vp-audio-primary);
+  color: #ffffff;
+  opacity: 1;
+
+  svg {
+    width: var(--h5vp-play-svg);
+    height: var(--h5vp-play-svg);
+    fill: currentColor;
+  }
+}
+
+// Jump buttons with the seconds count badged on.
+.h5vp-btn-skip {
+  width: var(--h5vp-skip-btn);
+  height: var(--h5vp-skip-btn);
+  color: var(--h5vp-audio-text);
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+    color: var(--h5vp-audio-text);
+  }
+
+  svg {
+    width: var(--h5vp-skip-svg);
+    height: var(--h5vp-skip-svg);
+  }
+
+  .h5vp-skip-badge {
+    position: absolute;
+    font-size: var(--h5vp-skip-badge);
+    font-weight: 700;
+    top: 10px;
+    color: var(--h5vp-audio-text);
+  }
+}
+
+// Secondary icon buttons: volume and download.
+.h5vp-btn-volume,
+.h5vp-btn-download {
+  width: var(--h5vp-icon-btn);
+  height: var(--h5vp-icon-btn);
+  color: var(--h5vp-audio-text);
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+    color: var(--h5vp-audio-text);
+  }
+
+  svg {
+    width: var(--h5vp-icon-svg);
+    height: var(--h5vp-icon-svg);
+    display: block;
+  }
+}
+
+// Timestamps.
+.h5vp-time {
+  font-size: var(--h5vp-time-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--h5vp-audio-text);
+  opacity: 0.75;
+  flex-shrink: 0;
+  min-width: var(--h5vp-time-min);
+}
+
+.h5vp-time-current {
+  text-align: right;
+}
+
+.h5vp-time-duration {
+  text-align: left;
+}
+
+// Seek rail.
+.h5vp-progress-wrapper {
+  flex: 1 1 auto;
+  position: relative;
+  height: var(--h5vp-track-h);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  touch-action: none;
+
+  &:hover .h5vp-progress-thumb {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+.h5vp-progress-rail {
+  position: relative;
+  width: 100%;
+  height: var(--h5vp-rail-h);
+  background: var(--h5vp-audio-rail);
+  border-radius: var(--h5vp-rail-r);
+  overflow: visible;
+}
+
+.h5vp-progress-buffered,
+.h5vp-progress-played {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: var(--h5vp-rail-r);
+}
+
+.h5vp-progress-buffered {
+  background: var(--h5vp-audio-buffered);
+  transition: width 0.2s ease;
+}
+
+.h5vp-progress-played {
+  background: var(--h5vp-audio-primary);
+}
+
+.h5vp-progress-thumb {
+  position: absolute;
+  right: calc(var(--h5vp-thumb) / -2);
+  top: 50%;
+  width: var(--h5vp-thumb);
+  height: var(--h5vp-thumb);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transform: translateY(-50%) scale(var(--h5vp-thumb-scale));
+  transition: transform 0.12s ease;
+}
+
+// Scrub timestamp bubble — default skin only, via ProgressBar's showTooltip.
+.h5vp-hover-tooltip {
+  position: absolute;
+  bottom: 24px;
+  transform: translateX(-50%);
+  background: #000000;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+// Playback-rate selector.
+.h5vp-speed-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.h5vp-btn-speed {
+  font-size: 11px;
+  font-weight: 700;
+  padding: var(--h5vp-speed-pad);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--h5vp-audio-text) var(--h5vp-speed-bg), transparent);
+  color: var(--h5vp-audio-text);
+  opacity: 0.85;
+
+  &:hover,
+  &.is-active {
+    opacity: 1;
+    background: color-mix(in srgb, var(--h5vp-audio-text) var(--h5vp-speed-bg-hover), transparent);
+    color: var(--h5vp-audio-text);
+  }
+}
+
+.h5vp-speed-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: var(--h5vp-speed-anchor-left);
+  right: var(--h5vp-speed-anchor-right);
+  background: var(--h5vp-audio-bg);
+  border: 1px solid var(--h5vp-audio-border);
+  border-radius: 8px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 10;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+
+  .h5vp-speed-item {
+    background: transparent;
+    border: 0;
+    color: var(--h5vp-audio-text);
+    opacity: 0.8;
+    font-size: 11px;
+    font-weight: 600;
+    padding: var(--h5vp-speed-item-pad);
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.1s ease, color 0.1s ease;
+
+    &:hover {
+      opacity: 1;
+      background: color-mix(in srgb, var(--h5vp-audio-text) 14%, transparent);
+      color: var(--h5vp-audio-text);
+    }
+
+    &.is-selected {
+      opacity: 1;
+      background: var(--h5vp-audio-primary);
+      color: #ffffff;
+    }
+  }
+}
+
+// Vertical volume slider popover.
+.h5vp-vol-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.h5vp-vol-popover {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--h5vp-audio-bg, #1e1e24);
+  border: 1px solid var(--h5vp-audio-border, rgba(255, 255, 255, 0.14));
+  border-radius: 20px;
+  padding: 10px 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: h5vpAudioSlideUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--h5vp-audio-bg, #1e1e24);
+  }
+}
+
+@keyframes h5vpAudioSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.h5vp-vol-track {
+  width: 16px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.h5vp-vol-rail {
+  position: relative;
+  width: 4px;
+  height: 100%;
+  background: var(--h5vp-audio-rail, rgba(255, 255, 255, 0.2));
+  border-radius: 2px;
+}
+
+.h5vp-vol-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--h5vp-audio-primary, #005aff);
+  border-radius: 2px;
+}
+
+.h5vp-vol-thumb {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+// ==========================================================================
+// 4. Skins — layout and chrome only
+// ==========================================================================
+
+// SKIN 1: MODERN BAR (DEFAULT)
+.h5vp-skin-default {
+  background: var(--h5vp-audio-bg);
+  border: 1px solid var(--h5vp-audio-border);
+  border-radius: var(--h5vp-audio-radius, 12px);
+  padding: 12px 18px;
+  color: var(--h5vp-audio-text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+  .h5vp-default-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+}
+
+// SKIN 2: WAVEFORM (MINIMAL)
+.h5vp-skin-minimal {
+  background: var(--h5vp-audio-bg);
+  border: 1px solid var(--h5vp-audio-border);
+  border-radius: var(--h5vp-audio-radius, 16px);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--h5vp-audio-text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+  // This skin scrubs on the waveform itself instead of a plain rail.
+  .h5vp-wave__track {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 34px;
+    min-width: 0;
+    overflow: hidden;
+    cursor: pointer;
+    touch-action: none;
+  }
+
+  .h5vp-wave__bar {
+    flex: 0 0 2px;
+    min-height: 3px;
+    border-radius: 2px;
+    background: var(--h5vp-audio-rail);
+    opacity: 0.85;
+    transition: height 0.3s ease, background-color 0.12s linear;
+
+    &.is-played {
+      background: var(--h5vp-audio-primary);
+      opacity: 1;
+    }
+  }
+}
+
+// SKIN 3: PODCAST CARD (RICH)
+.h5vp-skin-podcast {
+  .h5vp-podcast-card {
+    background: var(--h5vp-audio-bg);
+    border: 1px solid var(--h5vp-audio-border);
+    border-radius: var(--h5vp-audio-radius, 16px);
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--h5vp-audio-text);
+  }
+
+  .h5vp-podcast-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .h5vp-podcast-artwork {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--h5vp-audio-text) 8%, transparent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .h5vp-podcast-art-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--h5vp-audio-primary);
+
+    svg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .h5vp-podcast-meta {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .h5vp-podcast-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--h5vp-audio-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  .h5vp-podcast-artist {
+    font-size: 13px;
+    color: var(--h5vp-audio-text);
+    opacity: 0.7;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .h5vp-podcast-scrubber-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  // Opacity lives on .h5vp-time itself; setting it here too would compound.
+  .h5vp-podcast-time-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .h5vp-podcast-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .h5vp-podcast-action-left,
+  .h5vp-podcast-action-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 0;
+  }
+
+  .h5vp-podcast-action-right {
+    justify-content: flex-end;
+  }
+
+  .h5vp-podcast-action-center {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  // The card's hero button gets extra lift the other skins don't have.
+  .h5vp-btn-play {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  }
+}
+
+// SKIN 4: COMPACT PILL (INLINE)
+.h5vp-skin-compact {
+  .h5vp-compact-pill {
+    background: var(--h5vp-audio-bg);
+    border: 1px solid var(--h5vp-audio-border);
+    border-radius: var(--h5vp-audio-radius, 40px);
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--h5vp-audio-text);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// ==========================================================================
+// 5. Mobile
+// ==========================================================================
+@media (max-width: 480px) {
+  .h5vp-skin-type-default {
+    --h5vp-time-size: 11px;
+  }
+
+  .h5vp-skin-type-podcast {
+    --h5vp-skip-btn: 28px;
+  }
+
+  .h5vp-skin-default {
+    padding: 8px 12px;
+
+    .h5vp-default-controls {
+      gap: 6px;
+    }
+
+    .h5vp-btn-skip {
+      display: none;
+    }
+  }
+
+  .h5vp-skin-podcast {
+    .h5vp-podcast-card {
+      padding: 14px;
+      gap: 12px;
+    }
+
+    .h5vp-podcast-header {
+      gap: 12px;
+    }
+
+    .h5vp-podcast-artwork {
+      width: 48px;
+      height: 48px;
+    }
+
+    .h5vp-podcast-title {
+      font-size: 14px;
+    }
+
+    .h5vp-podcast-actions {
+      gap: 8px;
+    }
+  }
+
+  .h5vp-skin-compact {
+    .h5vp-compact-pill {
+      padding: 5px 10px;
+      gap: 6px;
+    }
+  }
+}

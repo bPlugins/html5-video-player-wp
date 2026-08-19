@@ -38,9 +38,9 @@ const Style = ({ attributes, updateFeatures, panelRef, updateHandler }: StylePro
   };
 
   return (
-    <CustomPanelBody title={__("Style", "h5vp")} badgeText={null} initialOpen={true} ref={panelRef}>
+    <CustomPanelBody title={__("Style", "html5-video-player")} badgeText={null} initialOpen={true} ref={panelRef}>
       <UnitControl
-        label={__("Width", "h5vp")}
+        label={__("Width", "html5-video-player")}
         step={1}
         value={plyr_wrapper.width}
         onChange={(width?: string) => updateStyle({ width }, "plyr_wrapper")}
@@ -50,7 +50,7 @@ const Style = ({ attributes, updateFeatures, panelRef, updateHandler }: StylePro
       <p></p>
       {!presetId && (
         <UnitControl
-          label={__("Round Corner", "h5vp")}
+          label={__("Round Corner", "html5-video-player")}
           value={plyr_wrapper.borderRadius}
           onChange={(borderRadius?: string) => updateStyle({ borderRadius }, "plyr_wrapper")}
         />

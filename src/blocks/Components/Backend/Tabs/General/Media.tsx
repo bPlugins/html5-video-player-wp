@@ -19,7 +19,7 @@ const Media = ({ attributes, setAttributes }: MediaProps) => {
   const { source, poster, provider } = attributes;
   return (
     <PanelBody title={<div className="bPlPanelBody h5vp-panel-icon">{videoIcon2({ color: "#146ef5" })} {" "}{__("Media", "html5-video-player")} </div> as unknown as string} initialOpen={false} >
-      <InlineMediaUpload types={["video"]} label={provider === "self-hosted" ? __("Video Source (720 recomended)", "html5-video-player") : __("Video Source", "html5-video-player")} onChange={(source: string) => setAttributes({ source })} value={source} placeholder="video source" />
+      <InlineMediaUpload types={["video"]} label={provider === "self-hosted" ? __("Video Source (MP4, WebM, HLS .m3u8)", "html5-video-player") : __("Video Source", "html5-video-player")} onChange={(source: string) => setAttributes({ source })} value={source} placeholder={__("Paste Video or HLS (.m3u8) URL", "html5-video-player")} />
 
       <BToggleControl
         info={__("Set an image to display before the video starts playing.", "html5-video-player")}

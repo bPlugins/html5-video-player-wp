@@ -19,8 +19,8 @@ interface SettingsProps {
 }
 
 const Settings = ({ attributes, setAttributes, handleOptions }: SettingsProps) => {
-  const { source, options, presetId } = attributes;
-  const { autoplay, muted, hideControls, ratio, resetOnEnd, loop, speed } = options;
+  const { source, provider, options, presetId } = attributes;
+  const { autoplay, muted, hideControls, playsinline, preload, ratio, resetOnEnd, loop, speed } = options;
 
   const [isCustomRatio, setIsCustomRatio] = useState(false);
 
@@ -32,23 +32,44 @@ const Settings = ({ attributes, setAttributes, handleOptions }: SettingsProps) =
 
 
   return (
-    <PanelBody title={<Title title={__("Settings", "h5vp")} Icon={SettingsIcon} /> as unknown as string} initialOpen={false} className="bPlPanelBody">
-      <BToggleControl info={helpText.autoplay} help={autoplay ? __("muted should be enabled", "h5vp") : ""} label={__("Autoplay", "h5vp")} id="autoplay" checked={autoplay} onChange={() => handleOptions({ autoplay: !autoplay })} />
+    <PanelBody title={<Title title={__("Settings", "html5-video-player")} Icon={SettingsIcon} /> as unknown as string} initialOpen={false} className="bPlPanelBody">
+      <BToggleControl info={helpText.autoplay} help={autoplay ? __("muted should be enabled", "html5-video-player") : ""} label={__("Autoplay", "html5-video-player")} id="autoplay" checked={autoplay} onChange={() => handleOptions({ autoplay: !autoplay })} />
 
-      <BToggleControl info={helpText.muted} label={__("Muted", "h5vp")} checked={muted} onChange={() => handleOptions({ muted: !muted })} />
+      <BToggleControl info={helpText.muted} label={__("Muted", "html5-video-player")} checked={muted} onChange={() => handleOptions({ muted: !muted })} />
 
-      <BToggleControl info={helpText.repeat} label={__("Repeat", "h5vp")} checked={loop.active} onChange={() => handleOptions({ loop: { ...loop, active: !loop.active } })} />
+      <BToggleControl info={helpText.repeat} label={__("Repeat", "html5-video-player")} checked={loop.active} onChange={() => handleOptions({ loop: { ...loop, active: !loop.active } })} />
 
-      {!loop.active && !presetId && <BToggleControl info={helpText.resetOnEnd} label={__("Reset On End", "h5vp")} checked={resetOnEnd} onChange={() => handleOptions({ resetOnEnd: !resetOnEnd })} />}
+      {!loop.active && !presetId && <BToggleControl info={helpText.resetOnEnd} label={__("Reset On End", "html5-video-player")} checked={resetOnEnd} onChange={() => handleOptions({ resetOnEnd: !resetOnEnd })} />}
 
-      {!presetId && <BToggleControl info={helpText.autoHideControls} label={__("Auto Hide Control", "h5vp")} checked={hideControls} onChange={() => handleOptions({ hideControls: !hideControls })} />}
+      {!presetId && <BToggleControl info={helpText.autoHideControls} label={__("Auto Hide Control", "html5-video-player")} checked={hideControls} onChange={() => handleOptions({ hideControls: !hideControls })} />}
+
+      <BToggleControl info={helpText.playsinline} label={__("Allow inline playback on iOS", "html5-video-player")} checked={playsinline} onChange={() => handleOptions({ playsinline: !playsinline })} />
+
+      {/* preload is a <video> attribute, so it has no effect on the YouTube/Vimeo iframe embeds. */}
+      {!presetId && !["youtube", "vimeo"].includes(provider) && (
+        <BToggleControl
+          info={helpText.preload}
+          Component={SelectControl}
+          labelPosition="side"
+          // Blocks saved before Preload was exposed have no options.preload;
+          // show the effective default instead of a phantom selection.
+          value={preload || "metadata"}
+          label={__("Preload", "html5-video-player")}
+          options={[
+            { label: "none", value: "none" },
+            { label: "metadata", value: "metadata" },
+            { label: "auto", value: "auto" },
+          ]}
+          onChange={(preload: string) => handleOptions({ preload })}
+        />
+      )}
 
       <BToggleControl
         info={helpText.videoRatio}
         Component={SelectControl}
         labelPosition="top"
         value={isCustomRatio ? "custom" : ratio}
-        label={__("Video Ratio (Aspect Ratio)", "h5vp")}
+        label={__("Video Ratio (Aspect Ratio)", "html5-video-player")}
         options={[
           { label: "Original", value: "original" },
           { label: "Square (1:1)", value: "1:1" },
@@ -75,7 +96,7 @@ const Settings = ({ attributes, setAttributes, handleOptions }: SettingsProps) =
         <BToggleControl
           info={helpText.videoRatio}
           Component={TextControl}
-          label={__("Custom Video Ratio", "h5vp")}
+          label={__("Custom Video Ratio", "html5-video-player")}
           help="Original - blank, Square - 1:1, Standard - 4:3, Portrait - 3:4, Classic - 3:2, Classic Portrait - 2:3, Wide - 16:9, Tall - 9:16"
           onChange={(ratio: string) => handleOptions({ ratio })}
           value={ratio}
@@ -85,9 +106,9 @@ const Settings = ({ attributes, setAttributes, handleOptions }: SettingsProps) =
       )}
 
       <BToggleControl
-        info={__("The speed options to display in the UI. YouTube and Vimeo will ignore any options outside of the 0.5-2 range, so options outside of this range will be hidden automatically.", "h5vp")}
+        info={__("The speed options to display in the UI. YouTube and Vimeo will ignore any options outside of the 0.5-2 range, so options outside of this range will be hidden automatically.", "html5-video-player")}
         Component={TextControl}
-        label={__("Speed", "h5vp")}
+        label={__("Speed", "html5-video-player")}
         value={speed.options}
         onChange={(options: string) => handleOptions({ ...speed, options: options.split(",") }, "speed")}
       />
@@ -102,7 +123,6 @@ const Settings = ({ attributes, setAttributes, handleOptions }: SettingsProps) =
           <li>{__("Save playback state", "html5-video-player")}</li>
           <li>{__("Stick on scroll", "html5-video-player")}</li>
           <li>{__("Seektime", "html5-video-player")}</li>
-          <li>{__("Preload", "html5-video-player")}</li>
           <li>{__("Start time", "html5-video-player")}</li>
           <li>{__("Custom play button", "html5-video-player")}</li>
           <li>{__("Ads", "html5-video-player")}</li>

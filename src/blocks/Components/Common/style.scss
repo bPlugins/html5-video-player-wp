@@ -429,6 +429,103 @@
   margin-left: 0px;
 }
 
+/* ======================================================== Player alignment ======================================== */
+/* The alignment class moves the inner .plyr_wrapper with auto margins rather than
+   floats, so the player never floats out of the content area or wraps text beside it.
+
+   Two things have to be undone for that to work:
+
+   1. Themes and core style .alignleft/.alignright as floats (the image-with-text-
+      wrap behaviour), so the float is cancelled on the wrapper.
+   2. Core's constrained layout deliberately EXEMPTS .alignleft/.alignright from the
+      content width — `.is-layout-constrained > :where(:not(.alignleft):not(.alignright)
+      :not(.alignfull))` — because it assumes a floated element shrinks to its content.
+      We do not float, so an aligned wrapper would stretch to the full canvas (645px
+      column -> 1300px block). The content width is therefore put back below.
+
+   The column width comes from --wp--style--global--content-size, which every block
+   theme defines. Classic themes leave it unset and fall back to 100%, which is
+   already correct there because the parent is what constrains them. A block nested
+   in a Group with its own narrower contentSize is the one case this cannot see. */
+.wp-block.html5_video_players[data-align="left"],
+.wp-block.html5_video_players[data-align="right"],
+.wp-block.html5_video_players[data-align="center"],
+.wp-block.html5_video_players.alignleft,
+.wp-block.html5_video_players.alignright,
+.wp-block.html5_video_players.aligncenter,
+.editor-styles-wrapper .wp-block[data-align="left"].html5_video_players,
+.editor-styles-wrapper .wp-block[data-align="right"].html5_video_players,
+.editor-styles-wrapper .wp-block[data-align="center"].html5_video_players,
+.editor-styles-wrapper .wp-block.alignleft.html5_video_players,
+.editor-styles-wrapper .wp-block.alignright.html5_video_players,
+.editor-styles-wrapper .wp-block.aligncenter.html5_video_players,
+.editor-styles-wrapper .wp-block[data-align="left"]:has(.html5_video_players),
+.editor-styles-wrapper .wp-block[data-align="right"]:has(.html5_video_players),
+.editor-styles-wrapper .wp-block[data-align="center"]:has(.html5_video_players),
+.editor-styles-wrapper .wp-block.alignleft:has(.html5_video_players),
+.editor-styles-wrapper .wp-block.alignright:has(.html5_video_players),
+.editor-styles-wrapper .wp-block.aligncenter:has(.html5_video_players),
+.wp-block-html5-player-video.alignleft,
+.wp-block-html5-player-video.alignright,
+.wp-block-html5-player-video.aligncenter,
+.html5_video_players.alignleft,
+.html5_video_players.alignright,
+.html5_video_players.aligncenter,
+.html5_video_players[data-align="left"],
+.html5_video_players[data-align="right"],
+.html5_video_players[data-align="center"] {
+  float: none !important;
+  clear: both !important;
+  width: 100% !important;
+  /* Centre the wrapper box itself, so it occupies exactly the same column an
+     unaligned block would; the inner .plyr_wrapper then moves within it. */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-inline-start: auto !important;
+  margin-inline-end: auto !important;
+}
+
+/* Only left/right need the column restored — core still constrains aligncenter,
+   so leaving its max-width alone keeps it matching the surrounding content. */
+.wp-block.html5_video_players[data-align="left"],
+.wp-block.html5_video_players[data-align="right"],
+.wp-block.html5_video_players.alignleft,
+.wp-block.html5_video_players.alignright,
+.wp-block-html5-player-video.alignleft,
+.wp-block-html5-player-video.alignright,
+.html5_video_players.alignleft,
+.html5_video_players.alignright,
+.html5_video_players[data-align="left"],
+.html5_video_players[data-align="right"],
+.editor-styles-wrapper .wp-block[data-align="left"].html5_video_players,
+.editor-styles-wrapper .wp-block[data-align="right"].html5_video_players,
+.editor-styles-wrapper .wp-block.alignleft.html5_video_players,
+.editor-styles-wrapper .wp-block.alignright.html5_video_players,
+.editor-styles-wrapper .wp-block[data-align="left"]:has(.html5_video_players),
+.editor-styles-wrapper .wp-block[data-align="right"]:has(.html5_video_players),
+.editor-styles-wrapper .wp-block.alignleft:has(.html5_video_players),
+.editor-styles-wrapper .wp-block.alignright:has(.html5_video_players) {
+  max-width: var(--wp--style--global--content-size, 100%) !important;
+}
+
+.html5_video_players[data-align="left"] .plyr_wrapper,
+.html5_video_players.alignleft .plyr_wrapper {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+.html5_video_players[data-align="center"] .plyr_wrapper,
+.html5_video_players.aligncenter .plyr_wrapper {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.html5_video_players[data-align="right"] .plyr_wrapper,
+.html5_video_players.alignright .plyr_wrapper {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
 .password_form {
   position: absolute;
   top: 0;

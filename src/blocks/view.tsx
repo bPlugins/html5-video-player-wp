@@ -25,15 +25,17 @@ window.addEventListener("elementor/frontend/init", function () {
   (window as any).elementorFrontend.hooks.addAction(
     "frontend/element_ready/H5VPPlayer.default",
     function (scope: any) {
-      const block = scope[0].querySelector(".html5_video_players") as HTMLElement;
-      if (!block.dataset.attributes || !block.dataset.nonce) return;
+      // the player in the editor preview.
+      const block = scope?.[0]?.querySelector(".html5_video_players") as HTMLElement | null;
+      if (!block || !block.dataset.attributes) return;
 
       const attributers = JSON.parse(block.dataset.attributes);
       const nonce = block.dataset.nonce;
-      createRoot(block).render(<VideoPlayer attributes={attributers} nonce={nonce} />);
 
       block.removeAttribute("data-attributes");
       block.removeAttribute("data-nonce");
+
+      createRoot(block).render(<VideoPlayer attributes={attributers} nonce={nonce} />);
     }
   );
 });

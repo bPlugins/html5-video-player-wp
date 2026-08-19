@@ -24,6 +24,7 @@ const controlSettings: ControlSetting[] = [
   { label: "Duration", control: "duration" },
   { label: "Mute", control: "mute" },
   { label: "Volume", control: "volume" },
+  { label: "Captions", control: "captions" },
   { label: "PIP", control: "pip" },
   { label: "Airplay", control: "airplay" },
   { label: "Settings", control: "settings" },

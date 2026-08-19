@@ -6,7 +6,7 @@ import { vimeoIcon } from "../constants";
 const Edit = (props: EditProps) => (
   <EditBlock
     config={{
-      validator: isVimeoLink,
+      validator: (source) => Boolean(isVimeoLink(source)),
       placeholderText: "Paste or type a vimeo video URL/ID",
       blockName: 'vimeo',
       icon: vimeoIcon()

@@ -1,0 +1,50 @@
+.html5-player-audio-block {
+  .h5vp-audio-editor-preview {
+    padding: 10px 0;
+
+    .plyr {
+      width: 100%;
+    }
+  }
+}
+
+// Inspector tabs + panel icons
+.h5vpAudioTabPanel {
+  .components-tab-panel__tabs {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      width: 50%;
+      justify-content: center;
+      color: #146ef5;
+      border-bottom: 3px solid transparent;
+
+      &:hover,
+      &:focus {
+        color: #146ef5;
+        box-shadow: none;
+      }
+    }
+
+    .activeTab {
+      font-weight: bold;
+      background-color: rgba(20, 110, 245, 0.15);
+      border-bottom: 3px solid #146ef5;
+    }
+  }
+
+  .h5vp-panel-icon {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    svg {
+      color: #146ef5;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+  }
+}

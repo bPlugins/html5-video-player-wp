@@ -6,7 +6,7 @@ import { vimeoIcon } from "../constants";
 
 
 registerBlockType(metadata as any, {
-  icon: vimeoIcon(),
+  icon: vimeoIcon() as any,
   edit: Edit as any,
   save: () => null,
 });

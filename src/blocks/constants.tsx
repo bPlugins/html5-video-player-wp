@@ -28,17 +28,24 @@ export const cameraIcon = (
   </svg>
 );
 
-export const youtubeIcon = (size = "20") => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="-21 -117 682.667 682" > <path d="M626.813 64.035c-7.375-27.418-28.993-49.031-56.407-56.414C520.324-6.082 319.992-6.082 319.992-6.082s-200.324 0-250.406 13.184c-26.887 7.375-49.031 29.52-56.406 56.933C0 114.113 0 217.97 0 217.97s0 104.379 13.18 153.933c7.382 27.414 28.992 49.028 56.41 56.41C120.195 442.02 320 442.02 320 442.02s200.324 0 250.406-13.184c27.418-7.379 49.032-28.992 56.414-56.406 13.176-50.082 13.176-153.934 13.176-153.934s.527-104.383-13.183-154.46zM256.21 313.915V122.022l166.586 95.946zm0 0"> </path></svg>
+export const youtubeIcon = (size = "20") => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="-21 -117 682.667 682" fill="currentColor" > <path d="M626.813 64.035c-7.375-27.418-28.993-49.031-56.407-56.414C520.324-6.082 319.992-6.082 319.992-6.082s-200.324 0-250.406 13.184c-26.887 7.375-49.031 29.52-56.406 56.933C0 114.113 0 217.97 0 217.97s0 104.379 13.18 153.933c7.382 27.414 28.992 49.028 56.41 56.41C120.195 442.02 320 442.02 320 442.02s200.324 0 250.406-13.184c27.418-7.379 49.032-28.992 56.414-56.406 13.176-50.082 13.176-153.934 13.176-153.934s.527-104.383-13.183-154.46zM256.21 313.915V122.022l166.586 95.946zm0 0"> </path></svg>
 
-export const vimeoIcon = (size = "20") => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24">
+export const vimeoIcon = (size = "20") => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
   <path d="M20.497 1.505c-3.328-.121-5.576 1.787-6.762 5.694a4.312 4.312 0 011.777-.395c1.219 0 1.758.697 1.614 2.082-.072.839-.608 2.059-1.612 3.664-1.009 1.605-1.763 2.409-2.265 2.409-1.522 0-2.437-7.284-2.747-9.273-.431-2.765-1.58-4.058-3.447-3.877C5.341 1.972 2.35 5.058 0 7.15l1.129 1.472C2.204 7.86 2.831 7.478 3.01 7.478c1.871 0 2.777 6.367 4.23 11.102.975 2.613 2.144 3.92 3.553 3.92 2.264 0 5.022-2.144 8.29-6.434 3.155-4.107 4.789-7.344 4.894-9.705l.013-.01c.134-3.165-1.021-4.785-3.493-4.846z"></path>
+</svg>
+
+/** Music note SVG icon, used for the audio player type. */
+export const audioIcon = (size = "24") => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="html5-block-icon">
+  <path d="M9 18V5l12-2v13"></path>
+  <circle cx="6" cy="18" r="3"></circle>
+  <circle cx="18" cy="16" r="3"></circle>
 </svg>
 
 
 export const DEFAULT_ATTRIBUTES: AttributesProps = {
   options: {
-    controls: ["play-large", "play", "progress", "current-time", "duration", "mute", "volume", "settings", "fullscreen"],
-    playsinline: false,
+    controls: ["play-large", "play", "progress", "current-time", "duration", "mute", "volume", "captions", "settings", "fullscreen"],
+    playsinline: true,
     hideControls: true,
     seekTime: 10,
     preload: "",
@@ -109,7 +116,7 @@ export const DEFAULT_PRESETS: PresetProps[] = [
     settings: JSON.stringify({
       options: {
         controls: ["play-large", "play", "progress", "current-time", "duration", "mute", "volume", "settings", "fullscreen"],
-        playsinline: false,
+        playsinline: true,
         hideControls: true,
         seekTime: 10,
         preload: "",
@@ -146,7 +153,7 @@ export const DEFAULT_PRESETS: PresetProps[] = [
     icon: <svg id="svg1767" xmlSpace="preserve" width={40} height={40} viewBox="0 0 682.66669 682.66669" xmlns="http://www.w3.org/2000/svg"> <defs id="defs1771"> <clipPath clipPathUnits="userSpaceOnUse" id="clipPath1781"> <path d="M 0,512 H 512 V 0 H 0 Z" id="path1779" /> </clipPath> </defs> <g id="g1773" transform="matrix(1.3333333,0,0,-1.3333333,0,682.66667)"> <g id="g1775"> <g id="g1777" clipPath="url(#clipPath1781)"> <g id="g1783" transform="translate(211.1337,462)"> <path d="m 0,0 h -161.134 c -22.091,0 -40,-17.909 -40,-40 v -332 c 0,-22.091 17.909,-40 40,-40 h 412 c 22.092,0 40,17.909 40,40 v 332 c 0,22.091 -17.908,40 -40,40 H 90" style={{ fill: "none", stroke: "#000000", strokeWidth: 20, strokeLinecap: "round", strokeLinejoin: "round", strokeMiterlimit: 10, strokeDasharray: "none", strokeOpacity: 1, }} id="path1785" /> </g> <g id="g1787" transform="translate(10,170)"> <path d="M 0,0 H 492" style={{ fill: "none", stroke: "#000000", strokeWidth: 20, strokeLinecap: "round", strokeLinejoin: "round", strokeMiterlimit: 10, strokeDasharray: "none", strokeOpacity: 1, }} id="path1789" /> </g> <g id="g1791" transform="translate(119.9244,110)"> <path d="m 0,0 c 0,-11.046 -8.954,-20 -20,-20 -11.046,0 -20,8.954 -20,20 0,11.046 8.954,20 20,20 C -8.954,20 0,11.046 0,0 Z" style={{ fill: "none", stroke: "#000000", strokeWidth: 20, strokeLinecap: "round", strokeLinejoin: "round", strokeMiterlimit: 10, strokeDasharray: "none", strokeOpacity: 1, }} id="path1793" /> </g> <g id="g1795" transform="translate(182.9897,110)"> <path d="M 0,0 H 249.086" style={{ fill: "none", stroke: "#000000", strokeWidth: 20, strokeLinecap: "round", strokeLinejoin: "round", strokeMiterlimit: 10, strokeDasharray: "none", strokeOpacity: 1, }} id="path1797" /> </g> <g id="g1799" transform="translate(242.6652,362.3616)"> <path d="m 0,0 52.52,-30.323 c 12.347,-7.128 12.347,-24.949 0,-32.078 L 0,-92.723 c -12.347,-7.129 -27.78,1.782 -27.78,16.039 v 60.645 C -27.78,-1.782 -12.347,7.129 0,0 Z" style={{ fill: "none", stroke: "#000000", strokeWidth: 20, strokeLinecap: "round", strokeLinejoin: "round", strokeMiterlimit: 10, strokeDasharray: "none", strokeOpacity: 1, }} id="path1801" /> </g> <g id="g1803" transform="translate(256.127,462)"> <path d="M 0,0 V 0" style={{ fill: "none", stroke: "#000000", strokeWidth: 20, strokeLinecap: "round", strokeLinejoin: "round", strokeMiterlimit: 10, strokeDasharray: "none", strokeOpacity: 1, }} id="path1805" /> </g> </g> </g> </g> </svg>,
     settings: JSON.stringify({
       options: {
-        controls: ["play-large", "play", "progress", "current-time", "mute", "fullscreen"],
+        controls: ["play-large", "play", "progress", "current-time", "mute", "captions", "fullscreen"],
         playsinline: true,
         hideControls: true,
         seekTime: 10,
@@ -166,7 +173,7 @@ export const DEFAULT_PRESETS: PresetProps[] = [
     settings: JSON.stringify({
       options: {
         controls: ["play-large", "rewind", "play", "fast-forward", "progress", "current-time", "duration", "mute", "volume", "captions", "settings", "pip", "airplay", "fullscreen"],
-        playsinline: false,
+        playsinline: true,
         hideControls: true,
         seekTime: 10,
         preload: "",

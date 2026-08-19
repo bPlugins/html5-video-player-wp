@@ -97,6 +97,7 @@ export interface TrackInfo {
     label: string;
     srclang: string;
     src: string;
+    default?: boolean;
 }
 
 export interface SourceInfo {
