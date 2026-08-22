@@ -6,7 +6,7 @@ import { __ } from "@wordpress/i18n";
 import { createBlock } from "@wordpress/blocks";
 
 
-import { cameraIcon, youtubeIcon, vimeoIcon, audioIcon } from "../constants";
+import { cameraIcon, youtubeIcon, vimeoIcon, audioIcon, playlistIcon } from "../constants";
 
 interface ParentEditProps {
   clientId: string;
@@ -46,6 +46,7 @@ const Edit = ({ clientId, isSelected }: ParentEditProps) => {
     { type: "youtube", label: __("YouTube", "html5-video-player"), icon: youtubeIcon("30") },
     { type: "vimeo", label: __("Vimeo", "html5-video-player"), icon: vimeoIcon("30") },
     { type: "audio", label: __("Audio", "html5-video-player"), icon: audioIcon("30") },
+    { type: "playlist", label: __("Playlist", "html5-video-player"), icon: playlistIcon("30") },
   ];
 
   const allowedBlocks = [
@@ -54,6 +55,7 @@ const Edit = ({ clientId, isSelected }: ParentEditProps) => {
     "html5-player/youtube",
     "html5-player/popup-trigger",
     "html5-player/audio",
+    "html5-player/playlist",
   ];
 
   if (!innerBlocks?.length) {

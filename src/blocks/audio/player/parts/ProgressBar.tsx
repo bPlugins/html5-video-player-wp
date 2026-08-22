@@ -12,10 +12,10 @@ interface ProgressBarProps {
 }
 
 /**
- * Seekable progress rail shared by the default, compact and podcast skins.
+ * Seekable progress rail shared by the default and compact skins.
  *
  * Keyboard seek used to live only in the minimal skin's waveform, even though
- * all three of these rails already advertised role="slider" and tabIndex={0} —
+ * both of these rails already advertised role="slider" and tabIndex={0} —
  * so they were focusable but inert. Folding it in here fixes that for all of them.
  */
 const ProgressBar = ({ engine, showBuffered = true, showTooltip = false }: ProgressBarProps) => {

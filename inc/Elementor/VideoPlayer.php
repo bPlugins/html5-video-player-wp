@@ -10,6 +10,10 @@ use Elementor\Controls_Manager;
 if (!defined('ABSPATH'))
 	exit; // Exit if accessed directly
 
+if (class_exists(__NAMESPACE__ . '\VideoPlayer')) {
+	return;
+}
+
 /**
  * Elementor Hello World
  *

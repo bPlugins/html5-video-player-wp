@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { PlaylistProvider } from "src/blocks/playlist/types";
 
 const durationCache = new Map<string, string>();
+type DurationListener = (url: string, duration: string) => void;
+const listeners = new Set<DurationListener>();
 
 /**
  * Format duration in seconds into 'm:ss' or 'h:mm:ss'
@@ -26,22 +28,61 @@ export const formatDuration = (seconds: number): string => {
 };
 
 /**
- * Probes video duration for self-hosted/library media URLs.
+ * Update duration in cache from Plyr / player and notify list item subscribers
+ */
+export const setCachedDuration = (url: string, durationStr: string) => {
+  if (!url || !durationStr) return;
+  durationCache.set(url, durationStr);
+  listeners.forEach((listener) => {
+    try {
+      listener(url, durationStr);
+    } catch (err) {
+      // ignore
+    }
+  });
+};
+
+/**
+ * Reads duration from custom override, Plyrio player playback, or self-hosted metadata.
  */
 export const useVideoDuration = (
   url?: string,
-  provider?: PlaylistProvider
+  provider: PlaylistProvider = "library",
+  customDuration?: string
 ): string => {
   const [duration, setDuration] = useState<string>(() => {
-    if (!url || provider === "youtube" || provider === "vimeo") return "";
+    if (customDuration) return customDuration;
+    if (!url) return "";
     return durationCache.get(url) || "";
   });
 
+  // Listen for duration updates from Plyrio player
   useEffect(() => {
-    if (!url || provider === "youtube" || provider === "vimeo") {
-      setDuration("");
+    if (customDuration) {
+      setDuration(customDuration);
       return;
     }
+
+    const handleUpdate: DurationListener = (updatedUrl, updatedDuration) => {
+      if (updatedUrl === url && updatedDuration) {
+        setDuration(updatedDuration);
+      }
+    };
+
+    listeners.add(handleUpdate);
+
+    if (url && durationCache.has(url)) {
+      setDuration(durationCache.get(url)!);
+    }
+
+    return () => {
+      listeners.delete(handleUpdate);
+    };
+  }, [url, customDuration]);
+
+  // For self-hosted media, probe metadata if not already cached
+  useEffect(() => {
+    if (customDuration || provider !== "library" || !url) return;
 
     if (durationCache.has(url)) {
       setDuration(durationCache.get(url)!);
@@ -57,8 +98,7 @@ export const useVideoDuration = (
       if (!isMounted) return;
       const formatted = formatDuration(tempVideo.duration);
       if (formatted) {
-        durationCache.set(url, formatted);
-        setDuration(formatted);
+        setCachedDuration(url, formatted);
       }
       cleanup();
     };
@@ -82,9 +122,9 @@ export const useVideoDuration = (
       isMounted = false;
       cleanup();
     };
-  }, [url, provider]);
+  }, [url, provider, customDuration]);
 
-  return duration;
+  return customDuration || duration;
 };
 
 export default useVideoDuration;

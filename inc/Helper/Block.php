@@ -30,27 +30,14 @@ class Block
 
         $align = h5vp_sanitize_align($this->get_post_meta($id, 'h5vp_align_playerio', ''));
 
-        $raw_subtitles = $this->get_post_meta($id, 'h5vp_subtitles');
         $subtitles = [];
-        if (is_array($raw_subtitles) && !empty($raw_subtitles)) {
-            foreach ($raw_subtitles as $sub) {
-                if (!empty($sub['caption_file'])) {
-                    $subtitles[] = [
-                        'label' => !empty($sub['label']) ? (string) $sub['label'] : 'English/en',
-                        'caption_file' => esc_url_raw((string) $sub['caption_file']),
-                    ];
-                }
-            }
-        }
-        if (empty($subtitles)) {
-            $caption_file = $this->get_post_meta($id, 'h5vp_caption_file');
-            if (!empty($caption_file)) {
-                $caption_label = $this->get_post_meta($id, 'h5vp_caption_label', 'English/en');
-                $subtitles[] = [
-                    'label' => !empty($caption_label) ? (string) $caption_label : 'English/en',
-                    'caption_file' => esc_url_raw((string) $caption_file),
-                ];
-            }
+        $caption_file = $this->get_post_meta($id, 'h5vp_caption_file');
+        if (!empty($caption_file)) {
+            $caption_label = $this->get_post_meta($id, 'h5vp_caption_label', 'English/en');
+            $subtitles[] = [
+                'label' => !empty($caption_label) ? (string) $caption_label : 'English/en',
+                'caption_file' => esc_url_raw((string) $caption_file),
+            ];
         }
 
         $block = [

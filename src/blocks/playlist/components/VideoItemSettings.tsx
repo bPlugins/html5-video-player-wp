@@ -3,9 +3,10 @@ import { __ } from "@wordpress/i18n";
 import {
   SelectControl,
   TextControl,
-  TextareaControl,
 } from "@wordpress/components";
 import { InlineMediaUpload } from "../../../../../bpl-tools/Components/MediaControl/MediaControl";
+import isYoutubeURL from "../../../../../wp-utils/v1/isYoutubeURL";
+import isVimeoLink from "../../../utils/isVimeoLink";
 import { PlaylistVideo, PlaylistProvider } from "../types";
 
 interface VideoItemSettingsProps {
@@ -19,6 +20,11 @@ const VideoItemSettings: React.FC<VideoItemSettingsProps> = ({
 }) => {
   const provider = video.h5vp_video_provider || "library";
   const isLibrary = provider === "library";
+  const currentSource = (video.h5vp_video_source || "").trim();
+  const sourceLooksMismatched =
+    !isLibrary &&
+    !!currentSource &&
+    (provider === "youtube" ? !isYoutubeURL(currentSource) : !isVimeoLink(currentSource));
 
   return (
     <div className="h5vp-video-item-settings">
@@ -30,12 +36,14 @@ const VideoItemSettings: React.FC<VideoItemSettingsProps> = ({
           { label: __("YouTube", "html5-video-player"), value: "youtube" },
           { label: __("Vimeo", "html5-video-player"), value: "vimeo" },
         ]}
-        onChange={(val) =>
+        onChange={(val) => {
+          // Switching provider must never discard an already-stored URL — it
+          // may simply be a format our validators don't recognize yet.
           onChange({
             ...video,
             h5vp_video_provider: val as PlaylistProvider,
-          })
-        }
+          });
+        }}
         className="mb5"
       />
 
@@ -57,6 +65,14 @@ const VideoItemSettings: React.FC<VideoItemSettingsProps> = ({
           }
           value={video.h5vp_video_source || ""}
           placeholder="https://"
+          help={
+            sourceLooksMismatched ? (
+              <span className="h5vp-field-warning">
+                <span className="dashicons dashicons-warning" aria-hidden="true" />
+                {__("This does not look like a valid URL or ID for the selected provider.", "html5-video-player")}
+              </span>
+            ) : undefined
+          }
           onChange={(val) => onChange({ ...video, h5vp_video_source: val })}
           className="mb5"
         />
@@ -77,6 +93,18 @@ const VideoItemSettings: React.FC<VideoItemSettingsProps> = ({
         value={video.video_title || ""}
         placeholder={__("Video Title", "html5-video-player")}
         onChange={(val) => onChange({ ...video, video_title: val })}
+      />
+
+      <TextControl
+        label={__("Duration (Optional)", "html5-video-player")}
+        className="mb5"
+        value={video.video_duration || ""}
+        placeholder={__("e.g. 3:45", "html5-video-player")}
+        help={__(
+          "Auto-detected, You can also specify custom duration.",
+          "html5-video-player"
+        )}
+        onChange={(val) => onChange({ ...video, video_duration: val })}
       />
 
     </div>

@@ -1,7 +1,7 @@
 === HTML5 Video Player – embed fast, responsive videos with ease ===
 Contributors: bplugins, shehabulislam, freemius, abuhayat, farazi1
 Tags: html5 video player, mp4 player, plyr, video, video player
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 2.13.0
 Requires PHP: 7.4
 Requires at least: 6.5
@@ -230,7 +230,7 @@ This plugin bundles the following third-party library:
 
 == Changelog ==
 
-= 2.13.0 - 20 August, 2026 =
+= 2.13.0 - 22 August, 2026 =
 * Added: Video Playlist block — simple list layout, auto-play next with a 5-second "Up Next" countdown, duration badges, custom thumbnails, and Library/YouTube/Vimeo sources
 * Added: Audio Player block with four skins (Modern Bar, Waveform, Podcast Card, Compact Pill), plus playback speed, 10-second skip, volume, download, and title/artist/artwork fields
 * Added: HLS (`.m3u8`) streaming with automatic quality levels

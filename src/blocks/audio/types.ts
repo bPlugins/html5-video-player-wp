@@ -1,4 +1,4 @@
-export type AudioSkin = "default" | "minimal" | "podcast" | "compact";
+export type AudioSkin = "default" | "minimal" | "compact";
 
 export interface AudioBlockAttributes {
     source: string;

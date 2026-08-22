@@ -7,6 +7,7 @@ export interface PlaylistVideo {
   video_thumb: string;
   video_title: string;
   video_desc: string;
+  video_duration?: string;
 }
 
 export const EMPTY_VIDEO: PlaylistVideo = {
@@ -16,6 +17,7 @@ export const EMPTY_VIDEO: PlaylistVideo = {
   video_thumb: "",
   video_title: "",
   video_desc: "",
+  video_duration: "",
 };
 
 export interface PlaylistBlockAttributes {

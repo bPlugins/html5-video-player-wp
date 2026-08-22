@@ -1,4 +1,6 @@
 import "./admin/style.scss";
+import isYoutubeURL from "../../wp-utils/v1/isYoutubeURL";
+import isVimeoLink from "./utils/isVimeoLink";
 // import { Chart } from "chart.js";
 (function ($) {
   $(document).ready(function () {
@@ -52,6 +54,60 @@ import "./admin/style.scss";
         $(".h5vp_player_click_trigger").addClass("h5vp_player_type");
       }, 1000);
     });
+
+    // Handle video source change (Library, Youtube, Vimeo).
+    const handleVideoSourceChange = (userInitiated = false) => {
+      const $sourceField = $('[data-depend-id="h5vp_video_source"], .csf-field[data-depend-id="h5vp_video_source"]').first();
+      let selectedSource = $sourceField.find(".csf--active input").val() as string;
+      if (!selectedSource) {
+        selectedSource = ($('input[name*="[h5vp_video_source]"]:checked').val() as string) || "";
+      }
+      if (!selectedSource) return;
+
+      const $urlInput = $('input[name*="[h5vp_video_link_youtube_vimeo]"]');
+      if (!$urlInput.length) return;
+
+      const currentUrl = (($urlInput.val() as string) || "").trim();
+      const $desc = $urlInput.closest(".csf-field").find(".csf-desc-text");
+
+      const isYoutube = selectedSource === "youtube";
+      const isVimeo = selectedSource === "vimeo";
+      if (!isYoutube && !isVimeo) return;
+
+      const defaultDesc = isYoutube ? "Youtube video url or ID" : "Vimeo video url or ID";
+
+      if (!userInitiated || !currentUrl) {
+        $urlInput.removeClass("h5vp-url-mismatch");
+        $desc.removeClass("h5vp-field-warning").text(defaultDesc);
+        return;
+      }
+
+      const looksValid = isYoutube ? isYoutubeURL(currentUrl) : isVimeoLink(currentUrl);
+      $urlInput.toggleClass("h5vp-url-mismatch", !looksValid);
+
+      if (looksValid) {
+        $desc.removeClass("h5vp-field-warning").text(defaultDesc);
+      } else {
+        const warning = isYoutube
+          ? "This does not look like a YouTube URL or ID — double check it before saving."
+          : "This does not look like a Vimeo URL or ID — double check it before saving.";
+        $desc
+          .addClass("h5vp-field-warning")
+          .html('<span class="dashicons dashicons-warning" aria-hidden="true"></span><span></span>');
+        $desc.find("span:last").text(warning);
+      }
+    };
+
+    $(document).on(
+      "click change",
+      '[data-depend-id="h5vp_video_source"] .csf--button, input[name*="[h5vp_video_source]"]',
+      function () {
+        setTimeout(() => handleVideoSourceChange(true), 50);
+      }
+    );
+
+    // Initial pass on load: label only, never validate/clear a stored value.
+    handleVideoSourceChange(false);
 
     //duplicate player
     $(".h5vp_duplicate_player").on("click", function (this: HTMLElement, event: Event) {

@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: HTML5 Video Player – Embed and Play Videos in Custom Player
+ * Plugin Name: HTML5 Video Player – embed fast, responsive videos with ease
  * Description: You can easily integrate html5 Video player in your WordPress website using this plugin.
  * Plugin URI:  https://bplugins.com/html5-video-player/
  * Version:     2.13.0

@@ -58,6 +58,41 @@ if (!function_exists(('h5vp_process_block_attributes'))) {
             ];
         }
 
+        // The frontend writes 'styles' and 'uniqueId' straight into a <style>
+        // element. Attributes originate from post_content, which a
+        // contributor-level user can edit directly, so both need to be safe
+        // as CSS selectors/declarations before they ever reach the browser.
+        if (!empty($attributes['uniqueId'])) {
+            $attributes['uniqueId'] = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $attributes['uniqueId']);
+        }
+
+        if (!empty($attributes['styles']) && is_array($attributes['styles'])) {
+            $clean_styles = [];
+            foreach ($attributes['styles'] as $selector => $declarations) {
+                if (!is_array($declarations)) {
+                    continue;
+                }
+                $selector = preg_replace('/[^A-Za-z0-9_\-.#:>\s\[\]="\']/', '', (string) $selector);
+                if ('' === $selector) {
+                    continue;
+                }
+                foreach ($declarations as $prop => $value) {
+                    $prop = preg_replace('/[^A-Za-z0-9-]/', '', (string) $prop);
+                    if ('' === $prop || !is_scalar($value)) {
+                        continue;
+                    }
+                    $value = (string) $value;
+                    // Reject anything that could close the <style> element or
+                    // open a new, attacker-controlled rule.
+                    if (preg_match('/[<>{};@]/', $value)) {
+                        continue;
+                    }
+                    $clean_styles[$selector][$prop] = $value;
+                }
+            }
+            $attributes['styles'] = $clean_styles;
+        }
+
         $attributes['skin'] = 'default';
         unset($attributes['quality']);
         unset($attributes['qualities']);

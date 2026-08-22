@@ -9,6 +9,7 @@ import {
   EMPTY_VIDEO,
 } from "../types";
 import VideoItemSettings from "./VideoItemSettings";
+import CopyShortcode from "../../Components/Backend/CopyShortcode";
 
 interface InspectorProps {
   attributes: PlaylistBlockAttributes;
@@ -53,6 +54,7 @@ const Inspector: React.FC<InspectorProps> = ({
 
   return (
     <InspectorControls>
+      <CopyShortcode />
       {/* ── 1. Videos Repeater using bpl-tools ItemsPanel in PanelBody ─ */}
       <PanelBody
         title={`${__("Videos", "html5-video-player")} (${videos.length})`}

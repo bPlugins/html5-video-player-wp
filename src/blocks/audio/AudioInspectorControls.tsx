@@ -3,21 +3,20 @@ import {
     Panel,
     PanelBody,
     TabPanel,
-    TextControl,
     ToggleControl,
     SelectControl,
-    BaseControl,
-    Button,
     __experimentalUnitControl as UnitControl
 } from "@wordpress/components";
-import { InspectorControls, MediaUpload, MediaUploadCheck } from "@wordpress/block-editor";
+import { InspectorControls } from "@wordpress/block-editor";
 import { AudioBlockAttributes, AudioSkin } from "./types";
 
 import { ColorControl } from "../../../../bpl-tools/Components/ColorControl/ColorControl";
+import { InlineMediaUpload } from "../../../../bpl-tools/Components/MediaControl/MediaControl";
+import PremiumPanel from "../../../../bpl-tools/ProControls/PremiumPanel";
 import CopyShortcode from "../Components/Backend/CopyShortcode";
 import panelBodyController from "../../../../wp-utils/v1/panelBodyController";
 
-import { skinIcon, trackIcon, playbackIcon, controlsIcon, dimensionsIcon, colorsIcon } from "./icons";
+import { mediaIcon, skinIcon, playbackIcon, controlsIcon, dimensionsIcon, colorsIcon } from "./icons";
 
 interface AudioInspectorControlsProps {
     attributes: AudioBlockAttributes;
@@ -29,6 +28,7 @@ const panelTitle = (icon: any, label: string) =>
 
 const AudioInspectorControls = ({ attributes, setAttributes }: AudioInspectorControlsProps) => {
     const {
+        source,
         autoplay,
         loop,
         preload,
@@ -40,10 +40,7 @@ const AudioInspectorControls = ({ attributes, setAttributes }: AudioInspectorCon
         width,
         borderRadius,
         backgroundColor,
-        textColor,
-        title,
-        artist,
-        artwork
+        textColor
     } = attributes;
 
     return (
@@ -62,68 +59,31 @@ const AudioInspectorControls = ({ attributes, setAttributes }: AudioInspectorCon
                     <>
                         {tab.name === "general" && (
                             <Panel>
+                                {/* Media Source & Metadata */}
+                                <PanelBody title={panelTitle(mediaIcon, __("Media", "html5-video-player"))} initialOpen={true}>
+                                    <InlineMediaUpload
+                                        types={["audio"]}
+                                        label={__("Audio Source (MP3, WAV, OGG, M4A)", "html5-video-player")}
+                                        value={source}
+                                        placeholder={__("Paste Audio URL or select from media library", "html5-video-player")}
+                                        onChange={(source: string) => setAttributes({ source })}
+                                    />
+
+                                </PanelBody>
+
                                 {/* Skin Selection */}
-                                <PanelBody title={panelTitle(skinIcon, __("Player Skin", "html5-video-player"))} initialOpen={true}>
+                                <PanelBody title={panelTitle(skinIcon, __("Player Skin", "html5-video-player"))} initialOpen={false}>
                                     <SelectControl
                                         label={__("Skin Layout", "html5-video-player")}
                                         value={skin}
                                         options={[
                                             { label: __("Modern Bar (Default)", "html5-video-player"), value: "default" },
                                             { label: __("Waveform (Minimal)", "html5-video-player"), value: "minimal" },
-                                            { label: __("Podcast Card (Rich)", "html5-video-player"), value: "podcast" },
                                             { label: __("Compact Pill (Inline)", "html5-video-player"), value: "compact" },
                                         ]}
                                         onChange={(val) => setAttributes({ skin: val as AudioSkin })}
                                     />
                                 </PanelBody>
-
-                                {/* Track Info (Especially for Podcast / Card Skin) */}
-                                {skin === "podcast" && (
-                                    <PanelBody title={panelTitle(trackIcon, __("Track Details", "html5-video-player"))} initialOpen={false}>
-                                        <TextControl
-                                            label={__("Track Title", "html5-video-player")}
-                                            value={title || ""}
-                                            placeholder={__("e.g. Episode 1: The Future of Tech", "html5-video-player")}
-                                            onChange={(title: string) => setAttributes({ title })}
-                                        />
-                                        <TextControl
-                                            label={__("Artist / Podcast Host", "html5-video-player")}
-                                            value={artist || ""}
-                                            placeholder={__("e.g. John Doe", "html5-video-player")}
-                                            onChange={(artist: string) => setAttributes({ artist })}
-                                        />
-                                        <BaseControl label={__("Cover Artwork", "html5-video-player")} id="h5vp-artwork-picker">
-                                            {artwork && (
-                                                <div style={{ marginBottom: "10px" }}>
-                                                    <img
-                                                        src={artwork}
-                                                        alt=""
-                                                        style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px" }}
-                                                    />
-                                                </div>
-                                            )}
-                                            <MediaUploadCheck>
-                                                {/* @ts-ignore */}
-                                                <MediaUpload
-                                                    onSelect={(media: any) => setAttributes({ artwork: media?.url || "" })}
-                                                    allowedTypes={["image"]}
-                                                    render={({ open }: { open: () => void }) => (
-                                                        <div style={{ display: "flex", gap: "8px" }}>
-                                                            <Button variant="secondary" onClick={open}>
-                                                                {artwork ? __("Replace Artwork", "html5-video-player") : __("Upload Artwork", "html5-video-player")}
-                                                            </Button>
-                                                            {artwork && (
-                                                                <Button variant="tertiary" isDestructive onClick={() => setAttributes({ artwork: "" })}>
-                                                                    {__("Remove", "html5-video-player")}
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                />
-                                            </MediaUploadCheck>
-                                        </BaseControl>
-                                    </PanelBody>
-                                )}
 
                                 {/* Playback */}
                                 <PanelBody title={panelTitle(playbackIcon, __("Playback", "html5-video-player"))} initialOpen={false}>
@@ -157,7 +117,7 @@ const AudioInspectorControls = ({ attributes, setAttributes }: AudioInspectorCon
                                         checked={showVolume}
                                         onChange={(showVolume) => setAttributes({ showVolume })}
                                     />
-                                    {(skin === "default" || skin === "podcast") && (
+                                    {skin === "default" && (
                                         <>
                                             <ToggleControl
                                                 label={__("Show Speed Selector", "html5-video-player")}
@@ -198,9 +158,9 @@ const AudioInspectorControls = ({ attributes, setAttributes }: AudioInspectorCon
                                         placeholder={
                                             skin === "compact"
                                                 ? "40px"
-                                                : skin === "minimal" || skin === "podcast"
-                                                ? "16px"
-                                                : "12px"
+                                                : skin === "minimal"
+                                                    ? "16px"
+                                                    : "12px"
                                         }
                                         onChange={(borderRadius?: string) => setAttributes({ borderRadius: borderRadius || "" })}
                                     />
@@ -228,8 +188,17 @@ const AudioInspectorControls = ({ attributes, setAttributes }: AudioInspectorCon
                     </>
                 )}
             </TabPanel>
+            <hr />
+            <PremiumPanel
+                description={__("Audio Playlist and multiple premium skins are available in the premium version", "html5-video-player")}
+                title={__("Premium Features", "html5-video-player")}
+                pricingUrl={(window as any).h5vpBlock?.adminUrl ? (window as any).h5vpBlock.adminUrl + `edit.php?post_type=videoplayer&page=html5-video-player#/pricing` : ""}
+                buttonLabel={__("Get Pro", "html5-video-player")}
+            >{' '}</PremiumPanel>
+            <br />
         </InspectorControls>
     );
 };
 
 export default AudioInspectorControls;
+

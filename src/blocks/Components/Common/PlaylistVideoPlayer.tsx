@@ -4,6 +4,7 @@ import MyPlayer from "src/public/MyPlayer";
 import isYoutubeURL from "../../../../../wp-utils/v1/isYoutubeURL";
 import isVimeoLink from "src/utils/isVimeoLink";
 import UpNextCountdown from "./playlist/UpNextCountdown";
+import { formatDuration, setCachedDuration } from "./playlist/useVideoDuration";
 
 export interface PlaylistPlayerHandle {
   play: () => void;
@@ -96,8 +97,24 @@ const PlaylistVideoPlayer = forwardRef<PlaylistPlayerHandle, PlaylistVideoPlayer
     // The build effect deliberately keeps these out of its dependency list — it
     // must not tear the player down because a callback identity or the autoplay
     // flag changed — so it reads them through a ref every render refreshes.
-    const latestRef = useRef({ video, options, poster, shouldAutoPlay, onPlay, onPause, onEnded });
-    latestRef.current = { video, options, poster, shouldAutoPlay, onPlay, onPause, onEnded };
+    const latestRef = useRef({ video, options, poster, shouldAutoPlay, onPlay, onPause, onEnded, rawSource });
+    latestRef.current = { video, options, poster, shouldAutoPlay, onPlay, onPause, onEnded, rawSource };
+
+    // Caches the live player's duration under the *current* track's source URL.
+    // rawSource must come through latestRef: the build effect's player event
+    // handlers survive an in-place source swap (its deps don't change for
+    // library-to-library switches), so a closed-over rawSource would keep
+    // caching the new track's duration under the previous track's URL.
+    const cachePlayerDuration = () => {
+      const dur = playerRef.current?.player?.duration;
+      const src = latestRef.current.rawSource;
+      if (dur && src) {
+        const formatted = formatDuration(dur);
+        if (formatted) {
+          setCachedDuration(src, formatted);
+        }
+      }
+    };
 
     useImperativeHandle(
       ref,
@@ -226,7 +243,12 @@ const PlaylistVideoPlayer = forwardRef<PlaylistPlayerHandle, PlaylistVideoPlayer
         player.player.on("pause", () => latestRef.current.onPause?.());
         player.player.on("ended", () => latestRef.current.onEnded?.());
 
+        player.player.on("loadedmetadata", cachePlayerDuration);
+        player.player.on("durationchange", cachePlayerDuration);
+        player.player.on("timeupdate", cachePlayerDuration);
+        player.player.on("playing", cachePlayerDuration);
         player.player.on("ready", () => {
+          cachePlayerDuration();
           if (!latestRef.current.shouldAutoPlay) return;
           player.player.play?.()?.catch?.(() => {});
         });
@@ -298,6 +320,7 @@ const PlaylistVideoPlayer = forwardRef<PlaylistPlayerHandle, PlaylistVideoPlayer
         if (host) {
           host.style.minHeight = "";
         }
+        cachePlayerDuration();
         if (latestRef.current.shouldAutoPlay) {
           playerRef.current?.player?.play?.()?.catch?.(() => {});
         }

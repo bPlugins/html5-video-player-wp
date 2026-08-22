@@ -13,9 +13,11 @@ const PreviewItem: React.FC<{
   onSelect: (index: number) => void;
 }> = ({ video, index, isActive, onSelect }) => {
   const isLibrary = video.h5vp_video_provider === "library";
+  const sourceUrl = isLibrary ? video.video_source : video.h5vp_video_source;
   const duration = useVideoDuration(
-    isLibrary ? video.video_source : "",
-    video.h5vp_video_provider
+    sourceUrl,
+    video.h5vp_video_provider,
+    video.video_duration
   );
 
   return (

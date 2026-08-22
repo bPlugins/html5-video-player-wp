@@ -449,6 +449,26 @@
   max-width: 11px;
 }
 
+/* Field-level warning (e.g. a stored URL that doesn't match the selected provider) */
+.h5vp-url-mismatch {
+  border-color: #dba617 !important;
+  background: #fff8e5 !important;
+}
+
+.csf-desc-text.h5vp-field-warning {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #8a6212;
+
+  .dashicons {
+    color: #dba617;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
 /* Notice  */
 .h5vp-notice {
   display: flex;

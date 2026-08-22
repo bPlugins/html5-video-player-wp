@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import camelToKebabCase from '../../../utils/camelToKebabCase';
 import { StylesMap } from '../../../interfaces/MyPlayerInterface';
 
@@ -16,8 +16,11 @@ interface StyleProps {
 // ────────────────────────────────────────────────────────────────
 
 const Style = ({ styles = {}, uniqueId }: StyleProps) => {
-  const css = useMemo(() => {
-    let result = '';
+  const ref = useRef<HTMLStyleElement>(null);
+  const safeUniqueId = useMemo(() => (uniqueId || '').replace(/[^A-Za-z0-9_-]/g, ''), [uniqueId]);
+
+  const rules = useMemo(() => {
+    const result: string[] = [];
 
     if (typeof styles === 'object') {
       for (const key of Object.keys(styles)) {
@@ -29,15 +32,29 @@ const Style = ({ styles = {}, uniqueId }: StyleProps) => {
           .join(' ');
 
         const prefix = ['.', '#'].includes(key[0]) ? '' : '.';
-        result += `#${uniqueId} ${prefix}${key}{${declarations}} `;
+        result.push(`#${safeUniqueId} ${prefix}${key}{${declarations}}`);
       }
     }
 
-    result += `#${uniqueId} {--plyr-color-main: ${window.h5vpBlock?.brandColor}}`;
+    result.push(`#${safeUniqueId} {--plyr-color-main: ${window.h5vpBlock?.brandColor}}`);
     return result;
-  }, [styles, uniqueId]);
+  }, [styles, safeUniqueId]);
 
-  return <style dangerouslySetInnerHTML={{ __html: css }} />;
+  useEffect(() => {
+    const sheet = ref.current?.sheet;
+    if (!sheet) return;
+
+    while (sheet.cssRules.length) sheet.deleteRule(0);
+    rules.forEach((rule) => {
+      try {
+        sheet.insertRule(rule, sheet.cssRules.length);
+      } catch {
+        // Malformed rule — drop it rather than let it break the rest of the sheet.
+      }
+    });
+  }, [rules]);
+
+  return <style ref={ref} />;
 };
 
 export default Style;

@@ -23,8 +23,9 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
   const isLibrary = video.h5vp_video_provider === "library";
   const sourceUrl = isLibrary ? video.video_source : video.h5vp_video_source;
   const duration = useVideoDuration(
-    isLibrary ? video.video_source : "",
-    video.h5vp_video_provider
+    sourceUrl,
+    video.h5vp_video_provider,
+    video.video_duration
   );
 
   // Selecting the item that is already loaded cannot re-select anything — the

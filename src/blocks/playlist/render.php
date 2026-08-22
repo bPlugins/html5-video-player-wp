@@ -17,9 +17,22 @@ foreach ($h5vp_attributes['videos'] as $h5vp_video) {
         continue;
     }
 
+    // Attribute values come from post_content and can be any JSON shape
+    // (hand-edited posts, imports); guard on is_scalar() rather than casting
+    // blindly so a stray array/object doesn't warn or render as "Array".
     foreach (array('video_source', 'h5vp_video_source', 'video_thumb') as $h5vp_url_key) {
-        if (!empty($h5vp_video[$h5vp_url_key])) {
+        if (!empty($h5vp_video[$h5vp_url_key]) && is_scalar($h5vp_video[$h5vp_url_key])) {
             $h5vp_video[$h5vp_url_key] = esc_url_raw((string) $h5vp_video[$h5vp_url_key]);
+        } else {
+            unset($h5vp_video[$h5vp_url_key]);
+        }
+    }
+
+    foreach (array('video_title', 'video_desc', 'video_duration') as $h5vp_text_key) {
+        if (!empty($h5vp_video[$h5vp_text_key]) && is_scalar($h5vp_video[$h5vp_text_key])) {
+            $h5vp_video[$h5vp_text_key] = sanitize_text_field((string) $h5vp_video[$h5vp_text_key]);
+        } else {
+            unset($h5vp_video[$h5vp_text_key]);
         }
     }
 

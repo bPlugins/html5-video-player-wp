@@ -2,7 +2,6 @@ import React from "react";
 import { AudioBlockAttributes } from "../types";
 import SkinDefault from "./SkinDefault";
 import SkinMinimal from "./SkinMinimal";
-import SkinPodcast from "./SkinPodcast";
 import SkinCompact from "./SkinCompact";
 import "../style.scss";
 
@@ -31,8 +30,6 @@ const AudioPlayer = ({ attributes }: { attributes: AudioBlockAttributes }) => {
         switch (skin) {
             case "minimal":
                 return <SkinMinimal key={source} attributes={attributes} />;
-            case "podcast":
-                return <SkinPodcast key={source} attributes={attributes} />;
             case "compact":
                 return <SkinCompact key={source} attributes={attributes} />;
             case "default":

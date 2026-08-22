@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "html5-player/audio",
     "title": "HTML5 Audio Player",
-    "description": "A customizable, multi-skin audio player with waveform, podcast, compact, and classic controls.",
+    "description": "A customizable, multi-skin audio player with waveform, compact, and classic controls.",
     "category": "media",
     "icon": "format-audio",
     "keywords": [
@@ -11,7 +11,6 @@
         "mp3",
         "sound",
         "music",
-        "podcast",
         "waveform"
     ],
     "textdomain": "html5-video-player",
