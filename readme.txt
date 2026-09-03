@@ -222,11 +222,35 @@ This plugin bundles the following third-party library:
 - Source code: https://github.com/sampotts/plyr
 - Bundled file: public/js/plyr-v3.8.4.polyfilled.js
 
+**hls.js**
+- Version: 1.7.0
+- Purpose: Adds HLS (.m3u8) streaming playback with automatic quality levels; only loaded on pages that actually contain an HLS source.
+- License: Apache-2.0
+- Website: https://github.com/video-dev/hls.js
+- Bundled file: public/js/hls.min.js
+
 = bpl-tools =
 * Source / GitHub: https://github.com/bPlugins/bpl-tools
 * License: GPL-2.0-or-later – https://www.gnu.org/licenses/gpl-2.0.html
 * Purpose: Shared utility library providing admin dashboard components and common Gutenberg editor controls.
 * External Services: The library may connect to bPlugins, WordPress.org, and Freemius services for product data and checkout functionality. See full details: https://github.com/bPlugins/bpl-tools#external-requests--why-they-are-made
+
+= Freemius SDK =
+
+* **Source:** [https://freemius.com/](https://freemius.com/)
+* **GitHub:** [https://github.com/Freemius/wordpress-sdk](https://github.com/Freemius/wordpress-sdk)
+* **License:** GPLv3 – [https://github.com/Freemius/wordpress-sdk/blob/master/LICENSE.txt](https://github.com/Freemius/wordpress-sdk/blob/master/LICENSE.txt)
+* **Purpose:** Provides opt-in usage tracking and analytics to help improve the plugin.
+
+== External Services ==
+
+This plugin connects to the following third-party services:
+
+= YouTube oEmbed =
+When you save a video player whose source is a YouTube URL, the plugin sends the video ID to YouTube's public oEmbed endpoint (`https://www.youtube.com/oembed`) to fetch the video's title for display in the admin list and Video Manager. No personal data is sent — only the video ID. This request is cached for 24 hours and is not made on page views by site visitors. YouTube Terms of Service: https://www.youtube.com/t/terms
+
+= Vimeo API =
+When you save a video player whose source is a Vimeo URL, the plugin sends the video ID to Vimeo's public oEmbed-style endpoint (`https://vimeo.com/api/v2/video/{id}.json`) to fetch the video's title, the same way as above. Vimeo Terms of Service: https://vimeo.com/terms
 
 == Changelog ==
 
